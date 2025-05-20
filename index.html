@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<title>Mignonneries de Nathalie - Accessoires mode artisanale</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+        integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" >
+	<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap" rel="stylesheet">	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+	<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+	<meta name="description" content="">
+	<link rel="stylesheet" href="./assets/style.css">
+	<script type="module" src="script.js" defer></script>
+	<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+</head>
+<body id="btn-retour">
+	<div class="modal-content">
+		<div class="modal">
+			<button class="btn-close"><i class="fa-solid fa-xmark fa-2xl"></i></button>
+			<h2 class="titre-modal"></h2>
+<form id="product-form" enctype="multipart/form-data">
+    <!-- Tes inputs "categorie", "imageCouverture", "images"… -->
+<div class="formulaire-modification-primaire">
+	<!-- Les autres champs -->
+	<label>Catégorie</label><input type="text" name="categorie" />
+	<label>Nom</label><input type="text" name="nom" />
+	<label>Titre de description</label><input type="text" name="titreDescription" />
+	<label>Description courte</label><input type="text" name="description" />
+	<label>reference</label><input type="text" name="reference" />
+	<label>prix</label><input type="number" name="prix" step="0.01" />
+	<label>materiaux</label><input type="text" name="materiaux" />
+	<label>stock</label><input type="number" name="stock" min="0" />
+	<button id="btn-valider-modification" type="submit">Mettre à jour</button>
+</div>
+<div class="formulaire-modification-secondaire">
+	<!-- Conteneurs Quill -->
+	<label>Description complète</label>
+  <div id="editor-descriptionComplete" class="quill-editor"></div>
+  <input 
+    type="hidden" 
+    name="descriptionComplete" 
+    id="input-descriptionComplete" 
+  />
+</div>
+
+<!-- Ajout image de couverture -->
+<div class="add-photo-section" >
+	<div class="custom-file-upload" onclick="document.getElementById('file-upload-couverture').click()">
+  <input type="file" id="file-upload-couverture" name="imageCouverture" accept="image/jpeg,image/png">
+  <span class="btn-text">Modifier photo couverture</span>
+  <span class="file-info"></span>
+  <span class="text-error-add-photo"></span>
+</div>
+  <img id="preview-couverture">
+
+  <div class="custom-file-upload" onclick="document.getElementById('file-upload-images').click()">
+  <input type="file" id="file-upload-images" name="image" accept="image/jpeg,image/png" multiple>
+  <span class="btn-text">Ajouter photos produit</span>
+  <span class="file-info"></span>
+  <span class="text-error-add-photo"></span>
+</div>
+  <div id="preview-multi-images" class="image-preview-gallery"></div>
+
+</div>
+
+
+  </form>
+		</div>
+	</div>
+	<header>
+		<img src="./assets/images/image-accueil.jpg" alt="image accueil les mignonneries de nathalie">
+		<div class="titre-header">
+				<h1>Les mignonneries de <br> <span>Nathalie</span> </h1>
+				<p>Les petites choses du quotidien <br> cousues main pour petits et grands</p> 
+			</div>
+	<nav>
+		<a href="index.html"><img id="logo-nav-header" src="./assets/images/logo-nav.webp" alt="logo les mignonneries de nathalie"></a>
+		<ul class="btn-nav">
+			<li><a href="index.html">Accueil</a></li>
+			<li><a href="#creation">Créations</a></li>
+			<li><a href="#blog">Blog</a></li>
+			<li><a href="#contact">Contact</a></li>
+			<li id="user-open"><a href="login.html">Login</a></li>
+			<li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+		</ul>
+	</nav>
+</header>
+<main>
+	<div class="btn-retour-hp">
+		<button><a href="#btn-retour"><i class="fa-solid fa-chevron-up"></i></a></button>
+	</div>
+	<div id="base-content">
+	<section class="introduction">
+		<article>
+			<h2>Bienvenue chez Les mignonneries de Nathalie</h2>
+			<p>Découvrez une sélection unique d'accessoires faits main qui apporteront une note de douceur et d'originalité à votre quotidien.</p>
+			<p>Parcourez ma boutique en ligne ou rendez-vous directement en magasin, à la jardinerie Couleurs Jardin à Mazamet (81). </p>
+		</article>
+		<div class="presentation-une">
+			<div class="presentation-une-image">
+				<img src="./assets/images/sac-presentation.jpg" alt="">
+			</div>
+			<div class="presentation-une-texte">
+				<h3>Les mignonnerie du moment
+					<span class="icon"><img src="./assets/icons/icon-etoile.webp" alt="étoile"></span>
+				</h3>
+				<h4>Le Sac Cabas <span>29.99€</span></h4>
+				<p>Le Sac Cabas rayé d’assez grande capacité. Confectionné avec un tissu épais en coton marinière résistant pour l'extérieur et du lin pour l'intérieur.
+					<br><br>
+				Ajoutez une touche de mignonnerie à votre garde-robe dès maintenant !</p>
+				<button><a href="#">Découvrir</a></button>
+			</div>
+		</div>
+	</section>
+	<section class="article-boutique" id="creation">
+		<h2>Les mignonneries
+			<span class="icon"><img src="./assets/icons/icon-etoile.webp" alt="étoile"></span>
+		</h2>
+		<div class="titre-projet"></div>
+		<div class="zone-btn"></div>
+		<div id="portfolio"></div>
+	</section>
+	<section class="en-savoir-plus">
+			<div class="en-savoir-plus-texte">
+				<h3>Les petites mains derrière les Mignonneries</h3>
+			<p>C'est à la suite de la période Covid que j'ai pris le temps de renouer avec ma créativité en m'essayant à la couture. Depuis, je ne me suis plus jamais arrêtée...</p>
+				<button><a href="#">En savoir plus</a></button>
+			</div>
+			<div class="en-savoir-plus-image">
+			<img src="./assets/images/image-couture.webp" alt="image de Nathalie qui coud">
+			</div>
+	</section>
+	 <section class="section-information">
+      <div class="div-information">
+        <article>
+          <div class="produit-similaire">
+            <img src="./assets/icons/icone-artisanale.png" alt="">
+            <h4>Création artisanale</h4>
+            <p>Toutes nos créations sont réalisées à la main avec passion dans notre atelier dans le Tarn (81).</p>
+          </div>
+        </article>
+        <article>
+          <div class="produit-similaire">
+            <img src="./assets/icons/icone-ecoresponsable.png" alt="">
+            <h4>Écoresponsable</h4>
+            <p>Nos produits sont réutilisables et fabriqués, pour la plupart, avec des matériaux de seconde main.</p>
+          </div>
+        </article>
+      <article>
+        <div class="produit-similaire">
+          <img src="./assets/icons/icone-livraison.png" alt="">
+          <h4>Livraison rapide</h4>
+          <p>Nos produits sont emballés par nos soins et envoyés dans les plus brefs délais.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+  <section class="encore-plus">
+	<div class="encore-plus-texte">
+		<h3>Encore plus <br>de mignonneries !</h3>
+		<p>Retrouvez encore plus de mignonneries sur mes différents réseaux !</p>
+		<ul>
+			<li><a href="https://www.instagram.com/mignonneries.nathalie/" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
+			<li><a href="https://www.tiktok.com/@les_mignonneries_de_nath"><i class="fa-brands fa-tiktok"></i></a></li>
+			<li><a href="https://www.linkedin.com/in/mignonneries-de-nathalie-499884334/"><i class="fa-brands fa-linkedin"></i></a></li>
+			<li><a href="https://www.youtube.com/channel/UCEfuaMURKRQH5zqfeSbv1RQ"><i class="fa-brands fa-youtube"></i></a></li>
+			<li><a href="https://fr.pinterest.com/lesmidena/"><i class="fa-brands fa-pinterest"></i></a></li>
+		</ul>
+		</div>
+		<img src="./assets/images/trousse-soins.png" alt="image accueil les mignonneries de nathalie">
+		<img src="./assets/images/tablier-enseignante.png" alt="image accueil les mignonneries de nathalie">
+		<img src="./assets/images/sac-blanc.png" alt="image accueil les mignonneries de nathalie">
+		<img src="./assets/images/image-sac-vw.png" alt="image accueil les mignonneries de nathalie">
+		<img src="./assets/images/cache-pot.png" alt="image accueil les mignonneries de nathalie">
+	
+
+
+  </section>
+	<section id="contact">
+		<h3>Contact</h3>
+		<p>Vous avez un projet ? Discutons-en !</p>
+		<form action="#" method="post">
+			<label for="name-contact">Nom</label>
+			<input type="text" name="name" id="name-contact">
+			<label for="email-contact">Email</label>
+			<input type="email" name="email" id="email-contact">
+			<label for="message-contact">Message</label>
+			<textarea name="message" id="message-contact" cols="30" rows="10"></textarea>
+			<input type="submit" value="Envoyer" class="btn-contact">
+		</form>
+	</section>
+</div>
+</main>
+
+<footer>
+  <div class="div-footer">
+                <h3 class="titre-footer">À propos</h3>
+                <ul class="lien-footer">
+                    <li><a href="#">Mentions légales</a></li>
+                    <li><a href="#">Conditions générales </a></li>
+                    <li><a href="#">À propos</a></li>
+                </ul>
+            </div>
+            <div class="div-footer">
+              <p>© 2024 - 2025 Mignonneries-Nathalie</p>
+              <ul class="lien-footer-reseaux">
+                <li><a href="https://www.instagram.com/mignonneries.nathalie/" target="_blank"><i class="fa-brands fa-instagram"></i></a></li>
+                <li><a href="https://www.tiktok.com/@les_mignonneries_de_nath"><i class="fa-brands fa-tiktok"></i></a></li>
+                <li><a href="https://www.linkedin.com/in/mignonneries-de-nathalie-499884334/"><i class="fa-brands fa-linkedin"></i></a></li>
+                <li><a href="https://www.youtube.com/channel/UCEfuaMURKRQH5zqfeSbv1RQ"><i class="fa-brands fa-youtube"></i></a></li>
+                <li><a href="https://fr.pinterest.com/lesmidena/"><i class="fa-brands fa-pinterest"></i></a></li>
+              </ul>
+            </div>
+            <div class="div-footer">
+                <h3 class="titre-footer">Assistance</h3>
+                <ul class="lien-footer">
+                  <li><a href="#">Nous contacter</a></li>
+                  <li><a href="#">Avis google</a></li>
+                  <li><a href="#">Les tissus</a></li>
+                </ul>
+            </div>
+</footer>
+</body>
+</html>
