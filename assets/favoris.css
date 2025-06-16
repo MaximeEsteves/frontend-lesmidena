@@ -1,0 +1,63 @@
+header {
+  height: 350px;
+}
+.favoris-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 80%;
+  margin: auto;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+
+.favori-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border: 1px solid #3a5151;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.favori-card img {
+  width: 150px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0px 8px 14px 4px rgba(0, 0, 0, 0.09);
+  transition: 0.3s;
+  cursor: pointer;
+}
+.favori-card img:hover {
+  box-shadow: 0px 8px 14px 4px rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+}
+
+.favori-info {
+  flex: 1;
+}
+
+.favori-info h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.favori-info p {
+  margin: 5px 0;
+  color: #555;
+}
+
+.favori-card button {
+  padding: 8px 12px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.favori-card button:hover {
+  background-color: #555;
+}

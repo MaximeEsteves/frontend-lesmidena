@@ -1,3 +1,13 @@
+.sr-only {
+  position: absolute;
+  width: 1px; 
+  height: 1px; 
+  padding: 0; 
+  margin: -1px; 
+  overflow: hidden; 
+  clip: rect(0,0,0,0); 
+  border: 0;
+}
 html{
 	margin: 0;
 	padding: 0;
@@ -38,9 +48,39 @@ body {
 	flex-direction: column;
 }
 header {
-	display: flex;
-	justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  height: 100vh; /* Ajustez selon vos besoins */
 }
+
+/* Le wrapper occupe tout le header en arrière-plan */
+.parallax-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1; /* Placé en arrière-plan */
+}
+.parallax-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: translateY(0);
+  transition: transform 0.1s ease-out;
+}
+
+/* Le contenu du header */
+.header-content {
+  position: relative;
+  z-index: 2; /* Au-dessus du wrapper */
+  width: 100%;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Exemple d'effet parallax avec JS */
 h1{
 	font-family: 'Playfair Display', serif;
 	font-size: 22px;
@@ -67,19 +107,22 @@ a{
 header.scrolled nav {
   background-color: #3a5151;
   justify-content: center;
+  align-items: center;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   z-index: 1000;
   top: 0;
-  padding: 10px 0; 
-  transition: all 0.5s ease;
+  padding: 15px 0px; 
+  transition: all 0.3s ease;
   gap: 10%;
 }
-header.scrolled nav a#logo-nav-header{
+header.scrolled nav a#logo-nav-header img{
   transition: width 0.3s ease;
+  width: 80% !important;
 }
 header.scrolled nav ul li {
   border-bottom: 1px solid transparent;
-  transition: all 0.5s ease;
+  transition: all 0.3s ease;
+  padding-top: 15px;
 }
 header.scrolled nav ul li:hover {
   border-bottom-color: black;
@@ -123,6 +166,7 @@ header img{
 	top: 40%;
 	left: 18%;
 	text-align:center ;
+	z-index: 1;
 }
 .titre-header p{
 	text-align: left;
@@ -150,7 +194,12 @@ header img{
 .btn-retour-hp button:hover{
 	opacity: 0.5;
 }
-
+#panier-count,
+#favoris-count{
+	position: absolute;
+	display: none;
+	padding: 5px;
+}
 /* introduction */
 .introduction {
 	background-color: #fce4da;
@@ -269,92 +318,6 @@ header img{
     right: 52%;
 }
 
-/* zone articles boutique */
-#portfolio{
-	display:flex;
-	justify-content: center;
-	flex-wrap: wrap;
-	align-items: center;
-	font-family: Geist;
-	font-size: 16px;
-	color: black;
-}
-.gallery figure {
-	position: relative;
-	border: 1px solid #3a515188;
-	padding: 10px;
-	border-radius: 12px;
-	text-align: start;
-	width: 300px;
-	margin: 0;
-}
-.gallery figure h3{
-	margin: 10px auto;
-	color: #3a5151;
-	font-size: 20px;
-}
-.description-carte{
-	height: 50px;
-	line-height: 25px;
-}
-.gallery figure:hover {
-	border: 1px solid #fce4da;
-	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.5);
-	transition: 0.4s;
-	background-color: #fce4da;
-}
-.gallery img {
-	width: 100%;
-	height: 300px;
-	object-fit: cover;
-	border-radius: 8px;
-	transition: transform 0.5s ease;
-}
-.gallery img:hover {
-	transform: scale(1.02);
-	transition: 0.4s;
-	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.5);
-	cursor: pointer;
-}
-.btn-acheter {
-	margin-top: 10px;
-	padding: 8px 12px;
-	background-color: #3a5151;
-	color: white;
-	border: none;
-	border-radius: 6px;
-	cursor: pointer;
-	font-family: Geist;
-	font-size: 16px;
-	border: 2px solid transparent;
-}
-.btn-acheter:hover{
-	color: #3a5151;
-	background-color: #fce4da;
-	border: 2px solid #3a5151;
-	transition: 0.3s;
-}
-
-/* zone de modification */
-.div-modification {
-	color: black;
-	font-size: 16px;
-	display:flex;
-	justify-content: center;
-	align-items: center;
-	width: 100%;
-	margin: 80px auto;
-	gap: 10px;
-	border: none;
-	background-color: inherit;
-}
-.div-modification:hover {
-	opacity: 0.5;
-	cursor: pointer;
-}
-.hidden {
-    display: none;
-}
 
 /* zone a propos */
 .en-savoir-plus{
@@ -474,142 +437,7 @@ header img{
 	box-shadow: 0px 8px 14px 4px rgba(0, 0, 0, 0.2);
 	transition: 0.3s;
 }
-/* modal */ 
-/* ══ Overlay ══ */
-.modal-content {
-  display: none;               /* en JS : passer à flex pour ouvrir */
-  position: fixed;
-  inset: 0;                    /* top:0; left:0; right:0; bottom:0; */
-  background: rgba(0,0,0,0.3);
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  overflow: auto;              /* scroll si fenêtre plus petite */
-}
 
-/* ══ Modale (= inner box) ══ */
-.modal {
-  background: #fff;
-  width: 80vw;                 
-  max-width: 1200px;
-  height: 70vh;                
-  max-height: 700px;
-  border-radius: 10px;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  box-sizing: border-box;
-  position: relative;
-  overflow: hidden;            
-}
-.modal h2{
-  color: #3a5151;
-  text-align: center;
-  padding-bottom: 15px;
-  font-size: 25px;          
-}
-
-/* ══ Formulaire en colonnes flexibles ══ */
-.modal form {
-	font-family: Geist;
-	color: #3a5151;
-	display: flex;
-	flex: 1;                     
-	gap: 20px;
-	overflow: hidden;            
-}
-/* Chaque colonne prend un tiers et scroll si besoin */
-.modal form > div {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-#btn-valider-modification {
-	font-family: Geist;
-	background-color: #3a5151;
-	border: 1px solid white;
-	border-radius: 50px;
-	padding: 10px 20px;
-	font-weight: 500;
-	font-size: 14px;
-	margin-top: 20px;
-	color: white;
-	transition: 0.3s;
-}
-#btn-valider-modification:hover {
-	background-color: white;
-	border: 1px solid #3a5151;
-	color: #3a5151;
-	cursor: pointer;
-	transition: 0.3s;
-}
-.formulaire-modification-primaire label{
-	margin-top: 20px;
-}
-
-/* ══ Quill – conteneurs fixes + scroll interne ══ */
-.quill-editor {
-  flex: 1;           
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-.quill-editor .ql-container {
-  flex: 1;                    
-  height: auto;                
-  max-height: 100%;            
-  overflow: hidden;            
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.quill-editor .ql-editor {
-  height: 100%;
-  overflow-y: auto;           
-  white-space: pre-wrap;       
-  overflow-wrap: break-word;   
-  box-sizing: border-box;
-  padding: 10px;
-}
-.image-wrapper {
-  position: relative;
-  display: inline-block;
-}
-
-.btn-delete-img {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  background: rgba(255, 0, 0, 0.7);
-  color: white;
-  border: none;
-  cursor: pointer;
-  padding: 2px 6px;
-  border-radius: 50%;
-}
-.image-preview {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-.image-preview-gallery {
-  display: inline;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 10px;
-  overflow-y: auto;
-}
-#preview-couverture{
-	width: 100%;
-	height: 20%;
-	object-fit: cover;
-	margin-bottom: 20px;
-}
 
 
 /*************************/
@@ -893,7 +721,28 @@ header img{
 	color: white;
 	border: 1px solid white;
 }
-
+.btn-fav-article,
+.btn-acheter {
+	margin-top: 10px;
+	padding: 8px 12px;
+	background-color: #3a5151;
+	color: white;
+	border: none;
+	border-radius: 6px;
+	cursor: pointer;
+	font-family: Geist;
+	font-size: 16px;
+	border: 2px solid transparent;
+  	transition: 0.3s;
+  	margin-right: 10px;
+}
+.btn-fav-article:hover,
+.btn-acheter:hover{
+	color: #3a5151;
+	background-color: transparent;
+	border: 2px solid #3a5151;
+	transition: 0.3s;
+}
 /* mode edition */
 .mode-edition{
 position: absolute;

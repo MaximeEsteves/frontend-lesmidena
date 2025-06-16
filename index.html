@@ -12,81 +12,38 @@
 	<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap" rel="stylesheet">	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 	<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 	<meta name="description" content="">
+	<link rel="stylesheet" href="./assets/index.css">
 	<link rel="stylesheet" href="./assets/style.css">
 	<script type="module" src="script.js" defer></script>
+	<script type="module" src="index.js" defer></script>
 	<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 </head>
 <body id="btn-retour">
-	<div class="modal-content">
-		<div class="modal">
-			<button class="btn-close"><i class="fa-solid fa-xmark fa-2xl"></i></button>
-			<h2 class="titre-modal"></h2>
-<form id="product-form" enctype="multipart/form-data">
-    <!-- Tes inputs "categorie", "imageCouverture", "images"… -->
-<div class="formulaire-modification-primaire">
-	<!-- Les autres champs -->
-	<label>Catégorie</label><input type="text" name="categorie" />
-	<label>Nom</label><input type="text" name="nom" />
-	<label>Titre de description</label><input type="text" name="titreDescription" />
-	<label>Description courte</label><input type="text" name="description" />
-	<label>reference</label><input type="text" name="reference" />
-	<label>prix</label><input type="number" name="prix" step="0.01" />
-	<label>materiaux</label><input type="text" name="materiaux" />
-	<label>stock</label><input type="number" name="stock" min="0" />
-	<button id="btn-valider-modification" type="submit">Mettre à jour</button>
-</div>
-<div class="formulaire-modification-secondaire">
-	<!-- Conteneurs Quill -->
-	<label>Description complète</label>
-  <div id="editor-descriptionComplete" class="quill-editor"></div>
-  <input 
-    type="hidden" 
-    name="descriptionComplete" 
-    id="input-descriptionComplete" 
-  />
-</div>
+	
+<header>
+  <div class="parallax-wrapper">
+    <img src="./assets/images/image-accueil.jpg" alt="image accueil les mignonneries de nathalie">
+  </div>
+  <div class="titre-header">
+	  <h1>Les mignonneries de <br> <span>Nathalie</span> </h1>
+      <p>Les petites choses du quotidien <br> cousues main pour petits et grands</p> 
+    </div>
+	<div class="header-content">
+    <nav>
+      <a href="#btn-retour" id="logo-nav-header"><img src="./assets/images/logo-nav.webp" alt="logo les mignonneries de nathalie"></a>
+      <ul class="btn-nav">
+        <li><a href="#btn-retour">Accueil</a></li>
+        <li><a href="#creation">Créations</a></li>
+        <li><a href="#blog">Blog</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li id="user-open"><a href="login.html">Login</a></li>
+        <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+        <li id="favoris"><a href="favoris.html"><i class="fa-solid fa-heart"></i><span id="favoris-count">0</span></a></li>
+		<li id="panier"><a href="panier.html"><i class="fa-solid fa-bag-shopping"></i><span id="panier-count">0</span></a></li>
 
-<!-- Ajout image de couverture -->
-<div class="add-photo-section" >
-	<div class="custom-file-upload" onclick="document.getElementById('file-upload-couverture').click()">
-  <input type="file" id="file-upload-couverture" name="imageCouverture" accept="image/jpeg,image/png">
-  <span class="btn-text">Modifier photo couverture</span>
-  <span class="file-info"></span>
-  <span class="text-error-add-photo"></span>
-</div>
-  <img id="preview-couverture">
-
-  <div class="custom-file-upload" onclick="document.getElementById('file-upload-images').click()">
-  <input type="file" id="file-upload-images" name="image" accept="image/jpeg,image/png" multiple>
-  <span class="btn-text">Ajouter photos produit</span>
-  <span class="file-info"></span>
-  <span class="text-error-add-photo"></span>
-</div>
-  <div id="preview-multi-images" class="image-preview-gallery"></div>
-
-</div>
-
-
-  </form>
-		</div>
-	</div>
-	<header>
-		<img src="./assets/images/image-accueil.jpg" alt="image accueil les mignonneries de nathalie">
-		<div class="titre-header">
-				<h1>Les mignonneries de <br> <span>Nathalie</span> </h1>
-				<p>Les petites choses du quotidien <br> cousues main pour petits et grands</p> 
-			</div>
-	<nav>
-		<a href="index.html"><img id="logo-nav-header" src="./assets/images/logo-nav.webp" alt="logo les mignonneries de nathalie"></a>
-		<ul class="btn-nav">
-			<li><a href="index.html">Accueil</a></li>
-			<li><a href="#creation">Créations</a></li>
-			<li><a href="#blog">Blog</a></li>
-			<li><a href="#contact">Contact</a></li>
-			<li id="user-open"><a href="login.html">Login</a></li>
-			<li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
-		</ul>
-	</nav>
+	</ul>
+    </nav>
+  </div>
 </header>
 <main>
 	<div class="btn-retour-hp">
@@ -111,11 +68,11 @@
 				<p>Le Sac Cabas rayé d’assez grande capacité. Confectionné avec un tissu épais en coton marinière résistant pour l'extérieur et du lin pour l'intérieur.
 					<br><br>
 				Ajoutez une touche de mignonnerie à votre garde-robe dès maintenant !</p>
-				<button><a href="#">Découvrir</a></button>
+				<button id="creation"><a href="produit.html?ref=A47879">Découvrir</a></button>
 			</div>
 		</div>
 	</section>
-	<section class="article-boutique" id="creation">
+	<section class="article-boutique">
 		<h2>Les mignonneries
 			<span class="icon"><img src="./assets/icons/icon-etoile.webp" alt="étoile"></span>
 		</h2>
@@ -170,11 +127,11 @@
 			<li><a href="https://fr.pinterest.com/lesmidena/"><i class="fa-brands fa-pinterest"></i></a></li>
 		</ul>
 		</div>
-		<img src="./assets/images/trousse-soins.png" alt="image accueil les mignonneries de nathalie">
-		<img src="./assets/images/tablier-enseignante.png" alt="image accueil les mignonneries de nathalie">
-		<img src="./assets/images/sac-blanc.png" alt="image accueil les mignonneries de nathalie">
-		<img src="./assets/images/image-sac-vw.png" alt="image accueil les mignonneries de nathalie">
-		<img src="./assets/images/cache-pot.png" alt="image accueil les mignonneries de nathalie">
+		<img src="./assets/images/trousse-soins.webp" alt="image d'une trousse de soins les mignonneries de nathalie">
+		<img src="./assets/images/lingettes-démaquillante.webp" alt="image de kit de lingettes-démaquillante réutilisables les mignonneries de nathalie">
+		<img src="./assets/images/trousse.webp" alt="image d'une trousse les mignonneries de nathalie">
+		<img src="./assets/images/pochette.webp" alt="image d'une pochette les mignonneries de nathalie">
+		<img src="./assets/images/cache-pot.webp" alt="image d'un cache pot en lin les mignonneries de nathalie">
 	
 
 
@@ -223,5 +180,53 @@
                 </ul>
             </div>
 </footer>
+<div class="modal-content">
+		<div class="modal">
+			<button class="btn-close"><i class="fa-solid fa-xmark fa-2xl"></i></button>
+			<h2 class="titre-modal"></h2>
+               <form id="product-form" enctype="multipart/form-data">
+    <!-- Tes inputs "categorie", "imageCouverture", "images"… -->
+                <div class="formulaire-modification-primaire">
+	<!-- Les autres champs -->
+	               <label>Catégorie</label><input type="text" name="categorie" required/>
+	               <label>Nom</label><input type="text" name="nom" required/>
+	               <label>Titre de description</label><input type="text" name="titreDescription" required/>
+	               <label>Description courte</label><input type="text" name="description" required/>
+	               <label>reference</label><input type="text" name="reference" required/>
+	               <label>prix</label><input type="number" name="prix" step="0.01" required/>
+	               <label>materiaux</label><input type="text" name="materiaux" required/>
+	               <label>stock</label><input type="number" name="stock" min="0" required/>
+	               <button type="submit" id="btn-submit"></button>
+               </div>
+               		<div class="formulaire-modification-secondaire">
+						<!-- Conteneurs Quill -->
+						<label>Description complète</label>
+  							<div id="editor-descriptionComplete" class="quill-editor"></div>
+  								<input type="hidden" name="descriptionComplete" id="input-descriptionComplete" required/>
+					</div>
+
+						<!-- Ajout image de couverture -->
+						<div class="add-photo-section" >
+							<div class="custom-file-upload" onclick="document.getElementById('file-upload-couverture').click()">
+						  		<input type="file" id="file-upload-couverture" name="imageCouverture" accept="image/jpeg,image/png">
+						  		<span class="btn-text">Modifier photo couverture</span>
+						  		<span class="file-info"></span>
+						  		<span class="text-error-add-photo"></span>
+							</div>
+						  		<img id="preview-couverture">
+						  			<div class="custom-file-upload" onclick="document.getElementById('file-upload-images').click()">
+						  				<input type="file" id="file-upload-images" name="image" accept="image/jpeg,image/png" multiple>
+						  				<span class="btn-text">Ajouter photos produit</span>
+						  				<span class="file-info"></span>
+						  				<span class="text-error-add-photo"></span>
+									</div>
+						  <div id="preview-multi-images" class="image-preview-gallery"></div>
+
+						</div>
+
+
+  				</form>
+		</div>
+	</div>
 </body>
 </html>

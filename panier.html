@@ -25,100 +25,95 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" >
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap" rel="stylesheet">	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 	<meta name="description" content="">
-	<link rel="stylesheet" href="/assets/style.css">
-	<link rel="stylesheet" href="/assets/produit.css">
-	<script type="module" src="/produit.js" defer></script>
-	<script type="module" src="/script.js" defer></script>
+	<link rel="stylesheet" href="./assets/style.css">
+	<link rel="stylesheet" href="./assets/panier.css">
+	<script type="module" src="panier.js" defer></script>
+	<script type="module" src="script.js" defer></script>
+
 </head>
 <body>
     <header>
       <div class="parallax-wrapper">
-			<img id="image-couverture-boutique" src="" alt="image accueil les mignonneries de nathalie">
+			<img id="image-couverture-boutique" src="./assets/images/image-produit-header.jpg" alt="image accueil les mignonneries de nathalie">
 			</div>
       <div class="titre-header">
 				<h1 class="titre-produit-boutique"></h1>
 			</div>
 <div class="header-content">
     <nav>
-      <a href="#btn-retour" id="logo-nav-header"><img src="/assets/images/logo-nav.webp" alt="logo les mignonneries de nathalie"></a>
+      <a href="#btn-retour" id="logo-nav-header"><img src="./assets/images/logo-nav.webp" alt="logo les mignonneries de nathalie"></a>
       <ul class="btn-nav">
-        <li><a href="/index.html">Accueil</a></li>
-        <li><a href="/index.html#creation">Créations</a></li>
-        <li><a href="/index.html#blog">Blog</a></li>
-        <li><a href="/index.html#contact">Contact</a></li>
-        <li id="user-open"><a href="/login.html">Login</a></li>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="#creation">Créations</a></li>
+        <li><a href="#blog">Blog</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li id="user-open"><a href="login.html">Login</a></li>
         <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
-        <li id="favoris"><a href="/favoris.html"><i class="fa-solid fa-heart"></i><span id="favoris-count">0</span></a></li>
-      	<li id="panier"><a href="/panier.html"><i class="fa-solid fa-bag-shopping"></i><span id="panier-count">0</span></a></li>
+        <li id="favoris"><a href="favoris.html"><i class="fa-solid fa-heart"></i><span id="favoris-count">0</span></a></li>
+      	<li id="panier"><a href="panier.html"><i class="fa-solid fa-bag-shopping"></i><span id="panier-count">0</span></a></li>
 
       </ul>
     </nav>
   </div>
 </header>
-<main>
-  <div class="produit-wrapper">
-      <div class="image-section">
-        <div class="image-wrapper">
-            <button id="next-btn" class="nav-btn"><i class="fa-solid fa-chevron-right"></i></button>
-            <img id="image-principale" src="" alt="">
-            <button id="prev-btn" class="nav-btn"><i class="fa-solid fa-chevron-left"></i></button>
-        </div>
-          <div class="thumbs" id="thumbs-container">
-              <!-- Miniatures ici -->
-            </div>
-        </div>
-    <div class="details-section">
+<body>
+  <main>
+    <h1>Mon panier</h1>
 
+    <section id="panier-container">
+      <!-- Les articles seront générés ici par JS -->
+    </section>
 
-      <div class="titre-btn-partager">
-        <h2 class="titre-produit"></h2>
-        <button id="btn-partager" class="btn-partager">
-          <i class="fa-solid fa-share-nodes"></i>Partager
-        </button>
-      </div>
-      <p class="price" id="prix-produit"></p>
+    <section id="total-section">
+      <p>Frais de port : <span id="frais-livraison">4.99 €</span></p>
+      <p>Total : <span id="total-amount">0 €</span></p>
+    </section>
+<section>
+    <form id="form-livraison">
+      <h2>Adresse de livraison</h2>
 
-      <div class="select-wrapper">
-        <label for="options"></label><br>
-      </div>
-      <select name="stock" id="stock-produit">
-      </select>
-      <button class="btn-ajout-panier">Ajouter au panier</button>
-      <button class="btn-fav-article"><i class="fa-solid fa-heart"></i></button>
+      <label for="nom">Nom complet *</label>
+      <input type="text" id="nom" name="nom" placeholder="Michel Pont" required>
+
+      <label for="adresse">Adresse *</label>
+      <input type="text" id="adresse" name="adresse" list="suggestions" placeholder="2 rue des muriers" required>
+      <datalist id="suggestions"></datalist>
       
-      <p class="reference" id="ref-produit"></p>
+      <label for="ville">Ville *</label>
+      <input type="text" id="ville" name="ville" placeholder="Paris" required>
 
-      <h3 class="caracteristiques">Caractéristiques du kit :</h3>
-      <p id="titre-produit-description"></p>
-      <p id="desc-produit"></p>
-      <p id="materiaux"><strong>Matériaux : </strong><span id="materiaux-produit"></span></p>
-    </div>
-  </div>
-  <section class="autres-produits">
-    <h2 id="titre-produit-similaire"></h2>
-  </section>
-  <section class="autres-produits-similaires">
-    <h2 id="titre-produit-similaire-autres"></h2>
-  </section>
+      <label for="code-postal">Code postal *</label>
+      <input type="text" id="code-postal" name="code-postal"  pattern="\d{5}"  placeholder="75000" required>
+
+      <label for="email">Email *</label>
+      <input type="email" id="email" name="email" required placeholder="exemple@exemple.com">
+
+      <label for="telephone">Téléphone *</label>
+      <input type="tel" id="telephone" name="telephone" inputmode="numeric"  pattern="\d{10}" required placeholder="Ex : 0606060606">
+
+
+      <button type="submit" id="payer-btn">Procéder au paiement</button>
+    </form>
+    </section>
     <section class="section-information">
       <div class="div-information">
         <article>
           <div class="produit-similaire">
-            <img src="/assets/icons/icone-artisanale.png" alt="">
+            <img src="./assets/icons/icone-artisanale.png" alt="">
             <h4>Création artisanale</h4>
             <p>Toutes nos créations sont réalisées à la main avec passion dans notre atelier dans le Tarn (81).</p>
           </div>
         </article>
         <article>
           <div class="produit-similaire">
-            <img src="/assets/icons/icone-ecoresponsable.png" alt="">
+            <img src="./assets/icons/icone-ecoresponsable.png" alt="">
             <h4>Écoresponsable</h4>
             <p>Nos produits sont réutilisables et fabriqués, pour la plupart, avec des matériaux de seconde main.</p>
           </div>
         </article>
       <article>
         <div class="produit-similaire">
-          <img src="/assets/icons/icone-livraison.png" alt="">
+          <img src="./assets/icons/icone-livraison.png" alt="">
           <h4>Livraison rapide</h4>
           <p>Nos produits sont emballés par nos soins et envoyés dans les plus brefs délais.</p>
         </div>
@@ -126,36 +121,7 @@
     </div>
   </section>
   
-  <section id="avis-produit" class="avis-section">
-  <h3>Laissez un avis</h3>
-  <form id="form-avis">
-    <div class="form-group">
-      <label for="avis-nom">Votre nom</label>
-      <input type="text" id="avis-nom" name="nom" required />
-    </div>
-    <div class="form-group">
-      <label for="avis-note">Votre note</label>
-      <select id="avis-note" name="note" required>
-        <option value="">-- Choisissez --</option>
-        <option value="5">★★★★★</option>
-        <option value="4">★★★★☆</option>
-        <option value="3">★★★☆☆</option>
-        <option value="2">★★☆☆☆</option>
-        <option value="1">★☆☆☆☆</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="avis-commentaire">Votre commentaire</label>
-      <textarea id="avis-commentaire" name="commentaire" rows="4" required></textarea>
-    </div>
-    <button type="submit">Envoyer mon avis</button>
-    <p id="avis-message" class="avis-message"></p>
-  </form>
 
-  <div id="liste-avis">
-    <!-- Les avis postés s’afficheront ici -->
-  </div>
-</section>
 
   
 </main>
@@ -187,17 +153,5 @@
                 </ul>
             </div>
 </footer>
-<!-- Modale d'agrandissement de la photo -->
-  <div id="fullscreen-modal">
-  <div class="fullscreen-overlay">
-    <button id="close-fullscreen" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
-    <button id="fullscreen-next" class="nav-btn"><i class="fa-solid fa-chevron-right"></i></button>
-    <div class="contenair-image-modal">
-        <img id="fullscreen-image" src="" alt="">
-    </div>
-    <button id="fullscreen-prev" class="nav-btn"><i class="fa-solid fa-chevron-left"></i></button>
-  </div>
-</div>
-
 </body>
 </html>
