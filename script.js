@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
+      window.history.scrollRestoration = 'manual'; window.scrollTo(0, 0);
+
   const header = document.querySelector('header');
   window.addEventListener('scroll', () => {
     header.classList.toggle('scrolled', window.scrollY > 50);

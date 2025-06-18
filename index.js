@@ -4,7 +4,6 @@ import { initPageListeFavoris, updateFavorisCount,initPageListePanier,mettreAJou
 const baseURL = "https://backend-lesmidena-production.up.railway.app/";
 document.addEventListener('DOMContentLoaded', async () => {
   try {
-    window.history.scrollRestoration = 'manual'; window.scrollTo(0, 0);
     document
       .getElementById('file-upload-couverture')
       .addEventListener('change', previewFileCouverture);

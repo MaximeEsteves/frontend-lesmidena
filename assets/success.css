@@ -13,28 +13,17 @@ header {
 .confirmation h1 {
   font-size: 3rem;
   color: black;
+  margin: 50px auto;
 }
-.confirmation h2 {
-  font-size: 2rem;
-  color: black;
-  font-family: 'Montserrat';
-}
-
-.confirmation ul {
-  list-style: none;
-  padding: 0;
-  margin-top: 1rem;
-}
-
-.confirmation li {
-  margin-bottom: 0.5rem;
-  font-size: 1.1rem;
-  font-family: 'Montserrat';
+.confirmation p {
+  font-size: 1.5rem;
+  color: #3a5151;
+  margin-top: 20px;
 }
 
 .btn-retour {
   display: inline-block;
-  margin-top: 2rem;
+  margin: 50px auto;
   padding: 0.75rem 1.5rem;
   background-color: #3a5151;
   color: white;
