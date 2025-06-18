@@ -2,34 +2,33 @@
 header {
   height: 350px;
 }
-.confirmation {
+
+.erreur {
   text-align: center;
   padding: 2rem;
   background-color: #fce4da;
-  font-family: 'Montserrat';
 }
 
 
-.confirmation h1 {
-  font-size: 3rem;
-  color: black;
-}
-.confirmation h2 {
-  font-size: 2rem;
+.erreur h1 {
+    margin-top: 50px;
+   font-size: 2.5rem;
   color: black;
   font-family: 'Montserrat';
 }
 
-.confirmation ul {
+.erreur ul {
   list-style: none;
   padding: 0;
   margin-top: 1rem;
+  font-size: 1.1rem;
 }
 
-.confirmation li {
+.erreur li {
   margin-bottom: 0.5rem;
-  font-size: 1.1rem;
+    font-size: 1.1rem;
   font-family: 'Montserrat';
+   margin-bottom: 50px;
 }
 
 .btn-retour {
@@ -44,6 +43,7 @@ header {
   transition: background-color 0.3s ease;
   border: 1px solid #fce4da;
   font-family: 'Montserrat';
+  margin-bottom: 50px;
 }
 
 .btn-retour:hover {

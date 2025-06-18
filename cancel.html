@@ -26,12 +26,53 @@
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap" rel="stylesheet">	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
-	<link rel="stylesheet" href="./assets/panier.css">
-	<script type="module" src="panier.js" defer></script>
+	<link rel="stylesheet" href="./assets/cancel.css">
 	<script type="module" src="script.js" defer></script>
+  <script>
+    // Dès que la page se charge, on vide le panier localStorage
+    window.addEventListener("DOMContentLoaded", () => {
+      localStorage.removeItem("panier");
+    });
+  </script>
 </head>
-<body>
-<h1>erreur !</h1>
+<body id="btn-retour">
+  <header>
+  <div class="parallax-wrapper">
+    <img src="./assets/images/image-produit-header.jpg" alt="image accueil les mignonneries de nathalie">
+  </div>
+	<div class="header-content">
+    <nav>
+      <a href="#btn-retour" id="logo-nav-header"><img src="./assets/images/logo-nav.webp" alt="logo les mignonneries de nathalie"></a>
+      <ul class="btn-nav">
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="index.html#creation">Créations</a></li>
+        <li><a href="#blog">Blog</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+        <li id="user-open"><a href="login.html">Login</a></li>
+        <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+        <li id="favoris"><a href="favoris.html"><i class="fa-solid fa-heart"></i><span id="favoris-count">0</span></a></li>
+		<li id="panier"><a href="panier.html"><i class="fa-solid fa-bag-shopping"></i><span id="panier-count">0</span></a></li>
+
+	</ul>
+    </nav>
+  </div>
+</header>
+<section class="erreur">
+  <div class="container">
+    <h1>😥 Oups ! Le paiement a échoué</h1>
+    <p>Une erreur est survenue lors du traitement de votre paiement.</p>
+
+    <ul>
+      <li>💳 Vérifiez les informations de votre carte bancaire</li>
+      <li>🔁 Essayez à nouveau dans quelques instants</li>
+      <li>📩 Ou contactez-nous si le problème persiste</li>
+    </ul>
+
+    <a href="index.html" class="btn-retour">← Retour à l’accueil</a>
+  </div>
+</section>
+
+
 <footer>
   <div class="div-footer">
                 <h3 class="titre-footer">À propos</h3>
