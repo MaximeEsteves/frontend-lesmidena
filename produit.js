@@ -1,6 +1,6 @@
 import { getAllProducts, getProductByRef } from './api/apiClient.js';
 import { initPageListeFavoris, initPageListePanier, mettreAJourBoutonsPanier, updateFavorisCount } from './addFavorisPanier.js';
-const baseURL = "http://localhost:3000/";
+const baseURL = "https://backend-lesmidena-production.up.railway.app/";
 
 
 // Variables globales

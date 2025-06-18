@@ -10,7 +10,7 @@ mettreAJourBoutonsPanier();
 updateFavorisCount();
 });
 
-const baseURL = "http://localhost:3000/";
+const baseURL = "https://backend-lesmidena-production.up.railway.app";
 
 // Fonction principale d'affichage des favoris
 function getProduitFavoris() {

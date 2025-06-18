@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:3000";
+const API_BASE = "https://backend-lesmidena-production.up.railway.app";
 
 async function apiRequest(endpoint, method = "GET", data = null, token = null) {
   const headers = { "Content-Type": "application/json" };
