@@ -1,6 +1,6 @@
-import { getAllProducts, getProductByRef } from './api/apiClient.js';
+import { getAllProducts, getProductByRef, API_BASE } from './api/apiClient.js';
 import { initPageListeFavoris, initPageListePanier, mettreAJourBoutonsPanier, updateFavorisCount } from './addFavorisPanier.js';
-const baseURL = "https://backend-lesmidena-production.up.railway.app/";
+const baseURL = API_BASE + "/";
 
 
 // Variables globales

@@ -1,5 +1,5 @@
 import { updateFavorisCount, mettreAJourBoutonsPanier, initPageListePanier } from "./addFavorisPanier.js";
-import { getAllProducts } from './api/apiClient.js';
+import { getAllProducts, API_BASE } from './api/apiClient.js';
 
 // Initialisation
 document.addEventListener('DOMContentLoaded', async () => {
@@ -10,7 +10,7 @@ mettreAJourBoutonsPanier();
 updateFavorisCount();
 });
 
-const baseURL = "https://backend-lesmidena-production.up.railway.app/";
+const baseURL = API_BASE + "/";
 
 // Fonction principale d'affichage des favoris
 function getProduitFavoris() {

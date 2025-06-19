@@ -1,6 +1,6 @@
 import { updateFavorisCount } from "./addFavorisPanier.js";
-import { createStripeCheckoutSession } from './api/apiClient.js';
-const baseURL = "https://backend-lesmidena-production.up.railway.app/";
+import { createStripeCheckoutSession, API_BASE } from './api/apiClient.js';
+const baseURL = API_BASE + "/";
 const panierContainer = document.getElementById("panier-container");
 const totalAmount = document.getElementById("total-amount");
 const formLivraison = document.getElementById("form-livraison");

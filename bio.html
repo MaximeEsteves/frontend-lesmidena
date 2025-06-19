@@ -52,21 +52,22 @@
     />
     <meta name="description" content="" />
     <link rel="stylesheet" href="./assets/style.css" />
-    <link rel="stylesheet" href="./assets/favoris.css" />
-    <script type="module" src="favoris.js" defer></script>
-    <script type="module" src="script.js" defer></script>
+    <link rel="stylesheet" href="./assets/bio.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script type="module" src="./script.js" defer></script>
+    <!-- Script Leaflet -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   </head>
   <body>
     <header>
       <div class="parallax-wrapper">
         <img
-          id="image-couverture-boutique"
           src="./assets/images/image-produit-header.jpg"
           alt="image accueil les mignonneries de nathalie"
         />
       </div>
       <div class="titre-header">
-        <h1 class="titre-produit-boutique"></h1>
+        <h1>A Propos</h1>
       </div>
       <div class="header-content">
         <nav>
@@ -76,10 +77,11 @@
               alt="logo les mignonneries de nathalie"
           /></a>
           <ul class="btn-nav">
-            <li><a href="index.html">Accueil</a></li>
+            <li><a href="./index.html">Accueil</a></li>
             <li><a href="./index.html#creation">Créations</a></li>
             <li><a href="./blog.html">Blog</a></li>
             <li><a href="./index.html#contact">Contact</a></li>
+            <li id="user-open"><a href="./login.html">Login</a></li>
             <li>
               <a
                 href="https://www.instagram.com/mignonneries.nathalie/"
@@ -88,13 +90,13 @@
               ></a>
             </li>
             <li id="favoris">
-              <a href="favoris.html"
-                ><i class="fa-regular fa-heart"></i
+              <a href="/favoris.html"
+                ><i class="fa-solid fa-heart"></i
                 ><span id="favoris-count">0</span></a
               >
             </li>
             <li id="panier">
-              <a href="panier.html"
+              <a href="/panier.html"
                 ><i class="fa-solid fa-bag-shopping"></i
                 ><span id="panier-count">0</span></a
               >
@@ -104,44 +106,71 @@
       </div>
     </header>
     <main>
-      <div id="liste-favoris" class="favoris-container"></div>
+      <section class="bio-section">
+        <div class="bio-text">
+          <h2>Les petites mains derrière les mignonneries</h2>
+          <p>
+            C'est à la suite de la période Covid que j'ai pris le temps de
+            renouer avec ma créativité en m'essayant à la couture. Depuis ce
+            jour, je ne me suis plus jamais arrêtée. J'ai commencé par
+            confectionner avec passion des accessoires du quotidien pour ma
+            famille, puis pour des amis, puis pour des amis d'amis... et c'est
+            ainsi que Les Mignonneries de Nathalie est né. Je sélectionne
+            soigneusement des tissus, en privilégiant la seconde main, et je
+            confectionne chaque accessoire dans mon atelier afin de proposer une
+            gamme qui apportera une touche de mignonnerie à votre quotidien.
+          </p>
+        </div>
+        <div class="bio-img">
+          <img
+            src="assets/images/image-couture-bio.jpg"
+            alt="Image de Natalie en train de coudre"
+          />
+        </div>
+      </section>
+      <section class="bio-section">
+        <div id="map"></div>
+        <div class="bio-text">
+          <h2>Retrouvez mes créations en magasin</h2>
+          <p>
+            Vous pouvez retrouver mes créations en ligne ou en magasin, chez
+            Couleurs Jardin à Mazamet (81).
+          </p>
+          <div class="bio-contact">
+            <div>
+              <p>lesmidena@gmail.com</p>
+              <a href="mailto:lesmidena@gmail.com"
+                ><i class="fa-solid fa-envelope"></i
+              ></a>
+            </div>
+            <div>
+              <p>Réseaux sociaux</p>
+              <a
+                href="https://www.instagram.com/mignonneries.nathalie/"
+                target="_blank"
+                ><i class="fa-brands fa-instagram"></i
+              ></a>
+              <a
+                href="https://www.tiktok.com/@les_mignonneries_de_nath"
+                target="_blank"
+                ><i class="fa-brands fa-tiktok"></i
+              ></a>
+              <a
+                href="https://www.youtube.com/channel/UCEfuaMURKRQH5zqfeSbv1RQ"
+                target="_blank"
+                ><i class="fa-brands fa-youtube"></i
+              ></a>
 
-      <p id="message-vide" style="display: none; text-align: center">
-        Aucun article dans vos favoris.
-      </p>
-
-      <section class="section-information">
-        <div class="div-information">
-          <article>
-            <div class="produit-similaire">
-              <img src="./assets/icons/icone-artisanale.png" alt="" />
-              <h4>Création artisanale</h4>
-              <p>
-                Toutes nos créations sont réalisées à la main avec passion dans
-                notre atelier dans le Tarn (81).
-              </p>
+              <a href="https://fr.pinterest.com/lesmidena/" target="_blank"
+                ><i class="fa-brands fa-pinterest"></i
+              ></a>
+              <a
+                href="https://www.linkedin.com/in/mignonneries-de-nathalie-499884334/"
+                target="_blank"
+                ><i class="fa-brands fa-linkedin"></i
+              ></a>
             </div>
-          </article>
-          <article>
-            <div class="produit-similaire">
-              <img src="./assets/icons/icone-ecoresponsable.png" alt="" />
-              <h4>Écoresponsable</h4>
-              <p>
-                Nos produits sont réutilisables et fabriqués, pour la plupart,
-                avec des matériaux de seconde main.
-              </p>
-            </div>
-          </article>
-          <article>
-            <div class="produit-similaire">
-              <img src="./assets/icons/icone-livraison.png" alt="" />
-              <h4>Livraison rapide</h4>
-              <p>
-                Nos produits sont emballés par nos soins et envoyés dans les
-                plus brefs délais.
-              </p>
-            </div>
-          </article>
+          </div>
         </div>
       </section>
     </main>

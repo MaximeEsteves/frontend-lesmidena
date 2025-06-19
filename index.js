@@ -1,7 +1,7 @@
 // Fonction utilitaire fetchData
-import { getAllProducts, deleteProduct, createProduct, updateProduct } from './api/apiClient.js';
+import { getAllProducts, deleteProduct, createProduct, updateProduct, API_BASE } from './api/apiClient.js';
 import { initPageListeFavoris, updateFavorisCount,initPageListePanier,mettreAJourBoutonsPanier } from './addFavorisPanier.js';
-const baseURL = "https://backend-lesmidena-production.up.railway.app/";
+const baseURL = API_BASE + "/";
 document.addEventListener('DOMContentLoaded', async () => {
   try {
     document
