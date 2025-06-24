@@ -1,107 +1,227 @@
-header{
-    height: 350px;
+header {
+  height: 350px;
 }
-section{
-    width: 80%;
-    margin: auto;
+section {
+  width: 80%;
+  margin: auto;
 }
 /* Section panier */
-main h1{
-    color: #3a5151;
-    font-size: 30px;
-    display: flex;
-    justify-content: start;
-    width: 80%;
-    margin: 40px auto;
-}
-#panier-container{
-    color: #3a5151;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 40px 0px;
-}
-.panier-card {
-  border: 1px solid #3a5151;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  border-radius: 8px;
-  font-family: Geist;
-}
-.panier-card img {
-  max-width: 120px;
-  border-radius: 8px;
-  box-shadow: 0px 8px 14px 4px rgba(0, 0, 0, 0.09);
-  cursor: pointer;
-  transition: 0.3s;
-}
-.panier-card img:hover {
-  box-shadow: 0px 8px 14px 4px rgba(0, 0, 0, 0.2);
-  transition: 0.3s;
-}
-.btn-supprimer {
-  border: 2px solid white;
-  background-color: #3a5151;
-  color: white;
-  padding: 0.5rem;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: 0.3s
-}
-.btn-supprimer:hover {
-  background-color: white;
+main h1 {
   color: #3a5151;
-  border: 2px solid #3a5151;
-  transition: 0.3s
+  font-size: 30px;
+  display: flex;
+  justify-content: start;
+  width: 80%;
+  margin: 40px auto;
 }
-#total-section {
-    border-bottom: 1px solid #3a5151 ;
-    display: flex;
-    flex-direction: column;
-    padding: 40px 0px;
-}
-#total-section p{
-    color: #3a5151;
-    font-size: 20px;
-}
-/* Section formulaire d'achat */
-#form-livraison{
-    padding: 80px 0px;
-    color: #3a5151;
-    display: flex;
-    flex-direction: column;
-    width: 50%;
-    margin: auto;
-    gap: 10px;
-    font-family: Geist;
-}
-#form-livraison h2{
-    font-size: 30px;
-    display: flex;
-    flex-direction: column;
-    width: 50%;
-    margin: auto;
-}
-#form-livraison button{
-    border: 2px solid white;
-	background-color: #3a5151;
-	border-radius: 8px;
-	padding: 5px 15px;
-	font-size: 16px;
-	margin-top: 20px;
-    color: white;
-    transition: 0.3s;
-}
-#form-livraison button:hover{
-    border: 2px solid #3a5151;
-	background-color: white;
-	color: #3a5151;
-	cursor: pointer;
-	transition: 0.3s;
+.panier-page {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
+#panier-container {
+  flex: 2 1 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.panier-card {
+  display: flex;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid #ddd;
+  align-items: flex-start;
+}
+
+.panier-card img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: box-shadow 0.3s;
+}
+.panier-card img:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.panier-details {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.panier-details h3 {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.4;
+  color: #3a5151;
+}
+.panier-details h3 a {
+  color: #3a5151;
+  text-decoration: none;
+}
+.panier-details h3 a:hover {
+  text-decoration: underline;
+}
+
+.prix-unitaire {
+  font-size: 14px;
+  color: #555;
+  margin: 4px 0;
+}
+
+.panier-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.panier-actions input[type='number'] {
+  width: 60px;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.btn-supprimer {
+  background: none;
+  border: none;
+  color: #3a5151;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;
+}
+.btn-supprimer:hover {
+  text-decoration: underline;
+  color: red;
+}
+
+#total-section {
+  color: #3a5151 !important;
+  flex: 1 1 0;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 24px;
+  box-sizing: border-box;
+  background: #fafafa;
+  max-height: fit-content;
+}
+
+#total-section h2 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 18px;
+}
+
+#total-section .frais-livraison-ligne,
+#total-section .total-ligne {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+.frais-livraison-ligne {
+  flex-direction: column;
+}
+.frais-livraison-ligne div {
+  display: flex;
+  justify-content: space-between;
+}
+#total-section .total-ligne {
+  font-weight: bold;
+  border-top: 1px solid #3a5151;
+  padding-top: 12px;
+}
+
+#btn-checkout {
+  width: 100%;
+  padding: 12px;
+  background-color: #3a5151;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 16px;
+  transition: 0.3s;
+}
+#btn-checkout:hover {
+  background-color: #324646;
+}
+
+/* Section formulaire d'achat */
+/* Masquer le formulaire au départ */
+#form-livraison {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+  margin-top: 16px;
+}
+
+/* Quand on ajoute la classe .open, on déploie */
+#form-livraison.open {
+  max-height: 800px; /* assez grand pour contenir le form */
+}
+
+/* Styles de base du formulaire */
+#form-livraison h3 {
+  margin-top: 0;
+  font-size: 16px;
+  color: #333;
+}
+#form-livraison .form-group {
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+}
+#form-livraison .form-group label {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+#form-livraison .form-group label span {
+  color: red;
+}
+#form-livraison .form-group input {
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+#form-livraison .form-group input:invalid {
+  border-color: red;
+}
+
+/* Bouton de soumission du formulaire */
+#btn-submit-livraison {
+  background-color: #3a5151;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.3s;
+  width: 100%;
+}
+#btn-submit-livraison:hover {
+  background-color: #3a5151;
+}
+
+/* Optionnel : responsive */
+@media (max-width: 600px) {
+  #form-livraison .form-group {
+    margin-bottom: 10px;
+  }
+}

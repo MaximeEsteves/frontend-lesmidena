@@ -120,10 +120,10 @@ header {
 .details-section h2 {
   font-size: 26px;
 }
-.titre-btn-partager{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.titre-btn-partager {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .price {
   font-size: 32px;
@@ -299,146 +299,149 @@ header {
   top: 10px;
   right: 10px;
 }
+/* miniature des autre référence de l'article */
+#titre-produit-similaire {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.carte-produit {
+  width: 70px;
+  height: 70px !important;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+}
+.carte-produit img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  display: block;
+  cursor: pointer;
+}
+.carte-produit .nom-produit {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 4px 8px;
+  box-sizing: border-box;
+  font-size: 12px;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.carte-produit:hover .nom-produit {
+  opacity: 1;
+  transform: translateY(0);
+  cursor: pointer;
+}
 
 /* section autres produit similaire */
-.produits-similaire-container{
-    display: flex;
-    justify-content: space-around;
-    margin: auto;
-    gap: 40px;
+.autres-produits-similaires {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 40px auto;
+  padding: 80px 0px;
+  background-color: #fce4da;
 }
-.produits-similaire-container-autres{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-    margin-top:80px;
-    gap: 45px;
+#titre-produit-similaire-autres {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #3a5151;
+  font-size: 32px;
 }
-.autres-produits{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 40px auto;
-    padding: 40px 0px 80px 0px;
-    background-color: #fce4da;
-}
-.autres-produits-similaires{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin: 40px;
-    padding: 40px 0px 80px 0px;
-    border-bottom: 1px solid #fce4da;
-}
-#titre-produit-similaire-autres,
-#titre-produit-similaire{
-    font-size: 3rem;
-    color: #3a5151;
-    margin-bottom: 20px;
-}
-.carte-produit{
-    width: 230px;
-    height: 290px;
-    border-radius: 25px;
-    margin: 80px 0px;
-    box-shadow: 0px 5px 8px rgba(58, 81, 81, 0.38);
-}
-.carte-produit-autres{
-    width: 180px;
-    height: 220px;
-    border-radius: 25px;
-    box-shadow: 0px 5px 8px rgba(58, 81, 81, 0.38);
-}
-.carte-produit-autres:hover,
-.carte-produit:hover{
-    box-shadow: 0px 5px 8px rgba(58, 81, 81, 0.6);
-    transition: 0.3s;
-    cursor: pointer;
-    background-color: white;
-}
-.carte-produit-autres img{
-    width: 100%;
-    height: 140px;
-    object-fit: cover;
-    border-radius: 25px 25px 0px 0px;
+.produits-similaire-container-autres {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  margin-top: 80px auto;
+  gap: 45px;
 }
 
-.carte-produit img{
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 25px 25px 0px 0px;
+.carte-produit-autres {
+  width: 180px;
+  height: 220px;
+  border-radius: 8px;
+  background-color: white;
 }
-.carte-produit-autres h3{
-    margin: 10px;
-    font-size: 16px;
-    color: #3a5151;
+.carte-produit-autres:hover {
+  rotate: 2deg;
+  transition: 0.3s;
+  cursor: pointer;
 }
-.carte-produit h3{
-    margin: 10px;
-    font-size: 18px;
-    color: #3a5151;
+.carte-produit-autres img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 8px 8px 0px 0px;
 }
-.carte-produit-autres p{
-    margin: 10px;
-    font-size: 14px;
-    color: #3a5151;
+.carte-produit-autres h3 {
+  margin: 10px;
+  font-size: 16px;
+  color: #3a5151;
 }
-.carte-produit p{
-    margin: 10px;
-    font-size: 16px;
-    color: #3a5151;
+.carte-produit-autres p {
+  margin: 10px;
+  font-size: 14px;
+  color: #3a5151;
 }
 
 /* zone information img ect.. */
-.section-information{
-    display: flex;
-    justify-content: center;
-    margin: 80px auto;
+.section-information {
+  display: flex;
+  justify-content: center;
+  margin: 80px auto;
 }
-.div-information{
-    display: flex;
-    gap: 100px;
+.div-information {
+  display: flex;
+  gap: 100px;
 }
-.div-information article{
-    color: #3a5151;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    width: 350px;
+.div-information article {
+  color: #3a5151;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 350px;
 }
-.div-information article h4{
-    font-size: 24px;
-    color: #3a5151;
+.div-information article h4 {
+  font-size: 24px;
+  color: #3a5151;
 }
-.div-information article p{
-    font-size: 16px;
-    color: #3a5151;
+.div-information article p {
+  font-size: 16px;
+  color: #3a5151;
 }
 
 /* zone avis client */
 .avis-section {
-    color: #3a5151;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto;
+  color: #3a5151;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
   border-top: 1px solid #fce4da;
   width: 80%;
 }
 .avis-section h3 {
-  font-size: 2.5rem;
   margin-bottom: 10px;
 }
-#form-avis{
-    width: 50%;
+#form-avis {
+  width: 50%;
 }
 .form-group {
-    font-family: Geist;
-    font-size: 16px;
+  font-family: Geist;
+  font-size: 16px;
   margin-bottom: 15px;
   width: 100%;
 }
@@ -459,37 +462,37 @@ header {
   color: white;
   border: 1px solid white;
   padding: 10px 20px;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
+  transition: 0.3s;
 }
 #form-avis button:hover {
   background-color: white;
   border: 1px solid #3a5151;
   color: #3a5151;
+  border-radius: 8px;
   transition: 0.3s;
 }
 .avis-message {
-    
   margin-top: 10px;
   color: green;
 }
 #liste-avis .avis {
-    font-family: Geist;
-    font-size: 16px;
-    color: #3a5151;
+  font-family: Geist;
+  font-size: 16px;
+  color: #3a5151;
   border-bottom: 1px solid #eee;
   padding: 10px 0;
 }
 #liste-avis .avis h4 {
-    margin: 0 0 5px;
-    font-size: 20px;
-    color: #3a5151;
+  margin: 0 0 5px;
+  font-size: 20px;
+  color: #3a5151;
 }
 #liste-avis .avis .note {
-    color: #f5a623;
+  color: #f5a623;
 }
 .avis {
-    width: 1000px;
-    margin: 80px auto;
+  width: 1000px;
+  margin: 80px auto;
 }
-

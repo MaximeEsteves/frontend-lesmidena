@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       .addEventListener('change', previewFileCouverture);
     const productsData = await getAllProducts();
 
+    // Appeler projets() et filtres() avec les données récupérées
     projets(productsData);
     filtres(productsData);
     initPageListeFavoris(productsData);
@@ -39,27 +40,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Fonction d'affichage des filtres (adaptée pour recevoir les données)
 function filtres(worksData) {
   const titre = document.querySelector('.titre-projet');
+  let zoneBtn = document.querySelector('.zone-btn');
+  if (zoneBtn) zoneBtn.remove();
 
-  // Si un ancien conteneur existe, on le supprime
-  let oldZoneBtn = document.querySelector('.zone-btn');
-  if (oldZoneBtn) oldZoneBtn.remove();
-
-  // Si un ancien bouton toggle existe, on le supprime aussi
-  let oldToggle = document.querySelector('.btn-toggle-filtres');
-  if (oldToggle) oldToggle.remove();
-
-  // Création du bouton toggle
-  const btnToggle = document.createElement('button');
-  btnToggle.type = 'button';
-  btnToggle.innerText = 'Filtres';
-  btnToggle.classList.add('btn-toggle-filtres');
-  // État initial non ouvert
-  btnToggle.classList.remove('open');
-
-  // Création du conteneur des boutons de catégories
-  const zoneBtn = document.createElement('div');
+  zoneBtn = document.createElement('div');
   zoneBtn.classList.add('zone-btn');
-  // Ne pas ajouter la classe 'open' => est caché
 
   // Récupérer les catégories uniques
   const categoriesSet = new Set();
@@ -69,151 +54,50 @@ function filtres(worksData) {
 
   // Bouton "Tous"
   const btnTous = document.createElement('button');
-  btnTous.type = 'button';
   btnTous.innerText = 'Tous';
   btnTous.classList.add('btn-categorie', 'click-btn');
   btnTous.addEventListener('click', function () {
-    // Retirer l'état click de tous, ajouter sur celui-ci
-    document
-      .querySelectorAll('.btn-categorie')
-      .forEach((b) => b.classList.remove('click-btn'));
+    const allBtns = document.querySelectorAll('.btn-categorie');
+    allBtns.forEach((b) => b.classList.remove('click-btn'));
+
     document.getElementById('portfolio').innerHTML = '';
-    projets(worksData); // ou projets(worksData, true) si vous utilisez ce mode
+    projets(worksData);
     mettreAJourBoutonsPanier();
     btnTous.classList.add('click-btn');
   });
   zoneBtn.appendChild(btnTous);
 
-  // Création dynamique des boutons de filtre par catégorie
+  // Création dynamique des boutons de filtre
   categoriesSet.forEach((category) => {
     const btn = document.createElement('button');
-    btn.type = 'button';
     btn.innerText = category;
     btn.classList.add('btn-categorie');
     btn.addEventListener('click', function () {
-      document
-        .querySelectorAll('.btn-categorie')
-        .forEach((b) => b.classList.remove('click-btn'));
+      const allBtns = document.querySelectorAll('.btn-categorie');
+      allBtns.forEach((b) => b.classList.remove('click-btn'));
+
       document.getElementById('portfolio').innerHTML = '';
       const filtered = worksData.filter(
         (article) => article.categorie === category
       );
-      totalProduits(filtered); // ou projets(filtered, false) selon votre logique
+      projets(filtered);
       mettreAJourBoutonsPanier();
+
       btn.classList.add('click-btn');
     });
     zoneBtn.appendChild(btn);
   });
 
-  // Insérer le toggle puis le conteneur dans le DOM
-  // Vous pouvez choisir où exactement : ici, on ajoute avant ou après le titre
-  titre.appendChild(btnToggle);
   titre.appendChild(zoneBtn);
-
-  // Gestion du clic sur toggle : afficher/masquer
-  btnToggle.addEventListener('click', () => {
-    const isOpen = zoneBtn.classList.toggle('open');
-    // Optionnel : changer style du bouton toggle
-    if (isOpen) {
-      btnToggle.classList.add('open');
-      // Par exemple changer texte ou icône
-      // btnToggle.innerText = 'Cacher filtres';
-    } else {
-      btnToggle.classList.remove('open');
-      // btnToggle.innerText = 'Filtres';
-    }
-  });
-}
-
-function totalProduits(worksData) {
-  const portfolio = document.getElementById('portfolio');
-  portfolio.classList.add('gallery');
-  portfolio.innerHTML = '';
-
-  // Observer pour lazy loading
-  const imgObserver = new IntersectionObserver(
-    (entries, observer) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const img = entry.target;
-          img.src = img.dataset.src;
-          observer.unobserve(img);
-        }
-      });
-    },
-    { threshold: 0.1 }
-  );
-
-  worksData.forEach((produit) => {
-    if (!produit._id || produit.stock <= 0) return; // optionnel, filtrage
-
-    const figure = document.createElement('figure');
-    figure.dataset.id = produit._id;
-    // Facultatif : figure.style.position = 'relative' si overlay etc.
-
-    // Conteneur avec background/overlay si besoin
-    const divBg = document.createElement('div');
-    divBg.classList.add('div-bg-card');
-    // Vous pouvez définir ici un overlay CSS via .div-bg-card { position: relative; ... }
-
-    // Création de l'image
-    const img = document.createElement('img');
-    const raw = Array.isArray(produit.image)
-      ? produit.image[0]
-      : produit.image || '';
-    img.dataset.src = baseURL + raw;
-    img.alt = `image de ${produit.nom}`;
-    img.classList.add('img-carousel');
-    imgObserver.observe(img);
-
-    // On ajoute UNE SEULE FOIS l'image dans divBg
-    divBg.appendChild(img);
-
-    // Bouton favoris (on peut l'ajouter plus tard selon le design)
-    const btnFav = document.createElement('button');
-    btnFav.classList.add('btn-fav-article');
-    btnFav.dataset.id = produit._id;
-    const iconFav = document.createElement('i');
-    iconFav.classList.add('fa-regular', 'fa-heart');
-    btnFav.appendChild(iconFav);
-    // Ajout après updateDetails ou ici si pas de carousel
-
-    // Titre + prix
-    const divPrix = document.createElement('div');
-    divPrix.classList.add('div-titre-prix');
-    const figcaption = document.createElement('h3');
-    figcaption.textContent = produit.nom;
-    const prixSpan = document.createElement('span');
-    prixSpan.textContent = `${produit.prix}€`;
-    divPrix.appendChild(figcaption);
-    divPrix.appendChild(prixSpan);
-
-    // Description
-    const description = document.createElement('p');
-    description.classList.add('description-carte');
-    description.textContent = produit.description;
-
-    // Assemblage : on ajoute d’abord divBg (contenant img), puis les autres éléments
-    figure.appendChild(divBg);
-    figure.appendChild(divPrix);
-    figure.appendChild(description);
-    figure.appendChild(btnFav);
-    // Redirection sur clic image
-    img.addEventListener('click', () => {
-      window.location.href = `/produit/${produit.reference}`;
-    });
-
-    portfolio.appendChild(figure);
-  });
 }
 
 // Fonction d'affichage des projets avec lazy loading
 function projets(worksData) {
   const portfolio = document.getElementById('portfolio');
   portfolio.classList.add('gallery');
-  portfolio.innerHTML = ''; // Vide le conteneur
+  portfolio.innerHTML = ''; // Nettoyer le conteneur
 
-  // Bouton "Ajouter un produit" si connecté (inchangé)
+  // Si l'utilisateur est connecté, ajouter le bouton "Ajouter un produit" une seule fois
   if (localStorage.getItem('token')) {
     const h2 = document.querySelector('.titre-projet');
     if (!h2.querySelector('.div-modification')) {
@@ -229,13 +113,12 @@ function projets(worksData) {
     }
   }
 
-  // Observer pour lazy loading
+  // Observer pour lazy loading des images (principales et vignettes)
   const imgObserver = new IntersectionObserver(
     (entries, observer) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const img = entry.target;
-          // Charger l'image
           img.src = img.dataset.src;
           observer.unobserve(img);
         }
@@ -244,7 +127,7 @@ function projets(worksData) {
     { threshold: 0.1 }
   );
 
-  // 1) Regrouper les produits valides par catégorie
+  // Grouper les produits par catégorie en excluant absence d'_id ou stock <= 0
   const produitsParCat = new Map();
   for (const produit of worksData) {
     if (!produit._id || produit.stock <= 0) continue;
@@ -256,117 +139,50 @@ function projets(worksData) {
     }
   }
 
-  // 2) Pour chaque catégorie, créer la figure avec carousel
+  // Pour chaque catégorie, on affiche le produit principal puis les vignettes des autres
   for (const [cat, produits] of produitsParCat.entries()) {
-    // On construit la liste d'URLs d'images pour le carousel
-    // Ici on prend la première image de chaque produit
-    const urls = produits.map((prod) => {
-      const raw = Array.isArray(prod.image) ? prod.image[0] : prod.image || '';
-      return baseURL + raw;
-    });
-
-    // Création de la figure
+    const principal = produits[0];
+    const autres = produits.slice(1);
+    // Création du conteneur figure pour le produit principal
     const figure = document.createElement('figure');
-    figure.dataset.id = produits[0]._id; // id du premier produit, ou selon logique
+    figure.dataset.id = principal._id;
 
-    // Conteneur du carousel
-    const carouselContainer = document.createElement('div');
-    carouselContainer.classList.add('carousel-container');
-    // On va conserver un index courant via closure
-    let currentIndex = 0;
-
-    // Élément <img> principal du carousel
     const img = document.createElement('img');
-    img.dataset.src = urls[currentIndex];
-    img.alt = `Image de ${produits[currentIndex].nom || cat}`;
-    img.classList.add('img-carousel');
-
-    const divBg = document.createElement('div');
-    divBg.classList.add('div-bg-card');
-    // Lazy load initial :
+    const raw = Array.isArray(principal.image)
+      ? principal.image[0]
+      : principal.image || '';
+    img.dataset.src = baseURL + raw;
+    img.alt = `image de ${principal.categorie}`;
+    img.classList.add('img-principale');
     imgObserver.observe(img);
-    divBg.appendChild(img);
 
-    carouselContainer.appendChild(divBg);
-
-    // Boutons Prev / Next
-    const btnPrev = document.createElement('button');
-    btnPrev.classList.add(
-      'carousel-button',
-      'carousel-prev',
-      'fa-solid',
-      'fa-chevron-left'
-    );
-    btnPrev.setAttribute('aria-label', 'Précédent');
-    const btnNext = document.createElement('button');
-    btnNext.classList.add(
-      'carousel-button',
-      'carousel-next',
-      'fa-solid',
-      'fa-chevron-right'
-    );
-    btnNext.setAttribute('aria-label', 'Suivant');
-
-    carouselContainer.appendChild(btnPrev);
-    carouselContainer.appendChild(btnNext);
-
-    // Gestion du clic sur Prev
-    btnPrev.addEventListener('click', () => {
-      if (urls.length <= 1) return;
-      currentIndex = (currentIndex - 1 + urls.length) % urls.length;
-      // Mettre à jour l'image : on peut directement assigner src ici
-      img.src = urls[currentIndex];
-      // Mettre à jour alt si on veut le nom du produit correspondant
-      const prod = produits[currentIndex];
-      img.alt = `Image de ${prod.nom || cat}`;
-    });
-
-    // Gestion du clic sur Next
-    btnNext.addEventListener('click', () => {
-      if (urls.length <= 1) return;
-      currentIndex = (currentIndex + 1) % urls.length;
-      img.src = urls[currentIndex];
-      const prod = produits[currentIndex];
-      img.alt = `Image de ${prod.nom || cat}`;
-    });
-
-    // Clic sur l'image : redirige vers le produit correspondant dans la catégorie
-    img.addEventListener('click', () => {
-      const prod = produits[currentIndex];
-      if (prod && prod.reference) {
-        window.location.href = `/produit/${prod.reference}`;
-      }
-    });
-
-    // Ajouter le carousel à la figure
-    figure.appendChild(carouselContainer);
-
-    // Autres éléments : titre, prix, description, bouton favoris...
-    const divPrix = document.createElement('div');
-    divPrix.classList.add('div-titre-prix');
     const figcaption = document.createElement('h3');
-    figcaption.textContent = cat; // ou produits[currentIndex].nom si vous préférez le nom produit
-    const prix = document.createElement('span');
-    prix.textContent = `${produits[0].prix}€`; // affichage du prix du premier produit ? On peut mettre à jour au changement d'image si désiré
-
-    divPrix.appendChild(figcaption);
-    divPrix.appendChild(prix);
-    figure.appendChild(divPrix);
+    figcaption.textContent = principal.categorie;
 
     const description = document.createElement('p');
     description.classList.add('description-carte');
-    description.textContent = produits[0].description; // ou mettre à jour selon currentIndex
-    figure.appendChild(description);
+    description.textContent = principal.description;
+
+    const divPrix = document.createElement('div');
+    divPrix.classList.add('div-prix');
+    const prix = document.createElement('p');
+    prix.textContent = `${principal.prix}€`;
+    divPrix.appendChild(prix);
 
     const btnFav = document.createElement('button');
     btnFav.classList.add('btn-fav-article');
-    btnFav.dataset.id = produits[0]._id;
+    btnFav.dataset.id = principal._id;
     const iconFav = document.createElement('i');
     iconFav.classList.add('fa-regular', 'fa-heart');
     btnFav.appendChild(iconFav);
+
+    figure.appendChild(img);
+    figure.appendChild(figcaption);
+    figure.appendChild(description);
+    figure.appendChild(divPrix);
     figure.appendChild(btnFav);
 
-    // Si connecté, bouton supprimer / modifier
+    // Si connecté : boutons supprimer / modifier
     if (localStorage.getItem('token')) {
       const btnSupprimer = document.createElement('button');
       btnSupprimer.classList.add('icone-supprimer');
@@ -384,37 +200,66 @@ function projets(worksData) {
       iconModifier.classList.add('fa-solid', 'fa-pen-to-square');
       btnModifier.appendChild(iconModifier);
       btnModifier.addEventListener('click', () => {
-        // On édite le produit courant ou le premier ? selon souhait, ici on édite le produit courant
-        const prod = produits[currentIndex];
-        initProductModal('edit', prod);
+        initProductModal('edit', principal);
       });
       figure.appendChild(btnModifier);
     }
 
-    // Exemple minimal de mise à jour lors du changement d’image :
-    const updateDetails = () => {
-      const prod = produits[currentIndex];
-      if (!prod) return;
-      // Mettre à jour dataset-id du bouton favoris
-      btnFav.dataset.id = prod._id;
+    // Clic sur image principale redirige
+    img.addEventListener('click', () => {
+      window.location.href = `/produit/${principal.reference}`;
+    });
 
-      // Vérifier favoris depuis localStorage
-      const favoris = JSON.parse(localStorage.getItem('favoris')) || [];
-      const isFav = favoris.some((f) => f._id === prod._id);
-      if (isFav) {
-        iconFav.style.color = '#fce4da';
-        iconFav.classList.remove('fa-regular');
-        iconFav.classList.add('fa-solid');
-      } else {
-        iconFav.style.color = '';
-        iconFav.classList.remove('fa-solid');
-        iconFav.classList.add('fa-regular');
-      }
-    };
+    // Si d'autres produits dans la même catégorie, créer un conteneur vignettes
+    // ... à l’intérieur de la boucle sur chaque catégorie :
+    if (autres.length > 0) {
+      // Wrapper pour le carrousel
+      const carouselWrapper = document.createElement('div');
+      carouselWrapper.classList.add('carousel-wrapper');
+      // Bouton précédent
+      const btnPrev = document.createElement('button');
+      btnPrev.classList.add('carousel-button', 'carousel-prev');
+      btnPrev.innerHTML = '&#9664;'; // flèche gauche
+      // Bouton suivant
+      const btnNext = document.createElement('button');
+      btnNext.classList.add('carousel-button', 'carousel-next');
+      btnNext.innerHTML = '&#9654;'; // flèche droite
 
-    // Si vous voulez cet effet, activez updateDetails() dans Prev/Next :
-    btnPrev.addEventListener('click', updateDetails);
-    btnNext.addEventListener('click', updateDetails);
+      // Conteneur scrollable des miniatures
+      const container = document.createElement('div');
+      container.classList.add('vignettes-categorie');
+      // On peut ajouter un inner-track, mais ici on scroll directement le container flex
+      autres.forEach((prod) => {
+        const imgThumb = document.createElement('img');
+        const rawThumb = Array.isArray(prod.image)
+          ? prod.image[0]
+          : prod.image || '';
+        imgThumb.dataset.src = baseURL + rawThumb;
+        imgThumb.alt = `vignette de ${prod.nom}`;
+        imgThumb.classList.add('img-vignette');
+        imgObserver.observe(imgThumb);
+        imgThumb.addEventListener('click', () => {
+          window.location.href = `/produit/${prod.reference}`;
+        });
+        container.appendChild(imgThumb);
+      });
+
+      // Ajouter les éléments dans le wrapper
+      carouselWrapper.appendChild(btnPrev);
+      carouselWrapper.appendChild(container);
+      carouselWrapper.appendChild(btnNext);
+      figure.appendChild(carouselWrapper);
+
+      // JS pour défiler horizontalement
+      // On fait défiler d’environ la largeur d’une miniature + gap (ici 55px)
+      const scrollAmount = 55;
+      btnPrev.addEventListener('click', () => {
+        container.scrollBy({ left: -scrollAmount });
+      });
+      btnNext.addEventListener('click', () => {
+        container.scrollBy({ left: scrollAmount });
+      });
+    }
 
     portfolio.appendChild(figure);
   }

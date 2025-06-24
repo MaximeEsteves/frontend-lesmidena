@@ -1,16 +1,20 @@
-import { updateFavorisCount, mettreAJourBoutonsPanier, initPageListePanier } from "./addFavorisPanier.js";
+import {
+  updateFavorisCount,
+  mettreAJourBoutonsPanier,
+  initPageListePanier,
+} from './addFavorisPanier.js';
 import { getAllProducts, API_BASE } from './api/apiClient.js';
 
 // Initialisation
 document.addEventListener('DOMContentLoaded', async () => {
-const productsData = await getAllProducts();
-getProduitFavoris();
-initPageListePanier(productsData);
-mettreAJourBoutonsPanier();
-updateFavorisCount();
+  const productsData = await getAllProducts();
+  getProduitFavoris();
+  initPageListePanier(productsData);
+  mettreAJourBoutonsPanier();
+  updateFavorisCount();
 });
 
-const baseURL = API_BASE + "/";
+const baseURL = API_BASE + '/';
 
 // Fonction principale d'affichage des favoris
 function getProduitFavoris() {
@@ -23,7 +27,7 @@ function getProduitFavoris() {
     return;
   }
 
-  favoris.forEach(produit => {
+  favoris.forEach((produit) => {
     const image = document.createElement('img');
     const nom = document.createElement('h2');
     const description = document.createElement('p');
@@ -31,40 +35,53 @@ function getProduitFavoris() {
     const btnAjouter = document.createElement('button');
     const btnSupprimer = document.createElement('button');
     const card = document.createElement('div');
+    const divBtn = document.createElement('div');
+    const divInfoCard = document.createElement('div');
+    const divTextCard = document.createElement('div');
 
+    divTextCard.classList.add('div-text-card');
+    divInfoCard.classList.add('div-info-card');
+    divBtn.classList.add('div-btn');
     card.classList.add('favori-card');
 
     image.src = baseURL + produit.image;
     image.alt = produit.nom;
-    image.addEventListener("click", () => {
+    image.addEventListener('click', () => {
       window.location.href = `produit.html?ref=${produit.reference}`;
     });
     nom.textContent = produit.nom;
-    description.textContent = produit.description ;
+    description.textContent = produit.description;
     prix.textContent = `Prix : ${produit.prix} €`;
 
     btnAjouter.textContent = 'Ajouter au panier';
-    btnAjouter.classList.add('btn-ajout-panier-favoris')
+    btnAjouter.classList.add('btn-ajout-panier-favoris');
     btnAjouter.dataset.id = produit._id;
 
     btnSupprimer.textContent = 'Supprimer des favoris';
+    btnSupprimer.classList.add('btn-supprimer-panier-favoris');
     btnSupprimer.onclick = () => supprimerFavoris(produit, card, messageVide);
-    
-    card.appendChild(image);
-    card.appendChild(nom);
-    card.appendChild(description);
-    card.appendChild(prix);
-    card.appendChild(btnAjouter);
-    card.appendChild(btnSupprimer);
-    container.appendChild(card);
 
+    divInfoCard.appendChild(image);
+
+    divTextCard.appendChild(nom);
+    divTextCard.appendChild(description);
+    divTextCard.appendChild(prix);
+
+    divBtn.appendChild(btnAjouter);
+    divBtn.appendChild(btnSupprimer);
+
+    divInfoCard.appendChild(divTextCard);
+    card.appendChild(divInfoCard);
+    card.appendChild(divBtn);
+
+    container.appendChild(card);
   });
 }
 
 // Supprime un produit des favoris
 function supprimerFavoris(produit, card, messageVide) {
   let favoris = JSON.parse(localStorage.getItem('favoris')) || [];
-  favoris = favoris.filter(fav => fav._id !== produit._id);
+  favoris = favoris.filter((fav) => fav._id !== produit._id);
   localStorage.setItem('favoris', JSON.stringify(favoris));
 
   card.remove();
@@ -74,6 +91,3 @@ function supprimerFavoris(produit, card, messageVide) {
     messageVide.style.display = 'block';
   }
 }
-
-
-

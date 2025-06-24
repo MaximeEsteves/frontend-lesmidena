@@ -1,62 +1,78 @@
-
 export function updateFavorisCount() {
   const favoris = JSON.parse(localStorage.getItem('favoris')) || [];
   const panier = JSON.parse(localStorage.getItem('panier')) || [];
   const compteur = document.getElementById('favoris-count');
-  const iconeFavoris = document.querySelector('#favoris i')
+  const iconeFavoris = document.querySelector('#favoris i');
   const compteurPanier = document.getElementById('panier-count');
   if (compteur) {
     compteur.textContent = favoris.length;
-    compteur.style.display = favoris.length > 0 ? "inline-block" : "none";
-    iconeFavoris.style.color = favoris.length > 0 ? "red" : "";
+    compteur.style.display = favoris.length > 0 ? 'inline-block' : 'none';
+    if (iconeFavoris) {
+      iconeFavoris.classList.remove(
+        favoris.length > 0 ? 'fa-regular' : 'fa-solid'
+      );
+      iconeFavoris.classList.add(
+        favoris.length > 0 ? 'fa-solid' : 'fa-regular'
+      );
+    }
   }
   if (panier) {
     compteurPanier.textContent = panier.length;
-    compteurPanier.style.display = panier.length > 0 ? "inline-block" : "none";
+    compteurPanier.style.display = panier.length > 0 ? 'inline-block' : 'none';
   }
 }
 
-export async function initPageListeFavoris(produits) {
-  
-  // Utilisation de la délégation : un seul écouteur sur le conteneur
-  document.addEventListener('click', event => {
+let favorisListenerAjoute = false;
+
+export function initPageListeFavoris(produits) {
+  if (favorisListenerAjoute) return;
+  favorisListenerAjoute = true;
+
+  document.addEventListener('click', (event) => {
     const btn = event.target.closest('.btn-fav-article[data-id]');
     if (!btn) return;
-  
+
     let favoris = JSON.parse(localStorage.getItem('favoris')) || [];
     const id = btn.dataset.id;
     const icon = btn.querySelector('i');
-    const index = favoris.findIndex(f => f._id === id);
-  
+    const index = favoris.findIndex((f) => f._id === id);
+
     if (index === -1) {
-      const produit = produits.find(p => p._id === id);
+      const produit = produits.find((p) => p._id === id);
       if (produit) {
         favoris.push(produit);
-        icon.style.color = "red";
+        icon.style.color = '#fce4da';
+        icon.classList.remove('fa-regular');
+        icon.classList.add('fa-solid');
       }
     } else {
       favoris.splice(index, 1);
-      icon.style.color = "";
+      icon.classList.remove('fa-solid');
+      icon.classList.add('fa-regular');
     }
-  
+
     localStorage.setItem('favoris', JSON.stringify(favoris));
     updateFavorisCount();
   });
 }
-export async function initPageListePanier(produits) {
-  let panier = JSON.parse(localStorage.getItem('panier')) || [];
-  
-  // Utilisation d'un seul écouteur sur le document pour capter tous les clics
+
+let panierListenerAjoute = false;
+
+export function initPageListePanier(produits) {
+  if (panierListenerAjoute) return;
+  panierListenerAjoute = true;
+
   document.addEventListener('click', (event) => {
-    // Bouton "btn-acheter"
+    let panier = JSON.parse(localStorage.getItem('panier')) || [];
+
+    // BTN "acheter"
     const btnAcheter = event.target.closest('.btn-acheter[data-id]');
     if (btnAcheter) {
       const id = btnAcheter.dataset.id;
-      panier = JSON.parse(localStorage.getItem('panier')) || [];
-      const index = panier.findIndex(p => p._id === id);
-      
+      const index = panier.findIndex((p) => p._id === id);
+
       if (index === -1) {
-        const produit = produits.find(p => p._id === id);
+        const produit = produits.find((p) => p._id === id);
         if (produit) {
           panier.push(produit);
           btnAcheter.textContent = 'Retirer du panier';
@@ -71,22 +87,21 @@ export async function initPageListePanier(produits) {
         btnAcheter.style.color = '';
         btnAcheter.style.borderColor = '';
       }
-      
+
       localStorage.setItem('panier', JSON.stringify(panier));
       updateFavorisCount();
       mettreAJourBoutonsPanier();
       return;
     }
-    
-    // Bouton "btn-ajout-panier"
+
+    // BTN "ajout panier"
     const btnAjouterPanier = event.target.closest('.btn-ajout-panier[data-id]');
     if (btnAjouterPanier) {
       const id = btnAjouterPanier.dataset.id;
-      panier = JSON.parse(localStorage.getItem('panier')) || [];
-      const index = panier.findIndex(p => p._id === id);
-      
+      const index = panier.findIndex((p) => p._id === id);
+
       if (index === -1) {
-        const produit = produits.find(p => p._id === id);
+        const produit = produits.find((p) => p._id === id);
         if (produit) {
           panier.push(produit);
           btnAjouterPanier.textContent = 'Retirer du panier';
@@ -101,22 +116,23 @@ export async function initPageListePanier(produits) {
         btnAjouterPanier.style.color = '';
         btnAjouterPanier.style.borderColor = '';
       }
-      
+
       localStorage.setItem('panier', JSON.stringify(panier));
       updateFavorisCount();
       mettreAJourBoutonsPanier();
       return;
     }
 
-    // Bouton "btn-ajout-panier-favoris" (pour la page favoris.html)
-    const btnAjouterPanierFavoris = event.target.closest('.btn-ajout-panier-favoris[data-id]');
+    // BTN "ajout panier favoris"
+    const btnAjouterPanierFavoris = event.target.closest(
+      '.btn-ajout-panier-favoris[data-id]'
+    );
     if (btnAjouterPanierFavoris) {
       const id = btnAjouterPanierFavoris.dataset.id;
-      panier = JSON.parse(localStorage.getItem('panier')) || [];
-      const index = panier.findIndex(p => p._id === id);
-      
+      const index = panier.findIndex((p) => p._id === id);
+
       if (index === -1) {
-        const produit = produits.find(p => p._id === id);
+        const produit = produits.find((p) => p._id === id);
         if (produit) {
           panier.push(produit);
           btnAjouterPanierFavoris.textContent = 'Retirer du panier';
@@ -127,7 +143,7 @@ export async function initPageListePanier(produits) {
         btnAjouterPanierFavoris.textContent = 'Ajouter au panier';
         btnAjouterPanierFavoris.style.backgroundColor = '';
       }
-      
+
       localStorage.setItem('panier', JSON.stringify(panier));
       updateFavorisCount();
       mettreAJourBoutonsPanier();
@@ -142,9 +158,9 @@ export function mettreAJourBoutonsPanier() {
 
   const boutons = document.querySelectorAll('.btn-ajout-panier[data-id]');
 
-  boutons.forEach(btn => {
+  boutons.forEach((btn) => {
     const id = btn.dataset.id;
-    const estDansPanier = panier.some(p => p._id === id);
+    const estDansPanier = panier.some((p) => p._id === id);
 
     if (estDansPanier) {
       btn.textContent = 'Retirer du panier';
@@ -160,9 +176,9 @@ export function mettreAJourBoutonsPanier() {
   });
   const boutonsAcheter = document.querySelectorAll('.btn-acheter[data-id]');
 
-  boutonsAcheter.forEach(btn => {
+  boutonsAcheter.forEach((btn) => {
     const id = btn.dataset.id;
-    const estDansPanier = panier.some(p => p._id === id);
+    const estDansPanier = panier.some((p) => p._id === id);
 
     if (estDansPanier) {
       btn.textContent = 'Retirer du panier';
@@ -177,30 +193,37 @@ export function mettreAJourBoutonsPanier() {
     }
   });
 
-  const boutonsPanier = document.querySelectorAll('.btn-ajout-panier-favoris[data-id]');
+  const boutonsPanier = document.querySelectorAll(
+    '.btn-ajout-panier-favoris[data-id]'
+  );
 
-  boutonsPanier.forEach(btn => {
+  boutonsPanier.forEach((btn) => {
     const id = btn.dataset.id;
-    const estDansPanier = panier.some(p => p._id === id);
+    const estDansPanier = panier.some((p) => p._id === id);
 
     if (estDansPanier) {
       btn.textContent = 'Retirer du panier';
-      btn.style.backgroundColor = 'green';
+      btn.style.backgroundColor = '#fce4da';
+      btn.style.color = '#3a5151';
     } else {
       btn.textContent = 'Ajouter au panier';
-      btn.style.backgroundColor = '';
+      btn.style.backgroundColor = '#3a5151';
+      btn.style.color = '';
     }
   });
 
   const favoris = JSON.parse(localStorage.getItem('favoris')) || [];
   const btnFavs = document.querySelectorAll('.btn-fav-article[data-id]');
-  btnFavs.forEach(btn => {
+  btnFavs.forEach((btn) => {
     const id = btn.dataset.id;
     const icon = btn.querySelector('i');
-    if (favoris.find(f => f._id === id)) {
-      icon.style.color = "red";
+    if (favoris.find((f) => f._id === id)) {
+      icon.style.color = '#fce4da';
+      icon.classList.remove('fa-regular');
+      icon.classList.add('fa-solid');
     } else {
-      icon.style.color = "";
+      icon.classList.remove('fa-solid');
+      icon.classList.add('fa-regular');
     }
   });
 }

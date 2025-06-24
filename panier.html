@@ -41,7 +41,7 @@
 			</div>
 <div class="header-content">
     <nav>
-      <a href="#btn-retour" id="logo-nav-header"><img src="./assets/images/logo-nav.webp" alt="logo les mignonneries de nathalie"></a>
+      <a href="./index.html" id="logo-nav-header"><img src="./assets/images/logo-nav.webp" alt="logo les mignonneries de nathalie"></a>
       <ul class="btn-nav">
         <li><a href="./index.html">Accueil</a></li>
         <li><a href="./index.html#creation">Créations</a></li>
@@ -65,42 +65,65 @@
 <body>
   <main>
     <h1>Mon panier</h1>
+<div class="contenair">
+  
+    <div class="panier-page">
+  <section id="panier-container">
+    <!-- Les articles seront générés ici par JS -->
+  </section>
+ <aside id="total-section">
+  <h2>Résumé de la commande</h2>
+  <div class="frais-livraison-ligne">
+    <div>
+      <span>Total des articles</span>
+      <span id="total-amount">0 €</span>
+    </div>
+    <div>
+      <span>Frais de port</span>
+      <span id="frais-livraison">4.99 €</span>
+    </div>
+  </div>
+  <div class="total-ligne">
+    <span>Total</span>
+    <span id="total-panier">0 €</span>
+  </div>
+  <button id="btn-checkout" type="button">Finaliser la commande</button>
 
-    <section id="panier-container">
-      <!-- Les articles seront générés ici par JS -->
-    </section>
-
-    <section id="total-section">
-      <p>Frais de port : <span id="frais-livraison">4.99 €</span></p>
-      <p>Total : <span id="total-amount">0 €</span></p>
-    </section>
-<section>
-    <form id="form-livraison">
-      <h2>Adresse de livraison</h2>
-
-      <label for="nom">Nom complet *</label>
-      <input type="text" id="nom" name="nom" placeholder="Michel Pont" required>
-
-      <label for="adresse">Adresse *</label>
-      <input type="text" id="adresse" name="adresse" list="suggestions" placeholder="2 rue des muriers" required>
+  <!-- Formulaire masqué au départ -->
+  <form id="form-livraison" novalidate>
+    <h3>Informations de livraison</h3>
+    <div class="form-group">
+      <label for="nom">Nom complet<span>*</span></label>
+      <input type="text" id="nom" name="nom" required>
+    </div>
+    <div class="form-group">
+      <label for="adresse">Adresse<span>*</span></label>
+      <input type="text" id="adresse" name="adresse" list="suggestions" required>
       <datalist id="suggestions"></datalist>
-      
-      <label for="ville">Ville *</label>
-      <input type="text" id="ville" name="ville" placeholder="Paris" required>
+    </div>
+    <div class="form-group">
+      <label for="ville">Ville<span>*</span></label>
+      <input type="text" id="ville" name="ville" required>
+    </div>
+    <div class="form-group">
+      <label for="code-postal">Code postal<span>*</span></label>
+      <input type="text" id="code-postal" name="code-postal" required pattern="\d{4,6}">
+    </div>
+    <div class="form-group">
+      <label for="email">E-mail<span>*</span></label>
+      <input type="email" id="email" name="email" required>
+    </div>
+    <div class="form-group">
+      <label for="telephone">Téléphone<span>*</span></label>
+      <input type="tel" id="telephone" name="telephone" required pattern="[\d\s+\-()]{6,}">
+    </div>
+    <button id="btn-submit-livraison" type="submit">Valider et payer</button>
+  </form>
+</aside>
 
-      <label for="code-postal">Code postal *</label>
-      <input type="text" id="code-postal" name="code-postal"  pattern="\d{5}"  placeholder="75000" required>
-
-      <label for="email">Email *</label>
-      <input type="email" id="email" name="email" required placeholder="exemple@exemple.com">
-
-      <label for="telephone">Téléphone *</label>
-      <input type="tel" id="telephone" name="telephone" inputmode="numeric"  pattern="\d{10}" required placeholder="Ex : 0606060606">
-
-
-      <button type="submit" id="payer-btn">Procéder au paiement</button>
-    </form>
-    </section>
+</div>
+    
+</div>
     <section class="section-information">
       <div class="div-information">
         <article>

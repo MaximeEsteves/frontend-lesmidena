@@ -1,0 +1,256 @@
+/* zone de modification */
+.div-modification {
+  color: black;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: 80px auto;
+  gap: 10px;
+  border: none;
+  background-color: inherit;
+}
+.div-modification:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}
+.hidden {
+  display: none;
+}
+/* mode edition */
+.mode-edition {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 59px;
+  width: 100%;
+  background-color: black;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+/* modal */
+/* ══ Overlay ══ */
+.modal-content {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  overflow: auto;
+}
+
+/* ══ Modale (= inner box) ══ */
+.modal {
+  background: #fff;
+  width: 80vw;
+  max-width: 1200px;
+  height: 70vh;
+  max-height: 700px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+.modal h2 {
+  color: #3a5151;
+  text-align: center;
+  padding-bottom: 15px;
+  font-size: 25px;
+}
+
+/* ══ Formulaire en colonnes flexibles ══ */
+.modal form {
+  font-family: Geist;
+  color: #3a5151;
+  display: flex;
+  flex: 1;
+  gap: 20px;
+  overflow: hidden;
+}
+/* Chaque colonne prend un tiers et scroll si besoin */
+.modal form > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#btn-submit {
+  font-family: Geist;
+  background-color: #3a5151;
+  border: 1px solid white;
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-weight: 500;
+  font-size: 14px;
+  margin-top: 20px;
+  color: white;
+  transition: 0.3s;
+}
+#btn-submit:hover {
+  background-color: white;
+  border: 1px solid #3a5151;
+  color: #3a5151;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.formulaire-modification-primaire label {
+  margin-top: 20px;
+}
+
+/* ══ Quill – conteneurs fixes + scroll interne ══ */
+.quill-editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.quill-editor .ql-container {
+  flex: 1;
+  height: auto;
+  max-height: 100%;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.quill-editor .ql-editor {
+  height: 100%;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
+  padding: 10px;
+}
+.image-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.btn-delete-img {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(255, 0, 0, 0.7);
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 50%;
+}
+.image-preview {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+.image-preview-gallery {
+  display: inline;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+  overflow-y: auto;
+}
+#preview-couverture {
+  width: 100%;
+  height: 20%;
+  object-fit: cover;
+  margin-bottom: 20px;
+}
+/* modale ajout photo projet */
+.ajout-projet {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.btnp,
+.btnp-line {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid #b3b3b3;
+  width: 420px;
+  padding: 25px 0px 30px 0px;
+}
+.ajout-projet form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.ajout-projet .formulaire-photo {
+  margin-bottom: 50px;
+}
+.ajout-projet form #title,
+.ajout-projet form #category {
+  margin: 10px auto;
+  display: flex;
+  justify-content: center;
+  width: 420px;
+  height: 51px;
+  box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.09);
+  border: none;
+}
+.custom-file-upload input[type='file'] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+  z-index: -1;
+}
+.custom-file-upload {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 4px;
+  background-color: white;
+  margin-bottom: 10px;
+}
+#preview {
+  height: 100%;
+  width: 30%;
+  margin: 0px;
+}
+.custom-file-upload .btn-text {
+  font-family: Geist;
+  background-color: #3a5151;
+  border: 1px solid white;
+  border-radius: 50px;
+  padding: 10px 20px;
+  font-weight: 500;
+  font-size: 14px;
+  margin-bottom: 0.25em;
+  color: white;
+  transition: 0.3s;
+}
+.picture-file {
+  color: #cbd6dc;
+  font-size: 50px;
+}
+.custom-file-upload .btn-text:hover {
+  background-color: white;
+  border: 1px solid #3a5151;
+  color: #3a5151;
+}
+.custom-file-upload:focus-within .btn-text {
+  border: 1px solid black;
+}
+.file-info {
+  font-size: 0.85em;
+  color: #555;
+}

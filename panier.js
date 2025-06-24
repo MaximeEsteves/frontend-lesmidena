@@ -1,113 +1,165 @@
-import { updateFavorisCount } from "./addFavorisPanier.js";
+import { updateFavorisCount } from './addFavorisPanier.js';
 import { createStripeCheckoutSession, API_BASE } from './api/apiClient.js';
-const baseURL = API_BASE + "/";
-const panierContainer = document.getElementById("panier-container");
-const totalAmount = document.getElementById("total-amount");
-const formLivraison = document.getElementById("form-livraison");
+const baseURL = API_BASE + '/';
 
+// Récupère le panier depuis localStorage
 function getPanier() {
   return JSON.parse(localStorage.getItem('panier')) || [];
 }
 
+// Sauvegarde le panier dans localStorage
 function savePanier(panier) {
   localStorage.setItem('panier', JSON.stringify(panier));
 }
 
-function calculerTotal(panier) {
-  let total = 4.99;
-  panier.forEach(p => {
-    total += ((p.prix * (p.quantite || 1)));
-  });
-  totalAmount.textContent = `${total.toFixed(2)} €`;
-}
-
+// Render du panier et calcul des totaux
 function renderPanier() {
   const panier = getPanier();
+  const panierContainer = document.getElementById('panier-container');
+  const totalAmountEl = document.getElementById('total-amount'); // total articles
+  const fraisLivraisonEl = document.getElementById('frais-livraison');
+  const totalPanierEl = document.getElementById('total-panier'); // total articles + frais
   panierContainer.innerHTML = '';
+
+  const btnCheckout = document.getElementById('btn-checkout');
 
   if (panier.length === 0) {
     panierContainer.innerHTML = '<p>Votre panier est vide.</p>';
-    totalAmount.textContent = '0 €';
+    totalAmountEl.textContent = '0 €';
+    totalPanierEl.textContent = '0 €';
+    if (btnCheckout) btnCheckout.disabled = true;
     return;
   }
+  if (btnCheckout) btnCheckout.disabled = false;
 
-  panier.forEach(produit => {
+  let totalArticles = 0;
+
+  panier.forEach((produit) => {
+    const quantite = produit.quantite || 1;
+    const sousTotal = produit.prix * quantite;
+    totalArticles += sousTotal;
+
+    // Création de la carte
     const card = document.createElement('div');
     card.classList.add('panier-card');
 
+    // Image
     const image = document.createElement('img');
     image.src = baseURL + produit.image;
     image.alt = produit.nom;
-    image.addEventListener("click", () => {
-      window.location.href = `/produit.html/${produit.reference}`;
+    image.addEventListener('click', () => {
+      window.location.href = `/produit/${produit.reference}`;
     });
 
-    const nom = document.createElement('h3');
-    nom.textContent = produit.nom;
+    // Détails
+    const details = document.createElement('div');
+    details.classList.add('panier-details');
 
-    const prix = document.createElement('p');
-    prix.textContent = `Prix unitaire : ${produit.prix} €`;
+    // Nom / lien
+    const nom = document.createElement('h3');
+    const lien = document.createElement('a');
+    lien.href = `/produit/${produit.reference}`;
+    lien.textContent = produit.nom;
+    nom.appendChild(lien);
+
+    // Prix unitaire
+    const prixUni = document.createElement('p');
+    prixUni.classList.add('prix-unitaire');
+    prixUni.textContent = `Prix unitaire : ${produit.prix} €`;
+
+    // Actions : quantité, sous-total, supprimer
+    const actions = document.createElement('div');
+    actions.classList.add('panier-actions');
 
     const quantiteLabel = document.createElement('label');
-    quantiteLabel.textContent = 'Quantité : ';
     quantiteLabel.setAttribute('for', `quantite-${produit._id}`);
-
+    quantiteLabel.textContent = 'Quantité :';
     const quantiteInput = document.createElement('input');
     quantiteInput.type = 'number';
-    quantiteInput.min = `1`;
+    quantiteInput.min = '1';
     quantiteInput.max = `${produit.stock}`;
-    quantiteInput.value = produit.quantite || 1;
+    quantiteInput.value = quantite;
     quantiteInput.id = `quantite-${produit._id}`;
     quantiteInput.addEventListener('change', (e) => {
-      const panier = getPanier();
-      const index = panier.findIndex(p => p._id === produit._id);
+      let panierActu = getPanier();
+      const index = panierActu.findIndex((p) => p._id === produit._id);
       if (index !== -1) {
-        panier[index].quantite = parseInt(e.target.value, 10);
-        savePanier(panier);
-        calculerTotal(panier);
+        let newQ = parseInt(e.target.value, 10);
+        if (isNaN(newQ) || newQ < 1) newQ = 1;
+        if (newQ > produit.stock) newQ = produit.stock;
+        panierActu[index].quantite = newQ;
+        savePanier(panierActu);
+        renderPanier();
       }
     });
 
+    const sousTotalEl = document.createElement('p');
+    sousTotalEl.classList.add('prix-unitaire');
+    sousTotalEl.textContent = `Sous-total : ${(produit.prix * quantite).toFixed(
+      2
+    )} €`;
+
     const btnSupprimer = document.createElement('button');
-    btnSupprimer.textContent = "Supprimer";
-    btnSupprimer.classList.add("btn-supprimer");
+    btnSupprimer.textContent = 'Supprimer';
+    btnSupprimer.classList.add('btn-supprimer');
     btnSupprimer.addEventListener('click', () => {
-      let panier = getPanier();
-      panier = panier.filter(p => p._id !== produit._id);
-      savePanier(panier);
+      let panierActu = getPanier();
+      panierActu = panierActu.filter((p) => p._id !== produit._id);
+      savePanier(panierActu);
       renderPanier();
       updateFavorisCount();
     });
 
-    card.appendChild(image);
-    card.appendChild(nom);
-    card.appendChild(prix);
-    card.appendChild(quantiteLabel);
-    card.appendChild(quantiteInput);
-    card.appendChild(btnSupprimer);
+    actions.appendChild(quantiteLabel);
+    actions.appendChild(quantiteInput);
+    actions.appendChild(sousTotalEl);
+    actions.appendChild(btnSupprimer);
 
+    details.appendChild(nom);
+    details.appendChild(prixUni);
+    details.appendChild(actions);
+
+    card.appendChild(image);
+    card.appendChild(details);
     panierContainer.appendChild(card);
   });
 
-  calculerTotal(panier);
+  // Affichage total des articles
+  const totalArticlesFormatted = totalArticles.toFixed(2) + ' €';
+  totalAmountEl.textContent = totalArticlesFormatted;
+
+  // Récupérer frais de livraison depuis le span (ex "4.99 €")
+  let frais = 0;
+  if (fraisLivraisonEl) {
+    const txt = fraisLivraisonEl.textContent.trim();
+    const num = parseFloat(txt.replace(/\s?€/, '').replace(',', '.'));
+    if (!isNaN(num)) frais = num;
+  }
+  // Calcul total panier
+  const totalPanier = totalArticles + frais;
+  totalPanierEl.textContent = totalPanier.toFixed(2) + ' €';
 }
 
+// Fonctions pour autocomplétion d'adresse si désiré
 function completeFormulaire() {
   const inputAdresse = document.getElementById('adresse');
   const dataList = document.getElementById('suggestions');
   const inputVille = document.getElementById('ville');
   const inputCodePostal = document.getElementById('code-postal');
 
+  if (!inputAdresse) return;
   inputAdresse.addEventListener('input', async () => {
     const query = inputAdresse.value;
     if (query.length < 3) return;
-
     try {
-      const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5`);
+      const res = await fetch(
+        `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(
+          query
+        )}&limit=5`
+      );
       const data = await res.json();
       dataList.innerHTML = '';
-
-      data.features.forEach(feature => {
+      data.features.forEach((feature) => {
         const option = document.createElement('option');
         option.value = feature.properties.label;
         option.dataset.city = feature.properties.city;
@@ -115,12 +167,14 @@ function completeFormulaire() {
         dataList.appendChild(option);
       });
     } catch (error) {
-      console.error("Erreur lors de la récupération des adresses :", error);
+      console.error('Erreur lors de la récupération des adresses :', error);
     }
   });
 
   inputAdresse.addEventListener('change', () => {
-    const selected = [...dataList.options].find(opt => opt.value === inputAdresse.value);
+    const selected = [...dataList.options].find(
+      (opt) => opt.value === inputAdresse.value
+    );
     if (selected) {
       inputVille.value = selected.dataset.city || '';
       inputCodePostal.value = selected.dataset.postcode || '';
@@ -128,54 +182,90 @@ function completeFormulaire() {
   });
 }
 
-function formulairePanier(){
-// Soumission du formulaire avec appel Stripe
-formLivraison.addEventListener("submit", async (e) => {
+// Handle la soumission du formulaire de livraison
+async function handleFormSubmit(e) {
   e.preventDefault();
+  const form = e.target;
+  // Validation HTML5 : si invalide, on arrête
+  if (!form.checkValidity()) {
+    // Montre les messages de validation
+    form.reportValidity();
+    return;
+  }
+  // Récupérer les valeurs
+  const nom = form.nom.value.trim();
+  const adresse = form.adresse.value.trim();
+  const ville = form.ville.value.trim();
+  const cp = form['code-postal'].value.trim();
+  const email = form.email.value.trim();
+  const telephone = form.telephone.value.trim();
 
+  // On peut refaire vérifications spécifiques si besoin
+  if (!nom || !adresse || !ville || !cp || !email || !telephone) {
+    alert('Merci de remplir tous les champs obligatoires.');
+    return;
+  }
+
+  // Préparer les lignes de commande pour Stripe
   const panier = getPanier();
   if (panier.length === 0) {
-    alert("Votre panier est vide.");
+    alert('Votre panier est vide.');
     return;
   }
-
-  const nom = formLivraison.nom.value.trim();
-  const adresse = formLivraison.adresse.value.trim();
-  const ville = formLivraison.ville.value.trim();
-  const cp = formLivraison['code-postal'].value.trim();
-  const email = formLivraison.email.value.trim();
-  const telephone = formLivraison.telephone.value.trim();
-
-  if (!nom || !adresse || !ville || !cp || !email || !telephone) {
-    alert("Merci de remplir tous les champs obligatoires.");
-    return;
-  }
-
-  // Tu peux ici envoyer les infos à ton backend si besoin, mais Stripe ne les prend pas directement
-  const lignes = panier.map(p => ({
+  const lignes = panier.map((p) => ({
     id: p._id,
-    quantite: p.quantite || 1
+    quantite: p.quantite || 1,
   }));
-
-   // On prépare l'objet customer
-    const customer = { nom, adresse, ville, cp, email, telephone };
+  // Préparer l’objet customer à envoyer au backend (le backend peut l’enregistrer ou l’ajouter à la session)
+  const customer = { nom, adresse, ville, cp, email, telephone };
 
   try {
-
-  const session = await createStripeCheckoutSession(lignes,customer);
-
+    // Désactiver le bouton pour éviter multi-submit
+    const btnSubmit = document.getElementById('btn-submit-livraison');
+    btnSubmit.disabled = true;
+    btnSubmit.textContent = 'Redirection…';
+    const session = await createStripeCheckoutSession(lignes, customer);
+    // Redirection vers Stripe
     window.location.href = session.url;
   } catch (err) {
-    console.error("Erreur de paiement :", err);
-    alert("Erreur lors du paiement.");
+    console.error('Erreur de paiement :', err);
+    alert('Erreur lors du paiement. Veuillez réessayer.');
+    const btnSubmit = document.getElementById('btn-submit-livraison');
+    if (btnSubmit) {
+      btnSubmit.disabled = false;
+      btnSubmit.textContent = 'Valider et payer';
+    }
   }
-});
 }
+
 function init() {
   renderPanier();
-  completeFormulaire();
   updateFavorisCount();
-  formulairePanier();
+
+  // Préparer autocomplétion si implémenté
+  completeFormulaire();
+
+  const btnCheckout = document.getElementById('btn-checkout');
+  const formLivraison = document.getElementById('form-livraison');
+
+  if (btnCheckout && formLivraison) {
+    // Au clic sur “Passer à la caisse”, on révèle ou replie le formulaire
+    btnCheckout.addEventListener('click', (e) => {
+      e.preventDefault();
+      const isOpen = formLivraison.classList.toggle('open');
+      // Optionnel : changer le texte du bouton
+      if (isOpen) {
+        btnCheckout.textContent = 'Masquer le formulaire';
+        // Scroll vers le formulaire pour que l'utilisateur voit bien
+        formLivraison.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        btnCheckout.textContent = 'Finaliser la commande';
+      }
+    });
+
+    // Soumission du formulaire
+    formLivraison.addEventListener('submit', handleFormSubmit);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', init);
