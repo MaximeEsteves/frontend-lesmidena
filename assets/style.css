@@ -311,6 +311,7 @@ header img {
   font-size: 32px;
   animation: bounce 2s infinite;
   transition: color 0.3s;
+  z-index: 1;
 }
 .fa-chevron-down:hover {
   color: #fce4da;

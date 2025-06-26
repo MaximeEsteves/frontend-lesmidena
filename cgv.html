@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Mignonneries de Nathalie - Accessoires mode artisanale</title>
+    <!-- Open Graph -->
+    <meta property="og:type" content="product" />
+    <meta
+      property="og:title"
+      content="Nom du produit – Mignonneries de Nathalie"
+    />
+    <meta property="og:description" content="Description courte du produit" />
+    <meta
+      property="og:image"
+      content="https://ton-site.com/images/produit.jpg"
+    />
+    <meta
+      property="og:url"
+      content="https://ton-site.com/produit.html?ref=LA-REF"
+    />
+    <meta property="og:site_name" content="Mignonneries de Nathalie" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Nom du produit – Mignonneries de Nathalie"
+    />
+    <meta name="twitter:description" content="Description courte du produit" />
+    <meta
+      name="twitter:image"
+      content="https://ton-site.com/images/produit.jpg"
+    />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+      integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <meta name="description" content="" />
+    <link rel="stylesheet" href="./assets/style.css" />
+    <link rel="stylesheet" href="./assets/cgv.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <!-- Script Leaflet -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  </head>
+  <body>
+    <header>
+      <div class="header-content">
+        <nav>
+          <a href="./index.html" id="logo-nav-header"
+            ><img
+              src="./assets/images/logo-nav.webp"
+              alt="logo les mignonneries de nathalie"
+          /></a>
+          <ul class="btn-nav">
+            <li><a href="./index.html">Accueil</a></li>
+            <li><a href="./index.html#creation">Créations</a></li>
+            <li><a href="./blog.html">Blog</a></li>
+            <li><a href="./index.html#contact">Contact</a></li>
+            <li id="user-open"><a href="./login.html">Login</a></li>
+            <li>
+              <a
+                href="https://www.instagram.com/mignonneries.nathalie/"
+                target="_blank"
+                ><i class="fa-brands fa-instagram"></i
+              ></a>
+            </li>
+            <li id="favoris">
+              <a href="/favoris.html"
+                ><i class="fa-solid fa-heart"></i
+                ><span id="favoris-count">0</span></a
+              >
+            </li>
+            <li id="panier">
+              <a href="/panier.html"
+                ><i class="fa-solid fa-bag-shopping"></i
+                ><span id="panier-count">0</span></a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <section class="cgv-intro">
+        <h1>Conditions générales de ventes</h1>
+        <div>
+          <ul>
+            <li class="titre-regle">
+              Règle n°1 : Objet et champ d'application
+            </li>
+            <li>
+              Les présentes conditions générales de vente (CGV) constituent le
+              socle de la négociation commerciale et sont systématiquement
+              adressées ou remises à chaque acheteur pour lui permettre de
+              passer commande. Les CGV décrites ci-après détaillent les droits
+              et obligations de la société Les Mignonneries de Nathalie et de
+              son client dans le cadre de la vente spécialisée de design
+              d'articles et d'accessoires de mode. Toute prestation accomplie
+              par la société Les Mignonneries de Nathalie implique donc
+              l'adhésion sans réserve de l'acheteur aux présentes CGV.
+            </li>
+            <li class="titre-regle">Règle n°2 : Prix</li>
+            <li>
+              Les prix des articles vendus sont ceux en vigueur le jour de la
+              prise de commande. Ils sont libellés en euros et calculés TTC. Les
+              frais de transport sont applicables au moment de la commande ou
+              offerts selon les promotions en cours.
+            </li>
+            <li class="titre-regle">Règle n°3 : Modalités de paiement</li>
+            <li>
+              Le règlement s'effectue : par carte bancaire au moment de la
+              commande pour validation de celle-ci.
+            </li>
+            <li class="titre-regle">Règle n°4 : Réservation</li>
+            <li>
+              Aucune réservation via le site internet ne pourra être faite sans
+              paiement.
+            </li>
+            <li class="titre-regle">Règle n°5 : Livraison</li>
+            <li>
+              La livraison s'effectue : Uniquement par envoi postal via MONDIAL
+              RELAY. Les pays disponible à la livraison sont : France, Belgique.
+              La remise du produit au transporteur MONDIAL RELAY s'effectue dans
+              les 24h à 48h maximum après la validation de la commande
+              classique. La remise du produit au transporteur MONDIAL RELAY
+              s'effectue dans les 7 jours maximum après la validation d'une
+              commande d'un Kit 2-1. Le délai de livraison est de 3 à 5 jours
+              pour un envoie en France. Le délai de livraison est de 4 à 6 jours
+              pour un envoie en Belgique.
+            </li>
+            <li class="titre-regle">Règle n°6 : Retours et Remboursement</li>
+            <li>
+              Les retours sont acceptés à condition que l'article n'ait ni été
+              porté ni endommagé, et qu'il soit renvoyé dans son emballage
+              d'origine. Vous disposez de 14 jours après réception de votre
+              commande pour faire une demande de retour. Le retour est gratuit.
+              Après vérification du ou des produits, vous serez remboursé(e) du
+              montant total des articles retournés (or frais de livraison). Le
+              remboursement sera effectué sur le compte bancaire ayant servi au
+              paiement. Pour toute question supplémentaire, veuillez consulter
+              la rubrique "Contact" de notre site ou vous rapprocher de la
+              boutique pour plus d'informations.
+            </li>
+            <li class="titre-regle" id="mentions-legales">Mentions Légales</li>
+            <li>Nom du site : www.mignonneries-nathalie.fr</li>
+            <li>Directeur de la publication : Mme Nathalie Esteves</li>
+            <li>lesmidena@gmail.com</li>
+            <li>Adresse : 81200- Mazamet</li>
+            <li>Forme juridique : Entrepreneur Individuel</li>
+            <li>Raison sociale : Les mignonneries de Nathalie</li>
+            <li>SIRET : 94768358700010</li>
+            <li>Capital :  100,00 €</li>
+            <li>TVA Intracommunautaire : FR76947683587</li>
+            <li>
+              L'utilisateur du site Internet reconnaît disposer de la compétence
+              et des moyens nécessaires pour accéder et utiliser ce site. Il
+              reconnaît également avoir pris connaissance de la présente notice
+              légale et s'engage à la respecter.
+            </li>
+            <li>
+              L'utilisateur est informé que lors de ses visites sur le site, un
+              cookie peut s'installer automatiquement sur son logiciel de
+              navigation. Un cookie est un élément qui ne permet pas
+              d'identifier l'utilisateur mais sert à enregistrer des
+              informations relatives à la navigation de celui-ci sur le site
+              Internet. L'utilisateur pourra désactiver ce cookie par
+              l'intermédiaire des paramètres figurant au sein de son logiciel de
+              navigation.
+            </li>
+            <li>
+              L'utilisateur dispose d'un droit d'accès, de modification, de
+              rectification et de suppression des données qui le concernent
+              (article 34 de la loi " Informatique et Libertés "). Pour
+              l'exercer, l'utilisateur peut s'adresser auprès du Directeur de la
+              publication visé plus haut.
+            </li>
+            <li>
+              Toute représentation totale ou partielle de ce site par quelque
+              procédé que ce soit, sans l'autorisation expresse de l'exploitant
+              du site Internet est interdite et constituerait une contrefaçon
+              sanctionnée par les article L 335-2 et suivants du Code de la
+              propriété intellectuelle.
+            </li>
+            <li>
+              Il en est de même des éventuelles bases de données figurant sur le
+              site Internet qui sont protégées par les dispositions de la loi du
+              11 juillet 1998 portant transposition dans le Code de la propriété
+              intellectuelle (CPI) de la directive européenne du 11 mars 1996
+              relative à la protection juridique des bases de données.
+            </li>
+            <li>
+              Les marques de l'exploitant du site Internet et de ses
+              partenaires, ainsi que les logos figurant sur le site sont des
+              éléments protégés par les dispositions du droit de la propriété
+              intellectuelle et ne peuvent faire l'objet, sans consentement du
+              Directeur de la publication, d'aucune reproduction ni
+              représentation partielle ou totale.
+            </li>
+            <li>
+              Les liens hypertextes mis en place dans le cadre du site Internet
+              en direction d'autres ressources présentes sur le réseau de
+              l'Internet, et notamment vers ses partenaires ont fait l'objet
+              d'une autorisation préalable expresse et écrite.
+            </li>
+            <li>
+              Les utilisateurs visiteurs du site Internet ne peuvent mettre en
+              place un hyperlien en direction de ces sites sans l'autorisation
+              expresse et préalable de l'exploitant du site Internet.
+            </li>
+            <li>
+              Conformément aux articles L.612-1 et suivants issus de
+              l'ordonnance n°2016-301 du 14 mars 2016, vous avez la possibilité
+              en cas de litige de recourir gratuitement au Médiateur de la
+              Consommation relevant de notre secteur d'économie en vous
+              reportant au site de la Commission d'Evaluation et de contrôle de
+              la médiation de la consommation chargée d'établir et de mettre à
+              jour la liste des médiateurs
+              (http://www.economie.gouv.fr/mediation-conso).
+            </li>
+          </ul>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <div class="div-footer">
+        <h3 class="titre-footer">À propos</h3>
+        <ul class="lien-footer">
+          <li><a href="./cgv.html#mentions-legales">Mentions légales</a></li>
+          <li><a href="./cgv.html">Conditions générales </a></li>
+          <li><a href="./bio.html">À propos</a></li>
+        </ul>
+      </div>
+      <div class="div-footer">
+        <p>© 2024 - 2025 Mignonneries-Nathalie</p>
+        <ul class="lien-footer-reseaux">
+          <li>
+            <a
+              href="https://www.instagram.com/mignonneries.nathalie/"
+              target="_blank"
+              ><i class="fa-brands fa-instagram"></i
+            ></a>
+          </li>
+          <li>
+            <a href="https://www.tiktok.com/@les_mignonneries_de_nath"
+              ><i class="fa-brands fa-tiktok"></i
+            ></a>
+          </li>
+          <li>
+            <a
+              href="https://www.linkedin.com/in/mignonneries-de-nathalie-499884334/"
+              ><i class="fa-brands fa-linkedin"></i
+            ></a>
+          </li>
+          <li>
+            <a href="https://www.youtube.com/channel/UCEfuaMURKRQH5zqfeSbv1RQ"
+              ><i class="fa-brands fa-youtube"></i
+            ></a>
+          </li>
+          <li>
+            <a href="https://fr.pinterest.com/lesmidena/"
+              ><i class="fa-brands fa-pinterest"></i
+            ></a>
+          </li>
+        </ul>
+      </div>
+      <div class="div-footer">
+        <h3 class="titre-footer">Assistance</h3>
+        <ul class="lien-footer">
+          <li><a href="./index.html#contact">Nous contacter</a></li>
+          <li>
+            <a href="https://g.page/r/CRnYaYW2yYMWEBM/review" target="_blank"
+              >Avis google</a
+            >
+          </li>
+          <li><a href="./tissus.html">Les tissus</a></li>
+        </ul>
+      </div>
+    </footer>
+  </body>
+</html>
