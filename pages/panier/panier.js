@@ -1,5 +1,5 @@
-import { updateFavorisCount } from './addFavorisPanier.js';
-import { createStripeCheckoutSession, API_BASE } from './api/apiClient.js';
+import { updateFavorisCount } from '../../global/addFavorisPanier.js';
+import { createStripeCheckoutSession, API_BASE } from '../../api/apiClient.js';
 const baseURL = API_BASE + '/';
 
 // Récupère le panier depuis localStorage

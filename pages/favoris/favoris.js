@@ -2,8 +2,8 @@ import {
   updateFavorisCount,
   mettreAJourBoutonsPanier,
   initPageListePanier,
-} from './addFavorisPanier.js';
-import { getAllProducts, API_BASE } from './api/apiClient.js';
+} from '../../global/addFavorisPanier.js';
+import { getAllProducts, API_BASE } from '../../api/apiClient.js';
 
 // Initialisation
 document.addEventListener('DOMContentLoaded', async () => {

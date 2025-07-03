@@ -1,12 +1,16 @@
 // produitDetail.js
 
-import { getAllProducts, getProductByRef, API_BASE } from './api/apiClient.js';
+import {
+  getAllProducts,
+  getProductByRef,
+  API_BASE,
+} from '../../api/apiClient.js';
 import {
   initPageListeFavoris,
   initPageListePanier,
   mettreAJourBoutonsPanier,
   updateFavorisCount,
-} from './addFavorisPanier.js';
+} from '../../global/addFavorisPanier.js';
 
 const baseURL = API_BASE + '/';
 
@@ -249,7 +253,7 @@ function renderAvis(list) {
   });
 }
 
-// Produits similaires même catégorie
+// Produits similaires même catégorie (affichage des petites cartes à cotés de la carte principale)
 function produitSupplementaire() {
   const titreProduitSupp = document.getElementById('titre-produit-similaire');
   if (!titreProduitSupp) return;
@@ -275,21 +279,39 @@ function produitSupplementaire() {
   });
 }
 
-// Produits d'autres catégories (aléatoire)
+// Produits d'autres catégories (en dessous de l'article principal - 5 cartes aléatoire d'un produit)
 function produitSupplementaireAutres() {
   const titreAutres = document.getElementById('titre-produit-similaire-autres');
   if (!titreAutres) return;
+
   titreAutres.innerHTML = '';
   const titre = document.createElement('h2');
   titre.textContent =
     "Découvre d'autres mignonneries qui vont te faire craquer !";
   const cont = document.createElement('div');
   cont.classList.add('produits-similaire-container-autres');
-  const autres = allProducts
-    .filter((p) => p.categorie !== produit.categorie)
-    .sort(() => 0.5 - Math.random())
-    .slice(0, 5);
-  autres.forEach((p) => {
+
+  // Étape 1 : filtrer les produits hors de la catégorie actuelle
+  const produitsAutres = allProducts.filter(
+    (p) => p.categorie !== produit.categorie
+  );
+
+  // Étape 2 : regrouper par catégorie
+  const produitsParCategorie = {};
+  produitsAutres.forEach((p) => {
+    if (!produitsParCategorie[p.categorie]) {
+      produitsParCategorie[p.categorie] = [];
+    }
+    produitsParCategorie[p.categorie].push(p);
+  });
+
+  // Étape 3 : choisir un produit aléatoire par catégorie
+  const produitsSelectionnes = Object.values(produitsParCategorie)
+    .map((produits) => produits[Math.floor(Math.random() * produits.length)])
+    .slice(0, 5); // max 5 produits
+
+  // Étape 4 : affichage
+  produitsSelectionnes.forEach((p) => {
     const c = document.createElement('div');
     c.classList.add('carte-produit-autres');
     c.innerHTML = `
@@ -303,6 +325,7 @@ function produitSupplementaireAutres() {
     });
     cont.appendChild(c);
   });
+
   titreAutres.appendChild(titre);
   titreAutres.appendChild(cont);
 }

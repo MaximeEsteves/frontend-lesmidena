@@ -25,28 +25,28 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" >
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap" rel="stylesheet">	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 	<meta name="description" content="">
-	<link rel="stylesheet" href="./assets/style.css">
-	<link rel="stylesheet" href="./assets/panier.css">
-	<script type="module" src="panier.js" defer></script>
-	<script type="module" src="script.js" defer></script>
+	<link rel="stylesheet" href="../../global/style.css">
+	<link rel="stylesheet" href="./panier.css">
+	<script type="module" src="./panier.js" defer></script>
+	<script type="module" src="../../global/script.js" defer></script>
 
 </head>
-<body>
+<body id="btn-retour">
     <header>
       <div class="parallax-wrapper">
-			<img id="image-couverture-boutique" src="./assets/images/image-produit-header.jpg" alt="image accueil les mignonneries de nathalie">
+			<img id="image-couverture-boutique" src="../../assets/images/image-produit-header.jpg" alt="image accueil les mignonneries de nathalie">
 			</div>
       <div class="titre-header">
 				<h1 class="titre-produit-boutique"></h1>
 			</div>
 <div class="header-content">
     <nav>
-      <a href="./index.html" id="logo-nav-header"><img src="./assets/images/logo-nav.webp" alt="logo les mignonneries de nathalie"></a>
+      <a href="#btn-retour" id="logo-nav-header"><img src="../../assets/images/logo-nav.webp" alt="logo les mignonneries de nathalie"></a>
       <ul class="btn-nav">
-        <li><a href="./index.html">Accueil</a></li>
-        <li><a href="./index.html#creation">Créations</a></li>
-        <li><a href="./blog.html">Blog</a></li>
-        <li><a href="./index.html#contact">Contact</a></li>
+        <li><a href="../../index.html">Accueil</a></li>
+        <li><a href="../../index.html#creation">Créations</a></li>
+        <li><a href="../blog/blog.html">Blog</a></li>
+        <li><a href="../../index.html#contact">Contact</a></li>
         <li id="user-open"><a href="./login.html">Login</a></li>
         <li>
               <a
@@ -55,8 +55,8 @@
                 ><i class="fa-brands fa-instagram"></i
               ></a>
             </li>
-        <li id="favoris"><a href="favoris.html"><i class="fa-solid fa-heart"></i><span id="favoris-count">0</span></a></li>
-      	<li id="panier"><a href="panier.html"><i class="fa-solid fa-bag-shopping"></i><span id="panier-count">0</span></a></li>
+        <li id="favoris"><a href="../favoris/favoris.html"><i class="fa-solid fa-heart"></i><span id="favoris-count">0</span></a></li>
+      	<li id="panier"><a href="./panier.html"><i class="fa-solid fa-bag-shopping"></i><span id="panier-count">0</span></a></li>
 
       </ul>
     </nav>
@@ -158,9 +158,9 @@
       <div class="div-footer">
         <h3 class="titre-footer">À propos</h3>
         <ul class="lien-footer">
-          <li><a href="./cgv.html#mentions-legales">Mentions légales</a></li>
-          <li><a href="./cgv.html">Conditions générales </a></li>
-          <li><a href="./bio.html">À propos</a></li>
+          <li><a href="../footer/cgv.html#mentions-legales">Mentions légales</a></li>
+          <li><a href="../footer/cgv.html">Conditions générales </a></li>
+          <li><a href="../bio/bio.html">À propos</a></li>
         </ul>
       </div>
       <div class="div-footer">
@@ -199,13 +199,13 @@
       <div class="div-footer">
         <h3 class="titre-footer">Assistance</h3>
         <ul class="lien-footer">
-          <li><a href="./index.html#contact">Nous contacter</a></li>
+          <li><a href="../../index.html#contact">Nous contacter</a></li>
           <li>
             <a href="https://g.page/r/CRnYaYW2yYMWEBM/review" target="_blank"
               >Avis google</a
             >
           </li>
-          <li><a href="./tissus.html">Les tissus</a></li>
+          <li><a href="../footer/tissus.html">Les tissus</a></li>
         </ul>
       </div>
     </footer>

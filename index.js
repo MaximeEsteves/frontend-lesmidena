@@ -11,7 +11,7 @@ import {
   updateFavorisCount,
   initPageListePanier,
   mettreAJourBoutonsPanier,
-} from './addFavorisPanier.js';
+} from './global/addFavorisPanier.js';
 const baseURL = API_BASE + '/';
 async function init() {
   try {

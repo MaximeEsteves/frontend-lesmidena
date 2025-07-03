@@ -51,27 +51,34 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
     <meta name="description" content="" />
-    <link rel="stylesheet" href="./assets/style.css" />
-    <link rel="stylesheet" href="./assets/tissus.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <!-- Script Leaflet -->
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="../../global/style.css" />
+    <link rel="stylesheet" href="./cancel.css" />
+    <script type="module" src="../../global/script.js" defer></script>
+    <script>
+      // Dès que la page se charge, on vide le panier localStorage
+      window.addEventListener('DOMContentLoaded', () => {
+        localStorage.removeItem('panier');
+      });
+    </script>
   </head>
-  <body>
+  <body id="btn-retour">
     <header>
+      <div class="parallax-wrapper">
+        <img
+          src="../../assets/images/image-produit-header.jpg"
+          alt="image accueil les mignonneries de nathalie"
+        />
+      </div>
       <div class="header-content">
         <nav>
-          <a href="./index.html" id="logo-nav-header"
+          <a href="#btn-retour" id="logo-nav-header"
             ><img
-              src="./assets/images/logo-nav.webp"
+              src="../../assets/images/logo-nav.webp"
               alt="logo les mignonneries de nathalie"
           /></a>
           <ul class="btn-nav">
-            <li><a href="./index.html">Accueil</a></li>
-            <li><a href="./index.html#creation">Créations</a></li>
-            <li><a href="./blog.html">Blog</a></li>
-            <li><a href="./index.html#contact">Contact</a></li>
-            <li id="user-open"><a href="./login.html">Login</a></li>
+            <li><a href="../../index.html">Accueil</a></li>
+            <li id="user-open"><a href="../../global/login.html">Login</a></li>
             <li>
               <a
                 href="https://www.instagram.com/mignonneries.nathalie/"
@@ -79,40 +86,37 @@
                 ><i class="fa-brands fa-instagram"></i
               ></a>
             </li>
-            <li id="favoris">
-              <a href="/favoris.html"
-                ><i class="fa-solid fa-heart"></i
-                ><span id="favoris-count">0</span></a
-              >
-            </li>
-            <li id="panier">
-              <a href="/panier.html"
-                ><i class="fa-solid fa-bag-shopping"></i
-                ><span id="panier-count">0</span></a
-              >
-            </li>
           </ul>
         </nav>
       </div>
     </header>
-    <main>
-      <section class="tissus-intro">
-        <h1>Références des articles</h1>
-        <div>
-          <img
-            src="./assets/images/liste-tissus.jpg"
-            alt="Image de la liste des références des tissus"
-          />
-        </div>
-      </section>
-    </main>
+    <section class="erreur">
+      <div class="container">
+        <h1>😥 Oups ! Le paiement a échoué</h1>
+        <p>Une erreur est survenue lors du traitement de votre paiement.</p>
+
+        <ul>
+          <li>💳 Vérifiez les informations de votre carte bancaire</li>
+          <li>🔁 Essayez à nouveau dans quelques instants</li>
+          <li>📩 Ou contactez-nous si le problème persiste</li>
+          <li id="mail">
+            <a href="mailto:lesmidena@gmail.com">lesmidena@gmail.com</a>
+          </li>
+        </ul>
+
+        <a href="../../index.html" class="btn-retour">← Retour à l’accueil</a>
+      </div>
+    </section>
+
     <footer>
       <div class="div-footer">
         <h3 class="titre-footer">À propos</h3>
         <ul class="lien-footer">
-          <li><a href="./cgv.html#mentions-legales">Mentions légales</a></li>
-          <li><a href="./cgv.html">Conditions générales </a></li>
-          <li><a href="./bio.html">À propos</a></li>
+          <li>
+            <a href="../footer/cgv.html#mentions-legales">Mentions légales</a>
+          </li>
+          <li><a href="../footer/cgv.html">Conditions générales </a></li>
+          <li><a href="../bio/bio.html">À propos</a></li>
         </ul>
       </div>
       <div class="div-footer">
@@ -151,13 +155,13 @@
       <div class="div-footer">
         <h3 class="titre-footer">Assistance</h3>
         <ul class="lien-footer">
-          <li><a href="./index.html#contact">Nous contacter</a></li>
+          <li><a href="../../index.html#contact">Nous contacter</a></li>
           <li>
             <a href="https://g.page/r/CRnYaYW2yYMWEBM/review" target="_blank"
               >Avis google</a
             >
           </li>
-          <li><a href="./tissus.html">Les tissus</a></li>
+          <li><a href="../footer/tissus.html">Les tissus</a></li>
         </ul>
       </div>
     </footer>

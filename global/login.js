@@ -1,6 +1,6 @@
 // /js/admin/login.js
 
-import { loginAdmin } from './api/apiClient.js';
+import { loginAdmin } from '../api/apiClient.js';
 
 /**
  * Fonction de connexion de l'administrateur.
@@ -23,14 +23,15 @@ async function login(event) {
       if (userOpen) userOpen.textContent = 'Log out';
 
       // Redirection
-      window.location.href = 'index.html';
+      window.location.href = '../index.html';
     } else {
       throw new Error('Aucun token reçu');
     }
   } catch (error) {
     console.error('Erreur de connexion :', error.message);
     const errMsg = document.querySelector('.text-error-connexion');
-    if (errMsg) errMsg.textContent = 'Erreur dans l’identifiant ou le mot de passe';
+    if (errMsg)
+      errMsg.textContent = 'Erreur dans l’identifiant ou le mot de passe';
   }
 }
 
@@ -39,4 +40,3 @@ const formLogin = document.querySelector('#menu-connexion');
 if (formLogin) {
   formLogin.addEventListener('submit', login);
 }
-

@@ -1,4 +1,4 @@
-import { getGalerie } from './api/apiClient.js';
+import { getGalerie } from '../../api/apiClient.js';
 
 async function chargerGalerieVideos() {
   const data = await getGalerie();
