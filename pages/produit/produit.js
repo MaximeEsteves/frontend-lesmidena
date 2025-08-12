@@ -1,5 +1,3 @@
-// produitDetail.js
-
 import {
   getAllProducts,
   getProductByRef,
@@ -12,78 +10,87 @@ import {
   updateFavorisCount,
 } from '../../global/addFavorisPanier.js';
 
-const baseURL = API_BASE + '/';
+const baseURL = API_BASE.endsWith('/') ? API_BASE : API_BASE + '/';
 
 // Variables globales
-let produit, allProducts;
+let produit = null;
+let allProducts = [];
 let currentImageIndex = 0;
+let shareData = { title: '', text: '', url: window.location.href };
 
-// Données de partage
-let shareData = {
-  title: '',
-  text: '',
-  url: window.location.href,
-};
+// ---- utilitaires ----
+function buildImageUrl(src) {
+  if (!src) return '';
+  // Déjà une URL absolue
+  if (/^https?:\/\//i.test(src)) return src;
+  // commence par slash => API_BASE + src
+  if (src.startsWith('/')) return API_BASE + src;
+  // sinon considère comme chemin relatif côté uploads (baseURL + src)
+  return baseURL + src;
+}
 
-// Met à jour l'image principale et la modale fullscreen
+// ---- Images / galerie ----
 function updateMainImage(index) {
   currentImageIndex = index;
   const mainImage = document.getElementById('image-principale');
   const fullscreenImage = document.getElementById('fullscreen-image');
-  if (!produit.image || !mainImage || !fullscreenImage) return;
-  mainImage.src = baseURL + produit.image[index];
-  fullscreenImage.src = baseURL + produit.image[index];
+  if (!produit || !Array.isArray(produit.image) || produit.image.length === 0) {
+    if (mainImage) mainImage.src = '';
+    if (fullscreenImage) fullscreenImage.src = '';
+    return;
+  }
+  const src = produit.image[index] || produit.image[0];
+  const url = buildImageUrl(src);
+  if (mainImage) mainImage.src = url;
+  if (fullscreenImage) fullscreenImage.src = url;
   document.querySelectorAll('.thumbnail').forEach((img, i) => {
     img.classList.toggle('active', i === index);
   });
 }
 
-// Initialisation de la galerie d'images (thumbnails, prev/next)
 function initImageGallery() {
-  const thumbsContainer = document.querySelector('.thumbs');
-  if (!thumbsContainer || !produit.image) return;
-  currentImageIndex = 0;
+  const thumbsContainer =
+    document.getElementById('thumbs-container') ||
+    document.querySelector('.thumbs');
+  if (!thumbsContainer) return;
   thumbsContainer.innerHTML = '';
-  // Si pas d'images, on vide ou on met un placeholder
-  if (!Array.isArray(produit.image) || produit.image.length === 0) {
+
+  if (!produit || !Array.isArray(produit.image) || produit.image.length === 0) {
+    // placeholder
     const mainImage = document.getElementById('image-principale');
     if (mainImage) mainImage.src = '';
     return;
   }
 
-  // Mettre à jour la première image
+  currentImageIndex = 0;
   updateMainImage(0);
 
-  // Créer les thumbnails
   produit.image.forEach((src, idx) => {
     const thumb = document.createElement('img');
-    thumb.src = baseURL + src;
+    thumb.src = buildImageUrl(src);
     thumb.classList.add('thumbnail');
     if (idx === 0) thumb.classList.add('active');
     thumb.addEventListener('click', () => updateMainImage(idx));
     thumbsContainer.appendChild(thumb);
   });
 
-  // Prev / Next boutons
   const prevBtn = document.getElementById('prev-btn');
   const nextBtn = document.getElementById('next-btn');
-  if (prevBtn) {
+  if (prevBtn)
     prevBtn.onclick = () => {
-      if (!produit.image || produit.image.length === 0) return;
+      if (!produit?.image?.length) return;
       updateMainImage(
         (currentImageIndex - 1 + produit.image.length) % produit.image.length
       );
     };
-  }
-  if (nextBtn) {
+  if (nextBtn)
     nextBtn.onclick = () => {
-      if (!produit.image || produit.image.length === 0) return;
+      if (!produit?.image?.length) return;
       updateMainImage((currentImageIndex + 1) % produit.image.length);
     };
-  }
 }
 
-// Initialisation de la modale plein écran (ouverture, fermeture, zoom)
+// ---- modal fullscreen ----
 function initFullScreenModal() {
   const mainImage = document.getElementById('image-principale');
   const fullscreenModal = document.getElementById('fullscreen-modal');
@@ -93,38 +100,33 @@ function initFullScreenModal() {
   const fullscreenNext = document.getElementById('fullscreen-next');
   const modalImageContainer = document.querySelector('.contenair-image-modal');
 
-  if (mainImage && fullscreenModal) {
+  if (mainImage && fullscreenModal)
     mainImage.onclick = () => fullscreenModal.classList.add('show');
-  }
-  if (closeFullscreenBtn && fullscreenModal) {
+  if (closeFullscreenBtn && fullscreenModal)
     closeFullscreenBtn.onclick = () => fullscreenModal.classList.remove('show');
-  }
   if (fullscreenModal) {
     fullscreenModal.onclick = (e) => {
       if (e.target === fullscreenModal)
         fullscreenModal.classList.remove('show');
     };
   }
-  // Échap pour fermer
   document.onkeydown = (e) => {
-    if (e.key === 'Escape' && fullscreenModal) {
+    if (e.key === 'Escape' && fullscreenModal)
       fullscreenModal.classList.remove('show');
-    }
   };
-  if (fullscreenPrev) {
+  if (fullscreenPrev)
     fullscreenPrev.onclick = () => {
-      if (!produit.image || produit.image.length === 0) return;
+      if (!produit?.image?.length) return;
       updateMainImage(
         (currentImageIndex - 1 + produit.image.length) % produit.image.length
       );
     };
-  }
-  if (fullscreenNext) {
+  if (fullscreenNext)
     fullscreenNext.onclick = () => {
-      if (!produit.image || produit.image.length === 0) return;
+      if (!produit?.image?.length) return;
       updateMainImage((currentImageIndex + 1) % produit.image.length);
     };
-  }
+
   if (modalImageContainer && fullscreenImage) {
     modalImageContainer.style.overflow = 'hidden';
     fullscreenImage.style.transition = 'transform 0.2s ease-out';
@@ -142,51 +144,61 @@ function initFullScreenModal() {
   }
 }
 
-// Affichage des détails du produit courant dans le DOM
+// ---- affichage détails ----
 function displayProductDetails() {
-  // Bouton "Ajouter au panier"
+  if (!produit) return;
   const boutonAcheter = document.querySelector('.btn-ajout-panier');
-  if (boutonAcheter) boutonAcheter.dataset.id = produit._id;
-  // Bouton favoris
+  if (boutonAcheter) boutonAcheter.dataset.id = produit._id || '';
+
   const boutonFavoris = document.querySelector('.btn-fav-article');
-  if (boutonFavoris) boutonFavoris.dataset.id = produit._id;
-  // Catégorie / titre
+  if (boutonFavoris) boutonFavoris.dataset.id = produit._id || '';
+
   const titreBoutique = document.querySelector('.titre-produit-boutique');
-  if (titreBoutique) titreBoutique.textContent = produit.categorie;
+  if (titreBoutique) titreBoutique.textContent = produit.categorie || '';
+
   const titreProduit = document.querySelector('.titre-produit');
   if (titreProduit)
-    titreProduit.textContent = `${produit.categorie} - ${produit.nom}`;
-  // Prix
+    titreProduit.textContent = `${produit.categorie || ''} - ${
+      produit.nom || ''
+    }`;
+
   const prixEl = document.getElementById('prix-produit');
-  if (prixEl) prixEl.textContent = `${produit.prix} €`;
-  // Référence
+  if (prixEl)
+    prixEl.textContent = produit.prix !== undefined ? `${produit.prix} €` : '';
+
   const refEl = document.getElementById('ref-produit');
-  if (refEl) refEl.textContent = `Référence : ${produit.reference}`;
-  // Description
+  if (refEl)
+    refEl.textContent = produit.reference
+      ? `Référence : ${produit.reference}`
+      : '';
+
   const titreDesc = document.getElementById('titre-produit-description');
-  if (titreDesc) titreDesc.textContent = produit.titreDescription;
+  if (titreDesc) titreDesc.textContent = produit.titreDescription || '';
+
   const descEl = document.getElementById('desc-produit');
-  if (descEl) descEl.innerHTML = produit.descriptionComplete;
-  // Matériaux
+  if (descEl) descEl.innerHTML = produit.descriptionComplete || '';
+
   const matEl = document.getElementById('materiaux-produit');
-  if (matEl) matEl.textContent = produit.materiaux;
-  // Image de couverture
+  if (matEl) matEl.textContent = produit.materiaux || '';
+
   const coverImg = document.getElementById('image-couverture-boutique');
   if (coverImg && produit.imageCouverture) {
-    coverImg.src = baseURL + produit.imageCouverture;
+    coverImg.src = buildImageUrl(produit.imageCouverture);
   }
-  // Mettre à jour shareData
-  shareData.title = produit.nom;
-  shareData.text = produit.descriptionComplete.slice(0, 100) + '…';
+
+  // shareData
+  shareData.title = produit.nom || '';
+  shareData.text = (produit.descriptionComplete || '').slice(0, 120) + '…';
   shareData.url = window.location.href;
 }
 
-// Sélecteur de quantité (stock)
+// ---- stock selector ----
 function initStockSelector() {
   const select = document.getElementById('stock-produit');
   if (!select) return;
   select.innerHTML = '';
-  for (let i = 1; i <= produit.stock; i++) {
+  const stock = Number(produit?.stock) || 1;
+  for (let i = 1; i <= Math.max(1, stock); i++) {
     const opt = document.createElement('option');
     opt.value = i;
     opt.textContent = i;
@@ -194,81 +206,83 @@ function initStockSelector() {
   }
 }
 
-// Gestion des avis
-const formAvis = document.getElementById('form-avis');
-const messageAvis = document.getElementById('avis-message');
-const listeAvisBloc = document.getElementById('liste-avis');
-
-function handleReviewSubmit(e) {
-  e.preventDefault();
-  const nom = document.getElementById('avis-nom').value.trim();
-  const note = document.getElementById('avis-note').value;
-  const com = document.getElementById('avis-commentaire').value.trim();
-  if (!nom || !note || !com) return;
-  const key = `avis_${produit.reference}`;
-  let avisList = JSON.parse(localStorage.getItem(key)) || [];
-  const nouvel = {
-    nom,
-    note,
-    commentaire: com,
-    date: new Date().toISOString(),
-  };
-  avisList.unshift(nouvel);
-  localStorage.setItem(key, JSON.stringify(avisList));
-  renderAvis(avisList);
-  formAvis.reset();
-  if (messageAvis) {
-    messageAvis.textContent = 'Merci pour votre avis !';
-    setTimeout(() => (messageAvis.textContent = ''), 3000);
-  }
-}
-
-function initReviewForm() {
-  if (!formAvis) return;
-  formAvis.removeEventListener('submit', handleReviewSubmit);
-  const key = `avis_${produit.reference}`;
-  let avisList = JSON.parse(localStorage.getItem(key)) || [];
-  renderAvis(avisList);
-  formAvis.addEventListener('submit', handleReviewSubmit);
-}
-
-function renderAvis(list) {
-  if (!listeAvisBloc) return;
-  listeAvisBloc.innerHTML = '';
-  if (list.length === 0) {
-    listeAvisBloc.innerHTML = '<p>Aucun avis pour le moment.</p>';
+// ---- avis ----
+function renderAvis(list, targetEl) {
+  if (!targetEl) return;
+  targetEl.innerHTML = '';
+  if (!list || list.length === 0) {
+    targetEl.innerHTML = '<p>Aucun avis pour le moment.</p>';
     return;
   }
   list.forEach((av) => {
     const div = document.createElement('div');
     div.classList.add('avis');
+    const note = Number(av.note) || 0;
     div.innerHTML = `
-      <h4>${av.nom} <span class="note">${'★'.repeat(av.note)}${'☆'.repeat(
-      5 - av.note
+      <h4>${av.nom} <span class="note">${'★'.repeat(note)}${'☆'.repeat(
+      5 - note
     )}</span></h4>
       <p>${av.commentaire}</p>
       <small>${new Date(av.date).toLocaleDateString()}</small>
     `;
-    listeAvisBloc.appendChild(div);
+    targetEl.appendChild(div);
   });
 }
 
-// Produits similaires même catégorie (affichage des petites cartes à cotés de la carte principale)
+function initReviewForm() {
+  const formAvis = document.getElementById('form-avis');
+  const messageAvis = document.getElementById('avis-message');
+  const listeAvisBloc = document.getElementById('liste-avis');
+
+  if (!formAvis) return;
+
+  const key = `avis_${produit?.reference || 'unknown'}`;
+  let avisList = JSON.parse(localStorage.getItem(key)) || [];
+  renderAvis(avisList, listeAvisBloc);
+
+  formAvis.removeEventListener('submit', handleReviewSubmit); // safe: no-op si pas attaché
+  formAvis.addEventListener('submit', handleReviewSubmit);
+
+  function handleReviewSubmit(e) {
+    e.preventDefault();
+    const nom = document.getElementById('avis-nom').value.trim();
+    const note = document.getElementById('avis-note').value;
+    const com = document.getElementById('avis-commentaire').value.trim();
+    if (!nom || !note || !com) return;
+    const nouvel = {
+      nom,
+      note,
+      commentaire: com,
+      date: new Date().toISOString(),
+    };
+    avisList.unshift(nouvel);
+    localStorage.setItem(key, JSON.stringify(avisList));
+    renderAvis(avisList, listeAvisBloc);
+    formAvis.reset();
+    if (messageAvis) {
+      messageAvis.textContent = 'Merci pour votre avis !';
+      setTimeout(() => (messageAvis.textContent = ''), 3000);
+    }
+  }
+}
+
+// ---- produits similaires ----
 function produitSupplementaire() {
   const titreProduitSupp = document.getElementById('titre-produit-similaire');
-  if (!titreProduitSupp) return;
+  if (!titreProduitSupp || !allProducts?.length || !produit) return;
   titreProduitSupp.innerHTML = '';
   const similaires = allProducts
     .filter(
       (p) =>
         p.categorie === produit.categorie && p.reference !== produit.reference
     )
-    .slice(0, 99);
+    .slice(0, 8);
   similaires.forEach((p) => {
     const carte = document.createElement('div');
     carte.classList.add('carte-produit');
+    const imgSrc = buildImageUrl(p.image?.[0] || '');
     carte.innerHTML = `
-      <img src="${baseURL + p.image[0]}" alt="${p.nom}">
+      <img src="${imgSrc}" alt="${p.nom}">
       <div class="nom-produit">${p.nom}</div>
     `;
     carte.addEventListener('click', (e) => {
@@ -279,11 +293,9 @@ function produitSupplementaire() {
   });
 }
 
-// Produits d'autres catégories (en dessous de l'article principal - 5 cartes aléatoire d'un produit)
 function produitSupplementaireAutres() {
   const titreAutres = document.getElementById('titre-produit-similaire-autres');
-  if (!titreAutres) return;
-
+  if (!titreAutres || !allProducts?.length || !produit) return;
   titreAutres.innerHTML = '';
   const titre = document.createElement('h2');
   titre.textContent =
@@ -291,33 +303,29 @@ function produitSupplementaireAutres() {
   const cont = document.createElement('div');
   cont.classList.add('produits-similaire-container-autres');
 
-  // Étape 1 : filtrer les produits hors de la catégorie actuelle
   const produitsAutres = allProducts.filter(
     (p) => p.categorie !== produit.categorie
   );
-
-  // Étape 2 : regrouper par catégorie
   const produitsParCategorie = {};
   produitsAutres.forEach((p) => {
-    if (!produitsParCategorie[p.categorie]) {
+    if (!produitsParCategorie[p.categorie])
       produitsParCategorie[p.categorie] = [];
-    }
     produitsParCategorie[p.categorie].push(p);
   });
 
-  // Étape 3 : choisir un produit aléatoire par catégorie
   const produitsSelectionnes = Object.values(produitsParCategorie)
-    .map((produits) => produits[Math.floor(Math.random() * produits.length)])
-    .slice(0, 5); // max 5 produits
+    .map((arr) => arr[Math.floor(Math.random() * arr.length)])
+    .slice(0, 5);
 
-  // Étape 4 : affichage
   produitsSelectionnes.forEach((p) => {
     const c = document.createElement('div');
     c.classList.add('carte-produit-autres');
     c.innerHTML = `
-      <img src="${baseURL + p.image[0]}" alt="${p.categorie} - ${p.nom}">
+      <img src="${buildImageUrl(p.image?.[0] || '')}" alt="${p.categorie} - ${
+      p.nom
+    }">
       <h3>${p.nom}</h3>
-      <p>${p.prix.toFixed(2)} €</p>
+      <p>${(p.prix || 0).toFixed(2)} €</p>
     `;
     c.addEventListener('click', (e) => {
       e.preventDefault();
@@ -330,9 +338,14 @@ function produitSupplementaireAutres() {
   titreAutres.appendChild(cont);
 }
 
-// Chargement dynamique d'un produit par référence sans rechargement de page
+// ---- loadProduct (dynamique, safe) ----
 async function loadProduct(ref, addToHistory = true) {
+  if (!ref) {
+    console.warn('loadProduct appelé sans ref');
+    return;
+  }
   try {
+    console.log('loadProduct -> ref:', ref);
     const newProduit = await getProductByRef(ref);
     if (!newProduit) {
       document.querySelector('main').innerHTML = '<p>Produit non trouvé.</p>';
@@ -342,10 +355,9 @@ async function loadProduct(ref, addToHistory = true) {
     if (addToHistory) {
       history.pushState({ ref }, '', `/produit/${encodeURIComponent(ref)}`);
     }
-    // Scroll en haut
     window.scrollTo(0, 0);
 
-    // Mettre à jour le DOM
+    // Mise à jour DOM / modules
     displayProductDetails();
     initImageGallery();
     initFullScreenModal();
@@ -353,6 +365,7 @@ async function loadProduct(ref, addToHistory = true) {
     initReviewForm();
     produitSupplementaire();
     produitSupplementaireAutres();
+    // Favoris / panier
     initPageListeFavoris(allProducts);
     initPageListePanier(allProducts);
     mettreAJourBoutonsPanier();
@@ -365,24 +378,42 @@ async function loadProduct(ref, addToHistory = true) {
   }
 }
 
-// Gérer le bouton Retour/Avant du navigateur
+// Gestion popstate
 window.addEventListener('popstate', (event) => {
   if (event.state && event.state.ref) {
     loadProduct(event.state.ref, false);
   }
 });
 
-// Partage
-const btnPartager = document.getElementById('btn-partager');
-
-// Initialisation au chargement de la page
+// ---- init ----
 async function init() {
   window.history.scrollRestoration = 'manual';
   window.scrollTo(0, 0);
+
+  // Récupérer les éléments qui nécessitent d'exister
+  const btnPartager = document.getElementById('btn-partager');
+
   try {
     allProducts = await getAllProducts();
-    // Extraire la référence de l'URL
-    const ref = window.location.pathname.split('/').pop();
+
+    // Extraire la référence : supporte /produit/REF ou /produit.html?ref=REF
+    let ref = null;
+    const pathParts = window.location.pathname.split('/');
+    const lastPart = pathParts.pop() || pathParts.pop(); // robust
+    if (lastPart && lastPart !== 'produit' && lastPart !== 'produit.html') {
+      ref = decodeURIComponent(lastPart);
+    }
+    // fallback query param ?ref=...
+    const params = new URLSearchParams(window.location.search);
+    if (!ref && params.get('ref')) ref = params.get('ref');
+
+    if (!ref) {
+      console.warn("Aucune référence trouvée dans l'URL");
+      document.querySelector('main').innerHTML =
+        "<p>Référence du produit manquante dans l'URL.</p>";
+      return;
+    }
+
     await loadProduct(ref, false);
 
     if (btnPartager) {
@@ -390,12 +421,14 @@ async function init() {
         if (navigator.share) {
           try {
             await navigator.share(shareData);
-          } catch {}
+          } catch (e) {
+            // utilisateur annule : ignore
+          }
         } else alert('Partage non supporté.');
       });
     }
 
-    // Initialisation favoris/panier
+    // Initialisation favoris/panier (sécurisé)
     initPageListeFavoris(allProducts);
     initPageListePanier(allProducts);
     mettreAJourBoutonsPanier();
@@ -408,3 +441,5 @@ async function init() {
 }
 
 document.addEventListener('DOMContentLoaded', init);
+
+export { loadProduct };
