@@ -112,6 +112,9 @@
   height: auto;
   object-fit: cover;
 }
+.img-carousel:hover {
+  transform: scale(1.02);
+}
 .carousel-button {
   position: absolute;
   display: flex;
@@ -193,12 +196,11 @@
 /* btn favoris*/
 .btn-fav-article {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 22px !important;
+  right: 22px !important;
   background-color: transparent !important;
   border: none !important;
   cursor: pointer;
-  font-family: Geist;
   font-size: 26px !important;
   transition: 0.3s;
   border-radius: 50%;

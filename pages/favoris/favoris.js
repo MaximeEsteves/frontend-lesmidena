@@ -44,10 +44,12 @@ function getProduitFavoris() {
     divBtn.classList.add('div-btn');
     card.classList.add('favori-card');
 
-    image.src = baseURL + produit.image;
+    image.src = baseURL + produit.image[0];
     image.alt = produit.nom;
     image.addEventListener('click', () => {
-      window.location.href = `produit.html?ref=${produit.reference}`;
+      window.location.href = `/produit/${encodeURIComponent(
+        produit.reference
+      )}`;
     });
     nom.textContent = produit.nom;
     description.textContent = produit.description;

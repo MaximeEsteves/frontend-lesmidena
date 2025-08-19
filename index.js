@@ -26,7 +26,6 @@ async function init() {
 
     mettreAJourBoutonsPanier();
     updateFavorisCount();
-    handleHeaderScroll();
   } catch (error) {
     console.error('Erreur lors du chargement des produits :', error);
   }
@@ -45,16 +44,6 @@ function enterEditModeUI() {
       '<i class="fa-solid fa-pen-to-square"></i><p>Mode édition</p>';
     body.style.marginTop = '59px';
     body.appendChild(modeEdition);
-  }
-}
-// Gère l'ajout du listener scroll pour le header, une seule fois
-function handleHeaderScroll() {
-  const header = document.querySelector('header');
-  if (!header._hasScrollListener) {
-    window.addEventListener('scroll', () => {
-      header.classList.toggle('scrolled', window.scrollY > 50);
-    });
-    header._hasScrollListener = true; // flag pour éviter les doublons
   }
 }
 

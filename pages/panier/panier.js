@@ -45,10 +45,12 @@ function renderPanier() {
 
     // Image
     const image = document.createElement('img');
-    image.src = baseURL + produit.image;
+    image.src = baseURL + produit.image[0];
     image.alt = produit.nom;
     image.addEventListener('click', () => {
-      window.location.href = `/produit/${produit.reference}`;
+      window.location.href = `/produit/${encodeURIComponent(
+        produit.reference
+      )}`;
     });
 
     // Détails

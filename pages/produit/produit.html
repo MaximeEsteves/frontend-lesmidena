@@ -51,20 +51,18 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
     <meta name="description" content="" />
-     <link rel="stylesheet" href="/pages/produit/produit.css" />
-    <script type="module" src="/pages/produit/produit.js" defer></script>
     <link rel="stylesheet" href="/global/style.css" />
+    <link rel="stylesheet" href="/pages/produit/produit.css" />
+    <script type="module" src="/pages/produit/produit.js" defer></script>
     <script type="module" src="/global/script.js" defer></script>
   </head>
   <body>
     <header>
-      <div class="parallax-wrapper">
-        <img
-          id="image-couverture-boutique"
-          src=""
-          alt="image accueil les mignonneries de nathalie"
-        />
-      </div>
+      <img
+        id="image-couverture-boutique"
+        src=""
+        alt="image accueil les mignonneries de nathalie"
+      />
       <div class="titre-header">
         <h1 class="titre-produit-boutique"></h1>
       </div>
@@ -72,7 +70,7 @@
         <nav>
           <a href="#btn-retour" id="logo-nav-header"
             ><img
-              src="../..//assets/images/logo-nav.webp"
+              src="../../assets/images/logo-nav.webp"
               alt="logo les mignonneries de nathalie"
           /></a>
           <ul class="btn-nav">
@@ -89,13 +87,13 @@
               ></a>
             </li>
             <li id="favoris">
-              <a href="../favoris/favoris.html"
+              <a href="../../pages/favoris/favoris.html"
                 ><i class="fa-solid fa-heart"></i
                 ><span id="favoris-count">0</span></a
               >
             </li>
             <li id="panier">
-              <a href="../panier/panier.html"
+              <a href="../../pages/panier/panier.html"
                 ><i class="fa-solid fa-bag-shopping"></i
                 ><span id="panier-count">0</span></a
               >
@@ -188,11 +186,11 @@
         <h3>Laissez un avis</h3>
         <form id="form-avis">
           <div class="form-group">
-            <label for="avis-nom">Votre nom</label>
+            <label for="avis-nom">Nom</label>
             <input type="text" id="avis-nom" name="nom" required />
           </div>
           <div class="form-group">
-            <label for="avis-note">Votre note</label>
+            <label for="avis-note">Note</label>
             <select id="avis-note" name="note" required>
               <option value="">-- Choisissez --</option>
               <option value="5">★★★★★</option>
@@ -203,7 +201,7 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="avis-commentaire">Votre commentaire</label>
+            <label for="avis-commentaire">Commentaire</label>
             <textarea
               id="avis-commentaire"
               name="commentaire"
@@ -265,7 +263,7 @@
       <div class="div-footer">
         <h3 class="titre-footer">Assistance</h3>
         <ul class="lien-footer">
-          <li><a href="./index.html#contact">Nous contacter</a></li>
+          <li><a href="../pages/bio/bio.html">Nous contacter</a></li>
           <li>
             <a href="https://g.page/r/CRnYaYW2yYMWEBM/review" target="_blank"
               >Avis google</a

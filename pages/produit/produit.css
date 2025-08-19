@@ -1,20 +1,14 @@
 /* ============================
    HEADER
 ============================ */
-.parallax-wrapper img {
-  width: 100%;
-  height: 350px;
-  margin: 0;
-}
 header {
-  height: 350px;
+  height: 350px !important;
 }
 
 .titre-header {
   position: absolute;
   top: 45%;
-  left: 67%;
-  text-align: center;
+  left: 60% !important;
 }
 
 .titre-header h1 {
@@ -65,7 +59,7 @@ header {
   padding: 8px;
   font-size: 1.5rem;
   cursor: pointer;
-  z-index: 2;
+  z-index: 1;
   height: 100%;
   width: 50px;
 }
@@ -149,18 +143,23 @@ header {
   font-family: Geist, sans-serif;
 }
 
+.btn-ajout-panier {
+  padding: 12px 25px;
+}
 .btn-ajout-panier,
 .btn-fav-article {
   background-color: #3a5151;
   color: white;
   border: 2px solid #3a5151;
-  padding: 12px 25px;
   border-radius: 6px;
   font-size: 16px;
   cursor: pointer;
   margin-right: 10px;
   font-family: Geist, sans-serif;
   transition: 0.3s;
+}
+.btn-fav-article {
+  padding: 12px 20px;
 }
 
 .btn-ajout-panier:hover,
@@ -359,6 +358,7 @@ header {
   align-items: center;
   color: #3a5151;
   font-size: 32px;
+  gap: 50px;
 }
 .produits-similaire-container-autres {
   display: grid;
@@ -435,6 +435,7 @@ header {
 }
 .avis-section h3 {
   margin-bottom: 10px;
+  font-size: 30px;
 }
 #form-avis {
   width: 50%;
@@ -465,6 +466,8 @@ header {
   border-radius: 8px;
   cursor: pointer;
   transition: 0.3s;
+  width: 100%;
+  font-size: 16px;
 }
 #form-avis button:hover {
   background-color: white;
