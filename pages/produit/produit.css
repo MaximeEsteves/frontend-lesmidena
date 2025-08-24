@@ -359,12 +359,18 @@ header {
   color: #3a5151;
   font-size: 32px;
   gap: 50px;
+  text-align: center;
+}
+#titre-produit-similaire-autres h2 {
+  line-height: 1.5;
 }
 .produits-similaire-container-autres {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin-top: 80px auto;
   gap: 45px;
+  flex-wrap: wrap;
 }
 
 .carte-produit-autres {
@@ -498,4 +504,113 @@ header {
 .avis {
   width: 1000px;
   margin: 80px auto;
+}
+
+@media (max-width: 1440px) {
+  .titre-header h1 {
+    font-size: 42px;
+  }
+  #avis-produit {
+    width: 100%;
+  }
+  #form-avis {
+    width: 70%;
+  }
+}
+@media (max-width: 1024px) {
+  header {
+    height: 300px !important;
+  }
+  .titre-header h1 {
+    font-size: 32px;
+  }
+  .produit-wrapper {
+    flex-direction: column;
+  }
+  .produit-wrapper {
+    border: none;
+  }
+  #titre-produit-similaire-autres {
+    width: 95%;
+  }
+}
+@media (max-width: 768px) {
+  header {
+    height: 250px !important;
+  }
+  .titre-header h1 {
+    font-size: 28px;
+  }
+  #titre-produit-similaire-autres h2 {
+    font-size: 28px;
+  }
+  .price {
+    font-size: 24px;
+  }
+  .details-section h2 {
+    font-size: 24px;
+  }
+  .btn-fav-article,
+  .btn-partager,
+  .btn-ajout-panier {
+    padding: 8px 18px;
+  }
+}
+@media (max-width: 550px) {
+  header {
+    height: 200px !important;
+  }
+  .titre-header h1 {
+    font-size: 22px;
+  }
+  .titre-header {
+    position: absolute;
+    top: 55%;
+    left: 60% !important;
+  }
+}
+@media (max-width: 425px) {
+  header {
+    height: 150px !important;
+  }
+  .titre-header h1 {
+    font-size: 18px;
+  }
+  .titre-header {
+    position: absolute;
+    top: 55%;
+    left: 60% !important;
+  }
+  #form-avis {
+    width: 90%;
+  }
+  .btn-fav-article,
+  .btn-partager,
+  .btn-ajout-panier {
+    padding: 6px 14px;
+  }
+  .price {
+    font-size: 22px;
+  }
+  .details-section h2 {
+    font-size: 22px;
+  }
+}
+@media (max-width: 320px) {
+  #stock-produit {
+    padding: 8px;
+    font-size: 14px;
+  }
+  .btn-fav-article,
+  .btn-partager,
+  .btn-ajout-panier {
+    font-size: 14px;
+    padding: 4px 12px;
+  }
+  .price {
+    font-size: 18px;
+  }
+  .details-section h2 {
+    font-size: 18px;
+  }
 }

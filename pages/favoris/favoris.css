@@ -88,3 +88,41 @@ header {
   border: 2px solid red;
   transition: 0.3s;
 }
+
+@media (max-width: 1024px) {
+  .favoris-container {
+    width: 90%;
+    padding: 20px 0px;
+  }
+}
+@media (max-width: 768px) {
+  .favoris-container {
+    width: 95%;
+    padding: 20px 0px;
+  }
+  .favori-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 20px;
+    border: 1px solid #3a5151;
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .div-btn {
+    display: flex;
+    gap: 15px;
+    flex-direction: column;
+    align-content: flex-end;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+  .div-info-card {
+    color: #3a5151;
+    display: flex;
+    gap: 0px;
+    justify-content: center;
+    flex-direction: column;
+  }
+}

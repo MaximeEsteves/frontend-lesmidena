@@ -282,7 +282,7 @@ function projets(worksData) {
     }
   }
 
-  // 2) Pour chaque catégorie, créer la figure avec carousel
+  // 2) Pour chaque catégorie, créer la figure avec carousel Swiper
   for (const [cat, produits] of produitsParCat.entries()) {
     const urls = produits.map((prod) => {
       const raw = Array.isArray(prod.image) ? prod.image[0] : prod.image || '';
@@ -292,20 +292,20 @@ function projets(worksData) {
     const figure = document.createElement('figure');
     figure.dataset.id = produits[0]._id;
 
-    // --- Carousel Slider ---
-    const carouselContainer = document.createElement('div');
-    carouselContainer.classList.add('carousel-container');
+    // --- Swiper Container ---
+    const swiperContainer = document.createElement('div');
+    swiperContainer.classList.add('swiper');
 
-    // Piste flex
-    const track = document.createElement('div');
-    track.classList.add('carousel-track');
+    const swiperWrapper = document.createElement('div');
+    swiperWrapper.classList.add('swiper-wrapper');
 
     // Slides
     produits.forEach((prod, i) => {
+      const slide = document.createElement('div');
+      slide.classList.add('swiper-slide');
+
       const divBg = document.createElement('div');
       divBg.classList.add('div-bg-card');
-      const slide = document.createElement('div');
-      slide.classList.add('carousel-slide');
 
       const imgEl = document.createElement('img');
       imgEl.src = urls[i];
@@ -321,53 +321,22 @@ function projets(worksData) {
 
       divBg.appendChild(imgEl);
       slide.appendChild(divBg);
-      track.appendChild(slide);
+      swiperWrapper.appendChild(slide);
     });
 
-    carouselContainer.appendChild(track);
+    swiperContainer.appendChild(swiperWrapper);
 
     // Boutons Prev / Next
-    const btnPrev = document.createElement('button');
-    btnPrev.classList.add(
-      'carousel-button',
-      'carousel-prev',
-      'fa-solid',
-      'fa-chevron-left'
-    );
-    btnPrev.setAttribute('aria-label', 'Précédent');
-
-    const btnNext = document.createElement('button');
-    btnNext.classList.add(
-      'carousel-button',
-      'carousel-next',
-      'fa-solid',
-      'fa-chevron-right'
-    );
-    btnNext.setAttribute('aria-label', 'Suivant');
-
-    // Si plus d'une image, on ajoute les flèches
     if (urls.length > 1) {
-      carouselContainer.appendChild(btnPrev);
-      carouselContainer.appendChild(btnNext);
+      const btnPrev = document.createElement('div');
+      btnPrev.classList.add('swiper-button-prev');
+      const btnNext = document.createElement('div');
+      btnNext.classList.add('swiper-button-next');
+      swiperContainer.appendChild(btnPrev);
+      swiperContainer.appendChild(btnNext);
     }
 
-    figure.appendChild(carouselContainer);
-
-    // Index courant et fonction de mise à jour
-    let currentIndex = 0;
-    const updateCarousel = () => {
-      track.style.transform = `translateX(-${currentIndex * 100}%)`;
-      updateDetails();
-    };
-
-    btnPrev.addEventListener('click', () => {
-      currentIndex = (currentIndex - 1 + urls.length) % urls.length;
-      updateCarousel();
-    });
-    btnNext.addEventListener('click', () => {
-      currentIndex = (currentIndex + 1) % urls.length;
-      updateCarousel();
-    });
+    figure.appendChild(swiperContainer);
 
     // --- Détails (titre, prix, desc, favoris) ---
     const divPrix = document.createElement('div');
@@ -394,27 +363,42 @@ function projets(worksData) {
     btnFav.appendChild(iconFav);
     figure.appendChild(btnFav);
 
-    const updateDetails = () => {
-      const prod = produits[currentIndex];
-      if (!prod) return;
-
-      // Mise à jour du titre, prix, description
-      prix.textContent = `${prod.prix}€`;
-
-      // Favoris
-      btnFav.dataset.id = prod._id;
-      const favoris = JSON.parse(localStorage.getItem('favoris')) || [];
-      const isFav = favoris.some((f) => f._id === prod._id);
-      if (isFav) {
-        iconFav.style.color = '#fce4da';
-        iconFav.classList.replace('fa-regular', 'fa-solid');
-      } else {
-        iconFav.style.color = '';
-        iconFav.classList.replace('fa-solid', 'fa-regular');
-      }
-    };
-
     portfolio.appendChild(figure);
+
+    // --- Initialisation Swiper ---
+    const swiper = new Swiper(swiperContainer, {
+      loop: true,
+      navigation: {
+        nextEl: swiperContainer.querySelector('.swiper-button-next'),
+        prevEl: swiperContainer.querySelector('.swiper-button-prev'),
+      },
+      grabCursor: true,
+      simulateTouch: true,
+      spaceBetween: 10,
+      on: {
+        slideChange: function () {
+          const activeIndex = this.realIndex; // index réel du produit
+          const prod = produits[activeIndex];
+          if (!prod) return;
+
+          // Mise à jour du prix, description
+          prix.textContent = `${prod.prix}€`;
+          description.textContent = prod.description;
+
+          // Mise à jour favoris
+          btnFav.dataset.id = prod._id;
+          const favoris = JSON.parse(localStorage.getItem('favoris')) || [];
+          const isFav = favoris.some((f) => f._id === prod._id);
+          if (isFav) {
+            iconFav.style.color = '#fce4da';
+            iconFav.classList.replace('fa-regular', 'fa-solid');
+          } else {
+            iconFav.style.color = '';
+            iconFav.classList.replace('fa-solid', 'fa-regular');
+          }
+        },
+      },
+    });
   }
 }
 

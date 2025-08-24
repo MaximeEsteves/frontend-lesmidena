@@ -70,7 +70,10 @@ header {
 }
 
 .blog-section-video {
-  width: 760px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
   height: 315px;
   margin: auto;
 }
@@ -119,9 +122,88 @@ header {
   .blog-section {
     flex-direction: column;
   }
+  .blog-section-video {
+    height: 515px;
+  }
+}
+@media (max-width: 1240px) {
 }
 @media (max-width: 1024px) {
   .video {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  header {
+    height: 250px !important;
+  }
+  .titre-header h1 {
+    font-size: 28px;
+  }
+  .blog-intro h2,
+  .blog-titre {
+    font-size: 28px;
+  }
+  .blog-text h2 {
+    font-size: 24px;
+  }
+  .blog-section-video {
+    height: 315px;
+  }
+  .blog-section {
+    padding: 0px;
+    width: 85%;
+  }
+  .fa-chevron-down {
+    display: none;
+  }
+}
+@media (max-width: 550px) {
+  header {
+    height: 200px !important;
+  }
+  .titre-header h1 {
+    font-size: 22px;
+  }
+  .titre-header {
+    position: absolute;
+    top: 55%;
+    left: 60% !important;
+  }
+}
+@media (max-width: 425px) {
+  header {
+    height: 150px !important;
+  }
+  .titre-header h1 {
+    font-size: 18px;
+  }
+  .titre-header {
+    position: absolute;
+    top: 55%;
+    left: 60% !important;
+  }
+  .blog-intro h2,
+  .blog-titre {
+    font-size: 26px;
+  }
+  .blog-text h2 {
+    font-size: 22px;
+  }
+  .blog-intro p {
+    width: 85%;
+  }
+}
+@media (max-width: 320px) {
+  header {
+    height: 140px !important;
+  }
+  .blog-intro h2,
+  .blog-titre {
+    font-size: 24px;
+  }
+  .blog-text h2 {
+    font-size: 18px;
   }
 }

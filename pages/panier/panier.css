@@ -85,6 +85,7 @@ main h1 {
   align-items: center;
   gap: 16px;
   margin-top: 8px;
+  flex-wrap: wrap;
 }
 
 .panier-actions input[type='number'] {
@@ -220,8 +221,13 @@ main h1 {
 }
 
 /* Optionnel : responsive */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   #form-livraison .form-group {
     margin-bottom: 10px;
+  }
+}
+@media (max-width: 425px) {
+  .panier-actions{
+    flex
   }
 }

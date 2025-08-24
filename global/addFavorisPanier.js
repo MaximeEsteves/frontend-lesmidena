@@ -1,25 +1,27 @@
 export function updateFavorisCount() {
   const favoris = JSON.parse(localStorage.getItem('favoris')) || [];
   const panier = JSON.parse(localStorage.getItem('panier')) || [];
-  const compteur = document.getElementById('favoris-count');
-  const iconeFavoris = document.querySelector('#favoris i');
-  const compteurPanier = document.getElementById('panier-count');
-  if (compteur) {
+
+  // ✅ Tous les compteurs favoris (desktop + mobile)
+  const compteursFavoris = document.querySelectorAll('.favoris-count');
+  const iconesFavoris = document.querySelectorAll('.favoris i');
+
+  compteursFavoris.forEach((compteur) => {
     compteur.textContent = favoris.length;
     compteur.style.display = favoris.length > 0 ? 'inline-block' : 'none';
-    if (iconeFavoris) {
-      iconeFavoris.classList.remove(
-        favoris.length > 0 ? 'fa-regular' : 'fa-solid'
-      );
-      iconeFavoris.classList.add(
-        favoris.length > 0 ? 'fa-solid' : 'fa-regular'
-      );
-    }
-  }
-  if (panier) {
+  });
+
+  iconesFavoris.forEach((icone) => {
+    icone.classList.remove(favoris.length > 0 ? 'fa-regular' : 'fa-solid');
+    icone.classList.add(favoris.length > 0 ? 'fa-solid' : 'fa-regular');
+  });
+
+  // ✅ Tous les compteurs panier (desktop + mobile)
+  const compteursPanier = document.querySelectorAll('.panier-count');
+  compteursPanier.forEach((compteurPanier) => {
     compteurPanier.textContent = panier.length;
     compteurPanier.style.display = panier.length > 0 ? 'inline-block' : 'none';
-  }
+  });
 }
 
 let favorisListenerAjoute = false;
@@ -152,12 +154,12 @@ export function initPageListePanier(produits) {
   });
 }
 
-// Met à jour les boutons en fonction de l'état du panier
+// ✅ Met à jour aussi les boutons + icônes
 export function mettreAJourBoutonsPanier() {
   const panier = JSON.parse(localStorage.getItem('panier')) || [];
 
+  // Tous les boutons "ajout panier"
   const boutons = document.querySelectorAll('.btn-ajout-panier[data-id]');
-
   boutons.forEach((btn) => {
     const id = btn.dataset.id;
     const estDansPanier = panier.some((p) => p._id === id);
@@ -174,8 +176,9 @@ export function mettreAJourBoutonsPanier() {
       btn.style.borderColor = '';
     }
   });
-  const boutonsAcheter = document.querySelectorAll('.btn-acheter[data-id]');
 
+  // Tous les boutons "acheter"
+  const boutonsAcheter = document.querySelectorAll('.btn-acheter[data-id]');
   boutonsAcheter.forEach((btn) => {
     const id = btn.dataset.id;
     const estDansPanier = panier.some((p) => p._id === id);
@@ -193,10 +196,10 @@ export function mettreAJourBoutonsPanier() {
     }
   });
 
+  // Tous les boutons "ajout panier depuis favoris"
   const boutonsPanier = document.querySelectorAll(
     '.btn-ajout-panier-favoris[data-id]'
   );
-
   boutonsPanier.forEach((btn) => {
     const id = btn.dataset.id;
     const estDansPanier = panier.some((p) => p._id === id);
@@ -212,6 +215,7 @@ export function mettreAJourBoutonsPanier() {
     }
   });
 
+  // ✅ Mettre à jour aussi les icônes favoris
   const favoris = JSON.parse(localStorage.getItem('favoris')) || [];
   const btnFavs = document.querySelectorAll('.btn-fav-article[data-id]');
   btnFavs.forEach((btn) => {

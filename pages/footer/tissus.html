@@ -55,45 +55,118 @@
     <link rel="stylesheet" href="./tissus.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <!-- Script Leaflet -->
+    <script type="module" src="../../global/script.js" defer></script>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   </head>
   <body>
     <header>
-      <div class="header-content">
-        <nav>
-          <a href="../../index.html" id="logo-nav-header"
-            ><img
-              src="../../assets/images/logo-nav.webp"
-              alt="logo les mignonneries de nathalie"
-          /></a>
-          <ul class="btn-nav">
+      <!-- NAVIGATION DESKTOP -->
+      <nav class="desktop">
+        <a href="../../index.html" id="logo-nav-header"
+          ><img
+            src="../../assets/images/logo-nav.webp"
+            alt="logo les mignonneries de nathalie"
+        /></a>
+        <ul class="btn-nav">
+          <li><a href="../../index.html">Accueil</a></li>
+          <li><a href="../../index.html#creation">Créations</a></li>
+          <li><a href="../blog/blog.html">Blog</a></li>
+          <li><a href="../../index.html#contact">Contact</a></li>
+          <li id="user-open"><a href="../../global/login.html">Login</a></li>
+          <li>
+            <a
+              href="https://www.instagram.com/mignonneries.nathalie/"
+              target="_blank"
+              ><i class="fa-brands fa-instagram"></i
+            ></a>
+          </li>
+          <li class="favoris">
+            <a href="../favoris/favoris.html"
+              ><i class="fa-solid fa-heart"></i
+              ><span class="favoris-count">0</span></a
+            >
+          </li>
+          <li class="panier">
+            <a href="../panier/panier.html"
+              ><i class="fa-solid fa-bag-shopping"></i
+              ><span class="panier-count">0</span></a
+            >
+          </li>
+        </ul>
+      </nav>
+      <!-- NAVIGATION MOBILE -->
+      <nav class="mobile">
+        <!-- Burger -->
+        <button class="burger" aria-label="Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+
+        <!-- Logo -->
+        <a href="#btn-retour" class="logo">
+          <img src="../../assets/images/logo-nav.webp" alt="logo" />
+        </a>
+
+        <!-- Barre de recherche -->
+        <div class="search">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Sac, Bavoir, Kit ..."
+          />
+          <div id="searchResults"></div>
+        </div>
+
+        <!-- Icônes à droite -->
+        <div class="icons">
+          <a
+            href="https://www.instagram.com/mignonneries.nathalie/"
+            target="_blank"
+          >
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a href="./pages/favoris/favoris.html" class="favoris">
+            <i class="fa-regular fa-heart"></i>
+            <span class="favoris-count"></span>
+          </a>
+          <a href="./pages/panier/panier.html" class="panier">
+            <i class="fa-solid fa-bag-shopping"></i>
+            <span class="panier-count"></span>
+          </a>
+        </div>
+
+        <!-- Menu déroulant caché -->
+        <div class="mobile-menu">
+          <div class="mobile-menu-overlay"></div>
+          <button class="close-menu" aria-label="Fermer">
+            <i class="fa-solid fa-xmark"></i>
+            <img src="../../assets/images/logo-nav.webp" alt="logo" />
+          </button>
+          <div class="icons">
+            <a
+              href="https://www.instagram.com/mignonneries.nathalie/"
+              target="_blank"
+            >
+              <i class="fa-brands fa-instagram"></i>
+            </a>
+            <a href="./pages/favoris/favoris.html" class="favoris">
+              <i class="fa-regular fa-heart"></i>
+              <span class="favoris-count"></span>
+            </a>
+            <a href="./pages/panier/panier.html" class="panier">
+              <i class="fa-solid fa-bag-shopping"></i>
+              <span class="panier-count"></span>
+            </a>
+          </div>
+          <ul>
             <li><a href="../../index.html">Accueil</a></li>
             <li><a href="../../index.html#creation">Créations</a></li>
             <li><a href="../blog/blog.html">Blog</a></li>
             <li><a href="../../index.html#contact">Contact</a></li>
-            <li id="user-open"><a href="../../global/login.html">Login</a></li>
-            <li>
-              <a
-                href="https://www.instagram.com/mignonneries.nathalie/"
-                target="_blank"
-                ><i class="fa-brands fa-instagram"></i
-              ></a>
-            </li>
-            <li id="favoris">
-              <a href="../favoris/favoris.html"
-                ><i class="fa-solid fa-heart"></i
-                ><span id="favoris-count">0</span></a
-              >
-            </li>
-            <li id="panier">
-              <a href="../panier/panier.html"
-                ><i class="fa-solid fa-bag-shopping"></i
-                ><span id="panier-count">0</span></a
-              >
-            </li>
+            <li><a href="../../global/login.html">Login</a></li>
           </ul>
-        </nav>
-      </div>
+          <p>© 2024 - 2025 Mignonneries-Nathalie</p>
+        </div>
+      </nav>
     </header>
     <main>
       <section class="tissus-intro">

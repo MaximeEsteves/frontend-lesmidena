@@ -36,6 +36,10 @@ export async function getProductByRef(ref) {
 }
 
 // === API spécifiques produits ===
+export async function searchProducts(query) {
+  return apiRequest(`/api/recherche?search=${encodeURIComponent(query)}`);
+}
+
 export async function getGalerie() {
   return apiRequest('/api/galerie');
 }
