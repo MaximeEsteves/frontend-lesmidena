@@ -110,9 +110,6 @@ header {
   }
 }
 @media (max-width: 768px) {
-  header {
-    height: 250px !important;
-  }
   .titre-header h1 {
     font-size: 28px;
   }
@@ -121,9 +118,6 @@ header {
   }
 }
 @media (max-width: 550px) {
-  header {
-    height: 200px !important;
-  }
   .titre-header h1 {
     font-size: 22px;
   }
@@ -150,9 +144,6 @@ header {
   }
 }
 @media (max-width: 425px) {
-  header {
-    height: 150px !important;
-  }
   .titre-header h1 {
     font-size: 18px;
   }
@@ -166,9 +157,6 @@ header {
   }
 }
 @media (max-width: 320px) {
-  header {
-    height: 140px !important;
-  }
   .bio-text h2 {
     font-size: 18px;
   }

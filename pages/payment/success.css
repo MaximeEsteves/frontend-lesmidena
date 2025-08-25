@@ -40,25 +40,16 @@ header {
 }
 
 @media (max-width: 1024px) {
-  header {
-    height: 300px !important;
-  }
   .titre-header h1 {
     font-size: 32px;
   }
 }
 @media (max-width: 768px) {
-  header {
-    height: 250px !important;
-  }
   .titre-header h1 {
     font-size: 28px;
   }
 }
 @media (max-width: 550px) {
-  header {
-    height: 200px !important;
-  }
   .titre-header h1 {
     font-size: 22px;
   }
@@ -69,9 +60,6 @@ header {
   }
 }
 @media (max-width: 425px) {
-  header {
-    height: 150px !important;
-  }
   .titre-header h1 {
     font-size: 18px;
   }

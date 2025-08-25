@@ -1,6 +1,15 @@
 header {
   height: 350px;
 }
+.titre-header {
+  position: absolute;
+  top: 45%;
+  left: 60% !important;
+}
+
+.titre-header h1 {
+  font-size: 4rem;
+}
 section {
   width: 80%;
   margin: auto;
@@ -220,14 +229,42 @@ main h1 {
   background-color: #3a5151;
 }
 
-/* Optionnel : responsive */
+/* responsive */
+@media (max-width: 1440px) {
+  .titre-header h1 {
+    font-size: 42px;
+  }
+}
+@media (max-width: 1024px) {
+  .titre-header h1 {
+    font-size: 32px;
+  }
+}
 @media (max-width: 768px) {
+  .titre-header h1 {
+    font-size: 28px;
+  }
   #form-livraison .form-group {
     margin-bottom: 10px;
   }
 }
+@media (max-width: 550px) {
+  .titre-header h1 {
+    font-size: 22px;
+  }
+  .titre-header {
+    position: absolute;
+    top: 55%;
+    left: 60% !important;
+  }
+}
 @media (max-width: 425px) {
-  .panier-actions{
-    flex
+  .titre-header h1 {
+    font-size: 18px;
+  }
+  .titre-header {
+    position: absolute;
+    top: 55%;
+    left: 60% !important;
   }
 }

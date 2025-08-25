@@ -15,12 +15,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   const mobileNav = document.querySelector('nav.mobile');
   const burger = mobileNav.querySelector('.burger');
   const closeBtn = mobileNav.querySelector('.close-menu');
+  const closeBtnBis = mobileNav.querySelector('.mobile-menu-overlay');
 
   burger.addEventListener('click', () => {
     mobileNav.classList.add('open');
   });
 
   closeBtn.addEventListener('click', () => {
+    mobileNav.classList.remove('open');
+  });
+
+  closeBtnBis.addEventListener('click', () => {
     mobileNav.classList.remove('open');
   });
 

@@ -59,7 +59,7 @@ function getProduitFavoris() {
     btnAjouter.classList.add('btn-ajout-panier-favoris');
     btnAjouter.dataset.id = produit._id;
 
-    btnSupprimer.textContent = 'Supprimer des favoris';
+    btnSupprimer.textContent = 'Supprimer';
     btnSupprimer.classList.add('btn-supprimer-panier-favoris');
     btnSupprimer.onclick = () => supprimerFavoris(produit, card, messageVide);
 

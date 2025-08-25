@@ -253,7 +253,9 @@ header img {
   flex-wrap: wrap;
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 100px;
+  width: 90%;
 }
 .div-information article {
   color: #3a5151;
@@ -354,7 +356,7 @@ header img {
 }
 .click-btn {
   background-color: #3a5151;
-  color: white;
+  color: white !important;
   border: 1px solid white;
   font-weight: 600;
 }
@@ -443,6 +445,9 @@ footer {
   .div-information {
     gap: 60px;
   }
+  .btn-retour-hp {
+    display: none;
+  }
 }
 
 /* <= 768px : tablettes portrait / mobiles larges */
@@ -468,7 +473,7 @@ footer {
     align-items: center;
     justify-content: space-between;
     padding: 10px;
-    background: transparent;
+    background: #3a5151;
     color: white;
     position: relative;
     z-index: 1000000 !important;
@@ -535,8 +540,10 @@ footer {
     text-decoration: none;
     font-size: 18px;
   }
-  nav.mobile .mobile-menu .close-menu {
+  nav.mobile .mobile-menu .close-menu-container {
     display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
     align-items: center;
     gap: 25px;
     padding: 25px 30px;
@@ -546,6 +553,13 @@ footer {
     color: white;
     border-bottom: 1px solid #fce4da;
   }
+  nav.mobile .mobile-menu .close-menu-container button {
+    border: none;
+    background-color: transparent;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+  }
   nav.mobile .mobile-menu .icons {
     padding: 20px 30px;
     border-bottom: 1px solid #fce4da;
@@ -553,7 +567,7 @@ footer {
   nav.mobile .mobile-menu .icons i {
     font-size: 28px;
   }
-  nav.mobile .mobile-menu .close-menu img {
+  nav.mobile .mobile-menu .close-menu-container img {
     object-fit: cover;
     width: 40%;
     height: auto;
@@ -605,6 +619,9 @@ footer {
   }
   header {
     height: 65vh;
+    top: 50px;
+    margin-bottom: 50px;
+    z-index: 10000;
   }
   header nav ul {
     gap: 0px;
@@ -656,9 +673,6 @@ footer {
     padding: 3px 5px;
     top: -6px;
     right: -6px;
-  }
-  .btn-retour-hp {
-    display: none;
   }
 }
 
