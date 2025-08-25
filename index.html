@@ -4,22 +4,55 @@
     <meta charset="UTF-8" />
     <title>Mignonneries de Nathalie - Accessoires mode artisanale</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Description pour les moteurs de recherche -->
+    <meta
+      name="description"
+      content="Boutique artisanale à Mazamet (Tarn) — accessoires faits main : sacs, trousses, lingettes réutilisables et autres créations uniques"
+    />
+
+    <!-- Open Graph pour Facebook, LinkedIn, etc. -->
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="Mignonneries de Nathalie - Accessoires mode artisanale"
+    />
+    <meta
+      property="og:description"
+      content="Boutique artisanale à Mazamet (Tarn) — accessoires faits main : sacs, trousses, lingettes réutilisables et autres créations uniques"
+    />
+    <meta
+      property="og:image"
+      content="https://lesmidena.netlify.app/assets/icons/logo.webp"
+    />
+    <meta property="og:url" content="https://lesmidena.netlify.app/" />
+    <meta property="og:site_name" content="Mignonneries de Nathalie" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Mignonneries de Nathalie - Accessoires mode artisanale"
+    />
+    <meta
+      name="twitter:description"
+      content="Boutique artisanale à Mazamet (Tarn) — accessoires faits main : sacs, trousses, lingettes réutilisables et autres créations uniques"
+    />
+    <meta
+      name="twitter:image"
+      content="https://lesmidena.netlify.app/assets/icons/logo.webp"
+    />
+
+    <!-- Fonts & Styles -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
-      integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
     <link
       href="https://fonts.googleapis.com/css2?family=Geist:wght@400&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap"
       rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
     <link
       href="https://cdn.quilljs.com/1.3.6/quill.snow.css"
@@ -29,20 +62,23 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"
     />
-    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 
-    <meta name="description" content="" />
+    <!-- Styles locaux -->
     <link rel="stylesheet" href="./index.css" />
     <link rel="stylesheet" href="./modal.css" />
     <link rel="stylesheet" href="./global/style.css" />
+
+    <!-- Scripts -->
     <script type="module" src="./global/script.js" defer></script>
     <script type="module" src="index.js" defer></script>
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
   </head>
-  <body id="btn-retour">
+
+  <body id="btn-retour" aria-label="Retour à l'accueil">
     <header>
       <img
-        src="./assets/images/image-accueil.jpg"
+        src="./assets/images/image-accueil.webp"
         alt="image accueil les mignonneries de nathalie"
       />
       <div class="titre-header">
@@ -73,18 +109,19 @@
             <a
               href="https://www.instagram.com/mignonneries.nathalie/"
               target="_blank"
+              aria-label="Instagram"
             >
               <i class="fa-brands fa-instagram"></i>
             </a>
           </li>
           <li class="favoris">
-            <a href="./pages/favoris/favoris.html">
+            <a href="./pages/favoris/favoris.html" aria-label="Favoris">
               <i class="fa-regular fa-heart"></i>
               <span class="favoris-count"></span>
             </a>
           </li>
           <li class="panier">
-            <a href="./pages/panier/panier.html">
+            <a href="./pages/panier/panier.html" aria-label="Panier">
               <i class="fa-solid fa-bag-shopping"></i>
               <span class="panier-count"></span>
             </a>
@@ -119,14 +156,23 @@
           <a
             href="https://www.instagram.com/mignonneries.nathalie/"
             target="_blank"
+            aria-label="Instagram"
           >
             <i class="fa-brands fa-instagram"></i>
           </a>
-          <a href="./pages/favoris/favoris.html" class="favoris">
+          <a
+            href="./pages/favoris/favoris.html"
+            class="favoris"
+            aria-label="Favoris"
+          >
             <i class="fa-regular fa-heart"></i>
             <span class="favoris-count"></span>
           </a>
-          <a href="./pages/panier/panier.html" class="panier">
+          <a
+            href="./pages/panier/panier.html"
+            class="panier"
+            aria-label="Panier"
+          >
             <i class="fa-solid fa-bag-shopping"></i>
             <span class="panier-count"></span>
           </a>
@@ -145,14 +191,23 @@
             <a
               href="https://www.instagram.com/mignonneries.nathalie/"
               target="_blank"
+              aria-label="Instagram"
             >
               <i class="fa-brands fa-instagram"></i>
             </a>
-            <a href="./pages/favoris/favoris.html" class="favoris">
+            <a
+              href="./pages/favoris/favoris.html"
+              class="favoris"
+              aria-label="Favoris"
+            >
               <i class="fa-regular fa-heart"></i>
               <span class="favoris-count"></span>
             </a>
-            <a href="./pages/panier/panier.html" class="panier">
+            <a
+              href="./pages/panier/panier.html"
+              class="panier"
+              aria-label="Panier"
+            >
               <i class="fa-solid fa-bag-shopping"></i>
               <span class="panier-count"></span>
             </a>
@@ -167,11 +222,15 @@
         </div>
       </nav>
     </header>
-    <a href="#base-content"><i class="fa-solid fa-chevron-down"></i></a>
+    <a href="#base-content" aria-label="Scroll down"
+      ><i class="fa-solid fa-chevron-down"></i
+    ></a>
     <main>
       <div class="btn-retour-hp">
         <button>
-          <a href="#btn-retour"><i class="fa-solid fa-chevron-up"></i></a>
+          <a href="#btn-retour" aria-label="Scroll to top"
+            ><i class="fa-solid fa-chevron-up"></i
+          ></a>
         </button>
       </div>
       <div id="base-content">
@@ -190,7 +249,10 @@
           </article>
           <div class="presentation-une">
             <div class="presentation-une-image">
-              <img src="./assets/images/sac-presentation.jpg" alt="" />
+              <img
+                src="./assets/images/sac-presentation.webp"
+                alt="Image de la mignonnerie du moment - Sac Cabas"
+              />
             </div>
             <div class="presentation-une-texte">
               <div class="section-principale-titre-texte">
@@ -215,7 +277,7 @@
                 Ajoutez une touche de mignonnerie à votre garde-robe dès
                 maintenant !
               </p>
-              <button id="creation">
+              <button id="creation" aria-label="Découvrir le produit">
                 <a href="produit/A47879">Découvrir</a>
               </button>
             </div>
@@ -242,7 +304,11 @@
               renouer avec ma créativité en m'essayant à la couture. Depuis, je
               ne me suis plus jamais arrêtée...
             </p>
-            <button><a href="./pages/bio/bio.html">En savoir plus</a></button>
+            <button>
+              <a href="./pages/bio/bio.html" aria-label="En savoir plus"
+                >En savoir plus</a
+              >
+            </button>
           </div>
           <div class="en-savoir-plus-image">
             <img
@@ -255,7 +321,10 @@
           <div class="div-information">
             <article>
               <div class="produit-similaire">
-                <img src="./assets/icons/icone-artisanale.png" alt="" />
+                <img
+                  src="./assets/icons/icone-artisanale.webp"
+                  alt="Image création artisanale"
+                />
                 <h4>Création artisanale</h4>
                 <p>
                   Toutes nos créations sont réalisées à la main avec passion
@@ -265,7 +334,10 @@
             </article>
             <article>
               <div class="produit-similaire">
-                <img src="./assets/icons/icone-ecoresponsable.png" alt="" />
+                <img
+                  src="./assets/icons/icone-ecoresponsable.webp"
+                  alt="Image écoresponsable"
+                />
                 <h4>Écoresponsable</h4>
                 <p>
                   Nos produits sont réutilisables et fabriqués, pour la plupart,
@@ -275,7 +347,10 @@
             </article>
             <article>
               <div class="produit-similaire">
-                <img src="./assets/icons/icone-livraison.png" alt="" />
+                <img
+                  src="./assets/icons/icone-livraison.webp"
+                  alt="Image livraison rapide"
+                />
                 <h4>Livraison rapide</h4>
                 <p>
                   Nos produits sont emballés par nos soins et envoyés dans les
@@ -296,28 +371,39 @@
                 <a
                   href="https://www.instagram.com/mignonneries.nathalie/"
                   target="_blank"
+                  aria-label="Instagram"
                   ><i class="fa-brands fa-instagram"></i
                 ></a>
               </li>
               <li>
-                <a href="https://www.tiktok.com/@les_mignonneries_de_nath"
+                <a
+                  href="https://www.tiktok.com/@les_mignonneries_de_nath"
+                  target="_blank"
+                  aria-label="TikTok"
                   ><i class="fa-brands fa-tiktok"></i
                 ></a>
               </li>
               <li>
                 <a
                   href="https://www.linkedin.com/in/mignonneries-de-nathalie-499884334/"
+                  target="_blank"
+                  aria-label="LinkedIn"
                   ><i class="fa-brands fa-linkedin"></i
                 ></a>
               </li>
               <li>
                 <a
                   href="https://www.youtube.com/channel/UCEfuaMURKRQH5zqfeSbv1RQ"
+                  target="_blank"
+                  aria-label="YouTube"
                   ><i class="fa-brands fa-youtube"></i
                 ></a>
               </li>
               <li>
-                <a href="https://fr.pinterest.com/lesmidena/"
+                <a
+                  href="https://fr.pinterest.com/lesmidena/"
+                  target="_blank"
+                  aria-label="Pinterest"
                   ><i class="fa-brands fa-pinterest"></i
                 ></a>
               </li>
@@ -359,7 +445,12 @@
               cols="30"
               rows="10"
             ></textarea>
-            <input type="submit" value="Envoyer" class="btn-contact" />
+            <input
+              type="submit"
+              value="Envoyer"
+              class="btn-contact"
+              aria-label="Envoyer le formulaire"
+            />
           </form>
         </section>
       </div>
@@ -471,7 +562,7 @@
                 type="file"
                 id="file-upload-couverture"
                 name="imageCouverture"
-                accept="image/jpeg,image/png"
+                accept="image/jpeg,image/png,image/webp"
               />
               <span class="btn-text">Modifier photo couverture</span>
               <span class="file-info"></span>
@@ -486,7 +577,7 @@
                 type="file"
                 id="file-upload-images"
                 name="image"
-                accept="image/jpeg,image/png"
+                accept="image/jpeg,image/png,image/webp"
                 multiple
               />
               <span class="btn-text">Ajouter photos produit</span>

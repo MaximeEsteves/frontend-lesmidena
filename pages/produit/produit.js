@@ -34,6 +34,9 @@ function updateMainImage(index) {
   currentImageIndex = index;
   const mainImage = document.getElementById('image-principale');
   const fullscreenImage = document.getElementById('fullscreen-image');
+  mainImage.alt = `Image ${
+    produit.categorie + ' ' + produit.nom + ' ' + produit.reference
+  }`;
   if (!produit || !Array.isArray(produit.image) || produit.image.length === 0) {
     if (mainImage) mainImage.src = '';
     if (fullscreenImage) fullscreenImage.src = '';
@@ -59,6 +62,7 @@ function initImageGallery() {
     // placeholder
     const mainImage = document.getElementById('image-principale');
     if (mainImage) mainImage.src = '';
+
     return;
   }
 
@@ -68,6 +72,9 @@ function initImageGallery() {
   produit.image.forEach((src, idx) => {
     const thumb = document.createElement('img');
     thumb.src = buildImageUrl(src);
+    thumb.alt = `Image ${
+      produit.categorie + ' ' + produit.nom + ' ' + produit.reference
+    }`;
     thumb.classList.add('thumbnail');
     if (idx === 0) thumb.classList.add('active');
     thumb.addEventListener('click', () => updateMainImage(idx));
@@ -282,7 +289,9 @@ function produitSupplementaire() {
     carte.classList.add('carte-produit');
     const imgSrc = buildImageUrl(p.image?.[0] || '');
     carte.innerHTML = `
-      <img src="${imgSrc}" alt="${p.nom}">
+      <img src="${imgSrc}" alt="Image ${
+      produit.categorie + ' ' + produit.nom + ' ' + produit.reference
+    }">
       <div class="nom-produit">${p.nom}</div>
     `;
     carte.addEventListener('click', (e) => {
@@ -438,6 +447,43 @@ async function init() {
     document.querySelector('main').innerHTML =
       '<p>Erreur lors du chargement.</p>';
   }
+  document.title = `${
+    produit.categorie + ' ' + produit.nom
+  } – Mignonneries de Nathalie`;
+  document
+    .querySelector('meta[name="description"]')
+    .setAttribute('content', produit.description);
+
+  // Open Graph
+  document
+    .querySelector('meta[property="og:title"]')
+    .setAttribute(
+      'content',
+      `${produit.categorie + ' ' + produit.nom} – Mignonneries de Nathalie`
+    );
+  document
+    .querySelector('meta[property="og:description"]')
+    .setAttribute('content', produit.description);
+  document
+    .querySelector('meta[property="og:image"]')
+    .setAttribute('content', produit.image);
+  document
+    .querySelector('meta[property="og:url"]')
+    .setAttribute('content', produit.url);
+
+  // Twitter Card
+  document
+    .querySelector('meta[name="twitter:title"]')
+    .setAttribute(
+      'content',
+      `${produit.categorie + ' ' + produit.nom} – Mignonneries de Nathalie`
+    );
+  document
+    .querySelector('meta[name="twitter:description"]')
+    .setAttribute('content', produit.description);
+  document
+    .querySelector('meta[name="twitter:image"]')
+    .setAttribute('content', produit.image);
 }
 
 document.addEventListener('DOMContentLoaded', init);

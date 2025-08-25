@@ -140,6 +140,7 @@ function createProductFigure(produit, imgObserver) {
   btnFav.classList.add('btn-fav-article');
   btnFav.dataset.id = produit._id;
   btnFav.innerHTML = '<i class="fa-regular fa-heart"></i>';
+  btnFav.ariaLabel = 'Ajouter aux favoris';
 
   // Clic sur l’image
   img.addEventListener('click', () => {
@@ -192,6 +193,7 @@ function filtres(worksData) {
   btnToggle.type = 'button';
   btnToggle.innerText = 'Filtres';
   btnToggle.classList.add('btn-toggle-filtres');
+  btnToggle.ariaLabel = 'Afficher les filtres';
   // État initial non ouvert
   btnToggle.classList.remove('open');
 
@@ -210,6 +212,7 @@ function filtres(worksData) {
   const btnTous = document.createElement('button');
   btnTous.type = 'button';
   btnTous.innerText = 'Tous';
+  btnTous.ariaLabel = 'Afficher tous les articles';
   btnTous.classList.add('btn-categorie', 'click-btn');
   btnTous.addEventListener('click', function () {
     // Retirer l'état click de tous, ajouter sur celui-ci
@@ -217,7 +220,7 @@ function filtres(worksData) {
       .querySelectorAll('.btn-categorie')
       .forEach((b) => b.classList.remove('click-btn'));
     document.getElementById('portfolio').innerHTML = '';
-    projets(worksData); // ou projets(worksData, true) si vous utilisez ce mode
+    projets(worksData);
     mettreAJourBoutonsPanier();
     btnTous.classList.add('click-btn');
   });
@@ -237,29 +240,23 @@ function filtres(worksData) {
       const filtered = worksData.filter(
         (article) => article.categorie === category
       );
-      totalProduits(filtered); // ou projets(filtered, false) selon votre logique
+      totalProduits(filtered);
       mettreAJourBoutonsPanier();
       btn.classList.add('click-btn');
     });
     zoneBtn.appendChild(btn);
   });
 
-  // Insérer le toggle puis le conteneur dans le DOM
-  // Vous pouvez choisir où exactement : ici, on ajoute avant ou après le titre
   titre.appendChild(btnToggle);
   titre.appendChild(zoneBtn);
 
   // Gestion du clic sur toggle : afficher/masquer
   btnToggle.addEventListener('click', () => {
     const isOpen = zoneBtn.classList.toggle('open');
-    // Optionnel : changer style du bouton toggle
     if (isOpen) {
       btnToggle.classList.add('open');
-      // Par exemple changer texte ou icône
-      // btnToggle.innerText = 'Cacher filtres';
     } else {
       btnToggle.classList.remove('open');
-      // btnToggle.innerText = 'Filtres';
     }
   });
 }
@@ -358,6 +355,7 @@ function projets(worksData) {
     const btnFav = document.createElement('button');
     btnFav.classList.add('btn-fav-article');
     btnFav.dataset.id = produits[0]._id;
+    btnFav.ariaLabel = 'Ajouter aux favoris';
     const iconFav = document.createElement('i');
     iconFav.classList.add('fa-regular', 'fa-heart');
     btnFav.appendChild(iconFav);
