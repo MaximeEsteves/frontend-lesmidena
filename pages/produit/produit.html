@@ -1,53 +1,63 @@
 <!DOCTYPE html>
 <html lang="fr">
   <head>
-    <meta charset="UTF-8" />
-    <title>Mignonneries de Nathalie - Accessoires mode artisanale</title>
-    <!-- Open Graph -->
+    <meta charset="utf-8" />
+    <title>%PAGE_TITLE% – Mignonneries de Nathalie</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="%PAGE_DESCRIPTION%" />
+
     <meta property="og:type" content="product" />
-    <meta
-      property="og:title"
-      content="Nom du produit – Mignonneries de Nathalie"
-    />
-    <meta property="og:description" content="Description courte du produit" />
-    <meta
-      property="og:image"
-      content="https://lesmidena.netlify.app/images/produit.webp"
-    />
-    <meta property="og:url" content="https://lesmidena.netlify.app/" />
+    <meta property="og:title" content="%OG_TITLE%" />
+    <meta property="og:description" content="%OG_DESCRIPTION%" />
+    <meta property="og:image" content="%OG_IMAGE_URL%" />
+    <meta property="og:url" content="%OG_URL%" />
     <meta property="og:site_name" content="Mignonneries de Nathalie" />
 
-    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="Nom du produit – Mignonneries de Nathalie"
-    />
-    <meta name="twitter:description" content="Description courte du produit" />
-    <meta
-      name="twitter:image"
-      content="https://lesmidena.netlify.app/assets/icons/logo.webp"
-    />
+    <meta name="twitter:title" content="%TWITTER_TITLE%" />
+    <meta name="twitter:description" content="%TWITTER_DESCRIPTION%" />
+    <meta name="twitter:image" content="%TWITTER_IMAGE_URL%" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
-      integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Geist:wght@400&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap"
-      rel="stylesheet"
+      rel="preconnect"
+      href="https://backend-lesmidena-production.up.railway.app"
+      crossorigin
     />
     <link
       rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400&family=Playfair+Display:wght@400;700&display=swap"
+      as="style"
+      onload="this.rel='stylesheet'"
+    />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Geist:wght@400&family=Playfair+Display:wght@400;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
+
+    <link
+      rel="preload"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      as="style"
+      onload="this.rel='stylesheet'"
     />
-    <meta name="description" content="" />
+    <noscript>
+      <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        rel="stylesheet"
+      />
+    </noscript>
+    <link rel="preload" as="image" href="" />
     <link rel="stylesheet" href="/global/style.css" />
     <link rel="stylesheet" href="/pages/produit/produit.css" />
     <script type="module" src="/pages/produit/produit.js" defer></script>
@@ -59,6 +69,8 @@
         id="image-couverture-boutique"
         src=""
         alt="image accueil les mignonneries de nathalie"
+        fetchpriority="high"
+        decoding="async"
       />
       <div class="titre-header">
         <h1 class="titre-produit-boutique"></h1>

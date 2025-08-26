@@ -17,6 +17,7 @@ let produit = null;
 let allProducts = [];
 let currentImageIndex = 0;
 let shareData = { title: '', text: '', url: window.location.href };
+let swiperInstance = null;
 
 // ---- utilitaires ----
 function buildImageUrl(src) {
@@ -32,72 +33,215 @@ function buildImageUrl(src) {
 // ---- Images / galerie ----
 function updateMainImage(index) {
   currentImageIndex = index;
+
+  // Si swiper est actif, laisse swiper gérer l'affichage
+  if (swiperInstance) {
+    try {
+      swiperInstance.slideTo(index, 300);
+    } catch (e) {
+      /* ignore */
+    }
+  }
+
   const mainImage = document.getElementById('image-principale');
   const fullscreenImage = document.getElementById('fullscreen-image');
-  mainImage.alt = `Image ${
-    produit.categorie + ' ' + produit.nom + ' ' + produit.reference
-  }`;
+  const altText = `${produit?.categorie || ''} ${produit?.nom || ''} ${
+    produit?.reference || ''
+  }`.trim();
+
+  if (mainImage) mainImage.alt = altText;
   if (!produit || !Array.isArray(produit.image) || produit.image.length === 0) {
     if (mainImage) mainImage.src = '';
     if (fullscreenImage) fullscreenImage.src = '';
     return;
   }
+
   const src = produit.image[index] || produit.image[0];
   const url = buildImageUrl(src);
-  if (mainImage) mainImage.src = url;
+
+  if (!swiperInstance && mainImage) mainImage.src = url;
   if (fullscreenImage) fullscreenImage.src = url;
+
   document.querySelectorAll('.thumbnail').forEach((img, i) => {
     img.classList.toggle('active', i === index);
   });
 }
 
+// ---- initImageGallery ----
 function initImageGallery() {
   const thumbsContainer =
     document.getElementById('thumbs-container') ||
     document.querySelector('.thumbs');
-  if (!thumbsContainer) return;
+  const imageWrapper = document.querySelector('.image-wrapper');
+  const prevBtn = document.getElementById('prev-btn');
+  const nextBtn = document.getElementById('next-btn');
+
+  // Destroy previous swiper if exists
+  if (swiperInstance && typeof swiperInstance.destroy === 'function') {
+    swiperInstance.destroy(true, true);
+    swiperInstance = null;
+  }
+
+  if (!thumbsContainer || !imageWrapper) return;
   thumbsContainer.innerHTML = '';
 
   if (!produit || !Array.isArray(produit.image) || produit.image.length === 0) {
-    // placeholder
     const mainImage = document.getElementById('image-principale');
     if (mainImage) mainImage.src = '';
-
+    if (prevBtn) prevBtn.style.display = 'none';
+    if (nextBtn) nextBtn.style.display = 'none';
     return;
   }
 
-  currentImageIndex = 0;
-  updateMainImage(0);
+  const multipleImages = produit.image.length > 1;
+  if (prevBtn) prevBtn.style.display = multipleImages ? '' : 'none';
+  if (nextBtn) nextBtn.style.display = multipleImages ? '' : 'none';
 
-  produit.image.forEach((src, idx) => {
-    const thumb = document.createElement('img');
-    thumb.src = buildImageUrl(src);
-    thumb.alt = `Image ${
-      produit.categorie + ' ' + produit.nom + ' ' + produit.reference
-    }`;
-    thumb.classList.add('thumbnail');
-    if (idx === 0) thumb.classList.add('active');
-    thumb.addEventListener('click', () => updateMainImage(idx));
-    thumbsContainer.appendChild(thumb);
-  });
+  // DETECTION VIA MEDIA QUERY: swiper active if viewport <= 1024px
+  const useSwiper =
+    window.matchMedia('(max-width: 1024px)').matches && multipleImages;
 
-  const prevBtn = document.getElementById('prev-btn');
-  const nextBtn = document.getElementById('next-btn');
-  if (prevBtn)
-    prevBtn.onclick = () => {
-      if (!produit?.image?.length) return;
-      updateMainImage(
-        (currentImageIndex - 1 + produit.image.length) % produit.image.length
-      );
-    };
-  if (nextBtn)
-    nextBtn.onclick = () => {
-      if (!produit?.image?.length) return;
-      updateMainImage((currentImageIndex + 1) % produit.image.length);
-    };
+  if (useSwiper) {
+    // build Swiper structure in imageWrapper
+    imageWrapper.innerHTML = `
+      <div class="swiper produit-swiper">
+        <div class="swiper-wrapper">
+          ${produit.image
+            .map(
+              (src) =>
+                `<div class="swiper-slide"><img class="slide-img" src="${buildImageUrl(
+                  src
+                )}" alt=""></div>`
+            )
+            .join('')}
+        </div>
+        <div class="swiper-pagination"></div>
+      </div>
+    `;
+
+    // init Swiper (assumes Swiper is loaded globally)
+    swiperInstance = new Swiper('.produit-swiper', {
+      spaceBetween: 10,
+      slidesPerView: 1,
+      pagination: { el: '.swiper-pagination', clickable: true },
+      navigation: { nextEl: '#next-btn', prevEl: '#prev-btn' },
+      loop: false,
+      grabCursor: true,
+      touchRatio: 1,
+      lazy: { loadPrevNext: true },
+    });
+
+    if (swiperInstance) {
+      // update currentImageIndex automatiquement (déjà fait) and sync fullscreen if open
+      swiperInstance.on('slideChange', () => {
+        currentImageIndex = swiperInstance.activeIndex;
+        // mettre à jour les miniatures actives
+        document
+          .querySelectorAll('.thumbnail')
+          .forEach((img, i) =>
+            img.classList.toggle('active', i === currentImageIndex)
+          );
+        // si la modale est ouverte, actualiser l'image fullscreen
+        const fullscreenModal = document.getElementById('fullscreen-modal');
+        const fullscreenImage = document.getElementById('fullscreen-image');
+        if (
+          fullscreenModal &&
+          fullscreenModal.classList.contains('show') &&
+          fullscreenImage
+        ) {
+          fullscreenImage.src = buildImageUrl(produit.image[currentImageIndex]);
+        }
+      });
+
+      // Attacher le clic sur chaque image Swiper pour ouvrir la modale et régler l'index
+      const slideImgs = document.querySelectorAll('.produit-swiper .slide-img');
+      slideImgs.forEach((img, idx) => {
+        img.style.cursor = 'pointer';
+        img.addEventListener('click', () => {
+          currentImageIndex = idx;
+          // synchroniser swiper (au cas où)
+          try {
+            swiperInstance.slideTo(idx, 0);
+          } catch (e) {}
+          // ouvrir la modale et mettre l'image fullscreen
+          const fullscreenModal = document.getElementById('fullscreen-modal');
+          const fullscreenImage = document.getElementById('fullscreen-image');
+          if (fullscreenImage)
+            fullscreenImage.src = buildImageUrl(
+              produit.image[currentImageIndex]
+            );
+          if (fullscreenModal) fullscreenModal.classList.add('show');
+        });
+      });
+    }
+
+    // create thumbnails
+    produit.image.forEach((src, idx) => {
+      const thumb = document.createElement('img');
+      thumb.src = buildImageUrl(src);
+      thumb.alt = `${produit.categorie || ''} ${produit.nom || ''} ${
+        produit.reference || ''
+      }`.trim();
+      thumb.classList.add('thumbnail');
+      thumb.loading = 'lazy';
+      thumb.width = 80;
+      thumb.height = 80;
+      thumb.addEventListener('click', () => swiperInstance.slideTo(idx));
+      thumbsContainer.appendChild(thumb);
+    });
+
+    swiperInstance.slideTo(0);
+  } else {
+    // desktop behavior (image + thumbnails)
+    // ensure imageWrapper contains the main img + nav buttons if needed
+    if (!imageWrapper.querySelector('#image-principale')) {
+      imageWrapper.innerHTML = `
+        <button id="next-btn" class="nav-btn" aria-label="Image suivante"><i class="fa-solid fa-chevron-right"></i></button>
+        <img id="image-principale" src="" alt="">
+        <button id="prev-btn" class="nav-btn" aria-label="Image précédente"><i class="fa-solid fa-chevron-left"></i></button>
+      `;
+    }
+
+    produit.image.forEach((src, idx) => {
+      const thumb = document.createElement('img');
+      thumb.src = buildImageUrl(src);
+      thumb.alt = `${produit.categorie || ''} ${produit.nom || ''} ${
+        produit.reference || ''
+      }`.trim();
+      thumb.classList.add('thumbnail');
+      thumb.loading = 'lazy';
+      thumb.width = 80;
+      thumb.height = 80;
+      if (idx === 0) thumb.classList.add('active');
+      thumb.addEventListener('click', () => updateMainImage(idx));
+      thumbsContainer.appendChild(thumb);
+    });
+
+    // rebind prev/next
+    const prev = document.getElementById('prev-btn');
+    const next = document.getElementById('next-btn');
+    if (prev) {
+      prev.style.display = multipleImages ? '' : 'none';
+      prev.onclick = () => {
+        if (!produit?.image?.length) return;
+        updateMainImage(
+          (currentImageIndex - 1 + produit.image.length) % produit.image.length
+        );
+      };
+    }
+    if (next) {
+      next.style.display = multipleImages ? '' : 'none';
+      next.onclick = () => {
+        if (!produit?.image?.length) return;
+        updateMainImage((currentImageIndex + 1) % produit.image.length);
+      };
+    }
+
+    updateMainImage(0);
+  }
 }
 
-// ---- modal fullscreen ----
+// ---- initFullScreenModal ----
 function initFullScreenModal() {
   const mainImage = document.getElementById('image-principale');
   const fullscreenModal = document.getElementById('fullscreen-modal');
@@ -111,16 +255,26 @@ function initFullScreenModal() {
     mainImage.onclick = () => fullscreenModal.classList.add('show');
   if (closeFullscreenBtn && fullscreenModal)
     closeFullscreenBtn.onclick = () => fullscreenModal.classList.remove('show');
+
   if (fullscreenModal) {
     fullscreenModal.onclick = (e) => {
       if (e.target === fullscreenModal)
         fullscreenModal.classList.remove('show');
     };
   }
+
   document.onkeydown = (e) => {
     if (e.key === 'Escape' && fullscreenModal)
       fullscreenModal.classList.remove('show');
   };
+
+  const multipleImages =
+    produit && Array.isArray(produit.image) && produit.image.length > 1;
+  if (fullscreenPrev)
+    fullscreenPrev.style.display = multipleImages ? '' : 'none';
+  if (fullscreenNext)
+    fullscreenNext.style.display = multipleImages ? '' : 'none';
+
   if (fullscreenPrev)
     fullscreenPrev.onclick = () => {
       if (!produit?.image?.length) return;
@@ -354,7 +508,6 @@ async function loadProduct(ref, addToHistory = true) {
     return;
   }
   try {
-    console.log('loadProduct -> ref:', ref);
     const newProduit = await getProductByRef(ref);
     if (!newProduit) {
       document.querySelector('main').innerHTML = '<p>Produit non trouvé.</p>';
@@ -384,6 +537,56 @@ async function loadProduct(ref, addToHistory = true) {
     console.error('Erreur loadProduct :', err);
     document.querySelector('main').innerHTML =
       '<p>Erreur lors du chargement du produit.</p>';
+  }
+}
+function updateMetas(prod) {
+  if (!prod) return;
+  try {
+    document.title = `${prod.categorie || ''} ${
+      prod.nom || ''
+    } – Mignonneries de Nathalie`;
+    const desc =
+      prod.description ||
+      (prod.descriptionComplete && prod.descriptionComplete.slice(0, 160)) ||
+      '';
+    const img = buildImageUrl(
+      prod.imageCouverture || prod.image?.[0] || '/assets/images/preview.webp'
+    );
+
+    const setIf = (selector, attr, value) => {
+      const el = document.querySelector(selector);
+      if (el) el.setAttribute(attr, value);
+    };
+
+    setIf('meta[name="description"]', 'content', desc);
+    setIf(
+      'meta[property="og:title"]',
+      'content',
+      `${prod.categorie || ''} ${prod.nom || ''} – Mignonneries de Nathalie`
+    );
+    setIf('meta[property="og:description"]', 'content', desc);
+    setIf('meta[property="og:image"]', 'content', img);
+    setIf(
+      'meta[property="og:url"]',
+      'content',
+      prod.url || window.location.href
+    );
+    setIf(
+      'meta[name="twitter:title"]',
+      'content',
+      `${prod.categorie || ''} ${prod.nom || ''} – Mignonneries de Nathalie`
+    );
+    setIf('meta[name="twitter:description"]', 'content', desc);
+    setIf('meta[name="twitter:image"]', 'content', img);
+    setIf(
+      'link[rel="preload"]',
+      'href',
+      buildImageUrl(
+        prod.imageCouverture || prod.image?.[0] || '/assets/images/preview.webp'
+      )
+    );
+  } catch (e) {
+    console.warn('updateMetas failed', e);
   }
 }
 
@@ -447,43 +650,7 @@ async function init() {
     document.querySelector('main').innerHTML =
       '<p>Erreur lors du chargement.</p>';
   }
-  document.title = `${
-    produit.categorie + ' ' + produit.nom
-  } – Mignonneries de Nathalie`;
-  document
-    .querySelector('meta[name="description"]')
-    .setAttribute('content', produit.description);
-
-  // Open Graph
-  document
-    .querySelector('meta[property="og:title"]')
-    .setAttribute(
-      'content',
-      `${produit.categorie + ' ' + produit.nom} – Mignonneries de Nathalie`
-    );
-  document
-    .querySelector('meta[property="og:description"]')
-    .setAttribute('content', produit.description);
-  document
-    .querySelector('meta[property="og:image"]')
-    .setAttribute('content', produit.image);
-  document
-    .querySelector('meta[property="og:url"]')
-    .setAttribute('content', produit.url);
-
-  // Twitter Card
-  document
-    .querySelector('meta[name="twitter:title"]')
-    .setAttribute(
-      'content',
-      `${produit.categorie + ' ' + produit.nom} – Mignonneries de Nathalie`
-    );
-  document
-    .querySelector('meta[name="twitter:description"]')
-    .setAttribute('content', produit.description);
-  document
-    .querySelector('meta[name="twitter:image"]')
-    .setAttribute('content', produit.image);
+  updateMetas(produit);
 }
 
 document.addEventListener('DOMContentLoaded', init);

@@ -240,7 +240,7 @@ header {
   background: rgba(0, 0, 0, 0.7);
   justify-content: center;
   align-items: center;
-  z-index: 9999;
+  z-index: 99999;
   opacity: 0;
   transition: opacity 0.3s ease;
 }
@@ -263,7 +263,9 @@ header {
   margin: 0 auto;
   border-radius: 8px;
 }
-
+.swiper-pagination-bullet-active {
+  background: #3a5151 !important;
+}
 .close-btn,
 #fullscreen-prev,
 #fullscreen-next {
@@ -529,6 +531,9 @@ header {
   #titre-produit-similaire-autres {
     width: 95%;
   }
+  .fullscreen-overlay {
+    width: 80%;
+  }
 }
 @media (max-width: 768px) {
   .titre-header h1 {
@@ -557,6 +562,17 @@ header {
     position: absolute;
     top: 55%;
     left: 60% !important;
+  }
+  .fullscreen-overlay {
+    width: 90%;
+  }
+  #fullscreen-next {
+    right: 0px;
+    height: 50%;
+  }
+  #fullscreen-prev {
+    left: 0px;
+    height: 50%;
   }
 }
 @media (max-width: 425px) {
