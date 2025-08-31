@@ -1,5 +1,5 @@
-export const API_BASE = 'https://backend-lesmidena-production.up.railway.app';
-//export const API_BASE = 'http://localhost:3000'; // Pour le développement local
+//export const API_BASE = 'https://backend-lesmidena-production.up.railway.app';
+export const API_BASE = 'http://localhost:3000'; // Pour le développement local
 
 async function apiRequest(endpoint, method = 'GET', data = null, token = null) {
   const headers = { 'Content-Type': 'application/json' };
@@ -31,20 +31,50 @@ export async function createStripeCheckoutSession(lignes, customer) {
   });
 }
 
-export async function getProductByRef(ref) {
-  return apiRequest(`/api/produits/by-ref/${encodeURIComponent(ref)}`);
+// === API spécifiques avis client ===
+export async function avis(productRef) {
+  const token = localStorage.getItem('token');
+  const url = productRef
+    ? `/api/avis?productRef=${encodeURIComponent(productRef)}`
+    : '/api/avis';
+  return apiRequest(url, 'GET', null, token);
 }
 
-// === API spécifiques produits ===
+export async function postAvis(payload) {
+  return apiRequest('/api/avis', 'POST', payload);
+}
+
+export async function validateAvis(id) {
+  const token = localStorage.getItem('token');
+  if (!token) throw new Error('Token admin manquant');
+
+  return apiRequest(`/api/avis/${id}/validate`, 'PATCH', null, token);
+}
+
+export async function deleteAvis(id) {
+  const token = localStorage.getItem('token');
+  if (!token) throw new Error('Token admin manquant');
+
+  return apiRequest(`/api/avis/${id}`, 'DELETE', null, token);
+}
+
+// === API spécifiques recherche ===
 export async function searchProducts(query) {
   return apiRequest(`/api/recherche?search=${encodeURIComponent(query)}`);
 }
 
+// === API spécifiques vidéo blog ===
 export async function getGalerie() {
   return apiRequest('/api/galerie');
 }
+
+// === API spécifiques produits ===
 export async function getAllProducts() {
   return apiRequest('/api/produits');
+}
+
+export async function getProductByRef(ref) {
+  return apiRequest(`/api/produits/by-ref/${encodeURIComponent(ref)}`);
 }
 
 export async function deleteProduct(id, token) {
@@ -58,7 +88,7 @@ export async function createProduct(formData, token) {
 export async function updateProduct(id, formData, token) {
   return apiRequest(`/api/produits/${id}`, 'PUT', formData, token);
 }
-
+// === API spécifiques ID ===
 export async function loginAdmin(credentials) {
   return apiRequest('/api/auth/login', 'POST', credentials);
 }

@@ -57,7 +57,6 @@
         rel="stylesheet"
       />
     </noscript>
-    <link rel="preload" as="image" href="" />
     <link rel="stylesheet" href="/global/style.css" />
     <link rel="stylesheet" href="/pages/produit/produit.css" />
     <script type="module" src="/pages/produit/produit.js" defer></script>
@@ -77,7 +76,7 @@
       </div>
       <!-- NAVIGATION DESKTOP -->
       <nav class="desktop">
-        <a href="#btn-retour" id="logo-nav-header">
+        <a href="/" id="logo-nav-header">
           <img
             src="../../assets/images/logo-nav.webp"
             alt="logo les mignonneries de nathalie"
@@ -87,7 +86,7 @@
           <li><a href="../../index.html#creation">Créations</a></li>
           <li><a href="../blog/blog.html">Blog</a></li>
           <li><a href="../../index.html#contact">Contact</a></li>
-          <li id="user-open"><a href="./login.html">Login</a></li>
+          <li id="user-open"><a href="../global/login.html">Login</a></li>
           <li>
             <a
               href="https://www.instagram.com/mignonneries.nathalie/"
@@ -235,9 +234,12 @@
             id="stock-produit"
             aria-label="Sélectionner le stock"
           ></select>
-          <button class="btn-ajout-panier" aria-label="Ajouter au panier">
-            Ajouter au panier
-          </button>
+          <button
+            class="btn-ajout-panier"
+            aria-label="Ajouter au panier"
+            data-id=""
+            data-stock=""
+          ></button>
           <button class="btn-fav-article" aria-label="Ajouter aux favoris">
             <i class="fa-solid fa-heart"></i>
           </button>
@@ -316,6 +318,10 @@
               rows="4"
               required
             ></textarea>
+            <div
+              class="g-recaptcha"
+              data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"
+            ></div>
           </div>
           <button type="submit">Envoyer mon avis</button>
           <p id="avis-message" class="avis-message"></p>
@@ -399,4 +405,6 @@
       </div>
     </div>
   </body>
+
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </html>

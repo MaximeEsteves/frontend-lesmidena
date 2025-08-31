@@ -384,7 +384,33 @@ footer {
   justify-content: space-around;
   font-size: 24px;
 }
+/* ====== stock des articles à zéro ======== */
+.is-rupture {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(200, 0, 0, 0.85) !important;
+  border: 2px solid rgba(200, 0, 0, 0.85) !important;
+  color: white !important;
+  cursor: default !important;
+}
+.is-rupture:hover {
+  background: rgba(200, 0, 0, 0.85) !important;
+  border: 2px solid rgba(200, 0, 0, 0.85) !important;
+  color: white !important;
+}
 
+.text-rupture {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(200, 0, 0, 0.85);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 6px;
+  z-index: 10;
+}
 /* ===========================
    Breakpoints responsive
    ===========================*/

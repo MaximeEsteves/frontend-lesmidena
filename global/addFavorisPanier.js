@@ -1,3 +1,4 @@
+// addFavorisPanier.js
 export function updateFavorisCount() {
   const favoris = JSON.parse(localStorage.getItem('favoris')) || [];
   const panier = JSON.parse(localStorage.getItem('panier')) || [];
@@ -99,6 +100,12 @@ export function initPageListePanier(produits) {
     // BTN "ajout panier"
     const btnAjouterPanier = event.target.closest('.btn-ajout-panier[data-id]');
     if (btnAjouterPanier) {
+      const stock = Number(btnAjouterPanier.dataset.stock || '0');
+
+      if (stock <= 0 || btnAjouterPanier.disabled) {
+        return; // 🚫 pas d’action en rupture
+      }
+
       const id = btnAjouterPanier.dataset.id;
       const index = panier.findIndex((p) => p._id === id);
 
@@ -130,6 +137,11 @@ export function initPageListePanier(produits) {
       '.btn-ajout-panier-favoris[data-id]'
     );
     if (btnAjouterPanierFavoris) {
+      const stock = Number(btnAjouterPanierFavoris.dataset.stock || '0');
+
+      if (stock <= 0 || btnAjouterPanierFavoris.disabled) {
+        return; // 🚫 pas d’action en rupture
+      }
       const id = btnAjouterPanierFavoris.dataset.id;
       const index = panier.findIndex((p) => p._id === id);
 
@@ -162,6 +174,24 @@ export function mettreAJourBoutonsPanier() {
   const boutons = document.querySelectorAll('.btn-ajout-panier[data-id]');
   boutons.forEach((btn) => {
     const id = btn.dataset.id;
+    const stock = Number(btn.dataset.stock ?? '0');
+    // 🔒 Cas rupture : on fige le bouton et on n’écrase pas son texte ensuite
+    if (stock <= 0) {
+      btn.disabled = true;
+      btn.classList.add('is-rupture');
+      btn.innerHTML = '<span>Rupture de stock</span>';
+      btn.style.backgroundColor = '';
+      btn.style.color = '';
+      btn.style.borderColor = '';
+
+      return; // 👈 IMPORTANT : ne pas exécuter la suite qui change le texte
+    }
+
+    // Cas normal : bouton activé, on met le texte selon présence dans le panier
+    btn.disabled = false;
+
+    btn.classList.remove('is-rupture');
+
     const estDansPanier = panier.some((p) => p._id === id);
 
     if (estDansPanier) {
@@ -202,6 +232,23 @@ export function mettreAJourBoutonsPanier() {
   );
   boutonsPanier.forEach((btn) => {
     const id = btn.dataset.id;
+    const stock = Number(btn.dataset.stock ?? '0');
+    // 🔒 Cas rupture : on fige le bouton et on n’écrase pas son texte ensuite
+    if (stock <= 0) {
+      btn.disabled = true;
+      btn.classList.add('is-rupture');
+      btn.innerHTML = '<span>Rupture de stock</span>';
+      btn.style.backgroundColor = '';
+      btn.style.color = '';
+      btn.style.borderColor = '';
+
+      return; // 👈 IMPORTANT : ne pas exécuter la suite qui change le texte
+    }
+
+    // Cas normal : bouton activé, on met le texte selon présence dans le panier
+    btn.disabled = false;
+
+    btn.classList.remove('is-rupture');
     const estDansPanier = panier.some((p) => p._id === id);
 
     if (estDansPanier) {

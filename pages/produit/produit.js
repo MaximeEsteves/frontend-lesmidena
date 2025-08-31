@@ -2,6 +2,8 @@ import {
   getAllProducts,
   getProductByRef,
   API_BASE,
+  avis,
+  postAvis,
 } from '../../api/apiClient.js';
 import {
   initPageListeFavoris,
@@ -68,6 +70,7 @@ function updateMainImage(index) {
 }
 
 // ---- initImageGallery ----
+
 function initImageGallery() {
   const thumbsContainer =
     document.getElementById('thumbs-container') ||
@@ -76,18 +79,20 @@ function initImageGallery() {
   const prevBtn = document.getElementById('prev-btn');
   const nextBtn = document.getElementById('next-btn');
 
-  // Destroy previous swiper if exists
+  // Détruire un Swiper existant si nécessaire
   if (swiperInstance && typeof swiperInstance.destroy === 'function') {
     swiperInstance.destroy(true, true);
     swiperInstance = null;
   }
 
-  if (!thumbsContainer || !imageWrapper) return;
-  thumbsContainer.innerHTML = '';
-
-  if (!produit || !Array.isArray(produit.image) || produit.image.length === 0) {
-    const mainImage = document.getElementById('image-principale');
-    if (mainImage) mainImage.src = '';
+  if (
+    !thumbsContainer ||
+    !imageWrapper ||
+    !produit ||
+    !Array.isArray(produit.image) ||
+    produit.image.length === 0
+  ) {
+    imageWrapper.innerHTML = '';
     if (prevBtn) prevBtn.style.display = 'none';
     if (nextBtn) nextBtn.style.display = 'none';
     return;
@@ -97,148 +102,83 @@ function initImageGallery() {
   if (prevBtn) prevBtn.style.display = multipleImages ? '' : 'none';
   if (nextBtn) nextBtn.style.display = multipleImages ? '' : 'none';
 
-  // DETECTION VIA MEDIA QUERY: swiper active if viewport <= 1024px
-  const useSwiper =
-    window.matchMedia('(max-width: 1024px)').matches && multipleImages;
-
-  if (useSwiper) {
-    // build Swiper structure in imageWrapper
-    imageWrapper.innerHTML = `
-      <div class="swiper produit-swiper">
-        <div class="swiper-wrapper">
-          ${produit.image
-            .map(
-              (src) =>
-                `<div class="swiper-slide"><img class="slide-img" src="${buildImageUrl(
-                  src
-                )}" alt=""></div>`
-            )
-            .join('')}
-        </div>
-        <div class="swiper-pagination"></div>
-      </div>
-    `;
-
-    // init Swiper (assumes Swiper is loaded globally)
-    swiperInstance = new Swiper('.produit-swiper', {
-      spaceBetween: 10,
-      slidesPerView: 1,
-      pagination: { el: '.swiper-pagination', clickable: true },
-      navigation: { nextEl: '#next-btn', prevEl: '#prev-btn' },
-      loop: false,
-      grabCursor: true,
-      touchRatio: 1,
-      lazy: { loadPrevNext: true },
+  // Construire les miniatures
+  thumbsContainer.innerHTML = '';
+  produit.image.forEach((src, idx) => {
+    const thumb = document.createElement('img');
+    thumb.src = buildImageUrl(src);
+    thumb.alt = `${produit.categorie || ''} ${produit.nom || ''} ${
+      produit.reference || ''
+    }`.trim();
+    thumb.classList.add('thumbnail');
+    thumb.loading = 'lazy';
+    thumb.width = 80;
+    thumb.height = 80;
+    if (idx === 0) thumb.classList.add('active');
+    thumb.addEventListener('click', () => {
+      if (swiperInstance) swiperInstance.slideTo(idx);
+      updateMainImage(idx);
     });
+    thumbsContainer.appendChild(thumb);
+  });
 
-    if (swiperInstance) {
-      // update currentImageIndex automatiquement (déjà fait) and sync fullscreen if open
-      swiperInstance.on('slideChange', () => {
-        currentImageIndex = swiperInstance.activeIndex;
-        // mettre à jour les miniatures actives
-        document
-          .querySelectorAll('.thumbnail')
-          .forEach((img, i) =>
-            img.classList.toggle('active', i === currentImageIndex)
-          );
-        // si la modale est ouverte, actualiser l'image fullscreen
+  // Créer le HTML du Swiper
+  imageWrapper.innerHTML = `
+    <div class="swiper produit-swiper">
+      <div class="swiper-wrapper">
+        ${produit.image
+          .map(
+            (src) =>
+              `<div class="swiper-slide"><img class="slide-img" src="${buildImageUrl(
+                src
+              )}" alt=""></div>`
+          )
+          .join('')}
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
+  `;
+
+  const swiperContainer = imageWrapper.querySelector('.produit-swiper');
+  if (!swiperContainer) return;
+
+  // Initialiser Swiper
+  swiperInstance = new Swiper(swiperContainer, {
+    spaceBetween: 10,
+    slidesPerView: 1,
+    pagination: { el: '.swiper-pagination', clickable: true },
+    navigation: { nextEl: nextBtn, prevEl: prevBtn },
+    loop: false,
+    grabCursor: true,
+    touchRatio: 1,
+    lazy: { loadPrevNext: true },
+  });
+
+  // Synchroniser la miniature active
+  swiperInstance.on('slideChange', () => {
+    const currentIndex = swiperInstance.activeIndex;
+    document
+      .querySelectorAll('.thumbnail')
+      .forEach((img, i) => img.classList.toggle('active', i === currentIndex));
+    updateMainImage(currentIndex);
+  });
+
+  // Clic sur une slide pour ouvrir la modale
+  document
+    .querySelectorAll('.produit-swiper .slide-img')
+    .forEach((img, idx) => {
+      img.style.cursor = 'pointer';
+      img.addEventListener('click', () => {
+        currentImageIndex = idx;
         const fullscreenModal = document.getElementById('fullscreen-modal');
         const fullscreenImage = document.getElementById('fullscreen-image');
-        if (
-          fullscreenModal &&
-          fullscreenModal.classList.contains('show') &&
-          fullscreenImage
-        ) {
+        if (fullscreenImage)
           fullscreenImage.src = buildImageUrl(produit.image[currentImageIndex]);
-        }
+        if (fullscreenModal) fullscreenModal.classList.add('show');
       });
-
-      // Attacher le clic sur chaque image Swiper pour ouvrir la modale et régler l'index
-      const slideImgs = document.querySelectorAll('.produit-swiper .slide-img');
-      slideImgs.forEach((img, idx) => {
-        img.style.cursor = 'pointer';
-        img.addEventListener('click', () => {
-          currentImageIndex = idx;
-          // synchroniser swiper (au cas où)
-          try {
-            swiperInstance.slideTo(idx, 0);
-          } catch (e) {}
-          // ouvrir la modale et mettre l'image fullscreen
-          const fullscreenModal = document.getElementById('fullscreen-modal');
-          const fullscreenImage = document.getElementById('fullscreen-image');
-          if (fullscreenImage)
-            fullscreenImage.src = buildImageUrl(
-              produit.image[currentImageIndex]
-            );
-          if (fullscreenModal) fullscreenModal.classList.add('show');
-        });
-      });
-    }
-
-    // create thumbnails
-    produit.image.forEach((src, idx) => {
-      const thumb = document.createElement('img');
-      thumb.src = buildImageUrl(src);
-      thumb.alt = `${produit.categorie || ''} ${produit.nom || ''} ${
-        produit.reference || ''
-      }`.trim();
-      thumb.classList.add('thumbnail');
-      thumb.loading = 'lazy';
-      thumb.width = 80;
-      thumb.height = 80;
-      thumb.addEventListener('click', () => swiperInstance.slideTo(idx));
-      thumbsContainer.appendChild(thumb);
     });
 
-    swiperInstance.slideTo(0);
-  } else {
-    // desktop behavior (image + thumbnails)
-    // ensure imageWrapper contains the main img + nav buttons if needed
-    if (!imageWrapper.querySelector('#image-principale')) {
-      imageWrapper.innerHTML = `
-        <button id="next-btn" class="nav-btn" aria-label="Image suivante"><i class="fa-solid fa-chevron-right"></i></button>
-        <img id="image-principale" src="" alt="">
-        <button id="prev-btn" class="nav-btn" aria-label="Image précédente"><i class="fa-solid fa-chevron-left"></i></button>
-      `;
-    }
-
-    produit.image.forEach((src, idx) => {
-      const thumb = document.createElement('img');
-      thumb.src = buildImageUrl(src);
-      thumb.alt = `${produit.categorie || ''} ${produit.nom || ''} ${
-        produit.reference || ''
-      }`.trim();
-      thumb.classList.add('thumbnail');
-      thumb.loading = 'lazy';
-      thumb.width = 80;
-      thumb.height = 80;
-      if (idx === 0) thumb.classList.add('active');
-      thumb.addEventListener('click', () => updateMainImage(idx));
-      thumbsContainer.appendChild(thumb);
-    });
-
-    // rebind prev/next
-    const prev = document.getElementById('prev-btn');
-    const next = document.getElementById('next-btn');
-    if (prev) {
-      prev.style.display = multipleImages ? '' : 'none';
-      prev.onclick = () => {
-        if (!produit?.image?.length) return;
-        updateMainImage(
-          (currentImageIndex - 1 + produit.image.length) % produit.image.length
-        );
-      };
-    }
-    if (next) {
-      next.style.display = multipleImages ? '' : 'none';
-      next.onclick = () => {
-        if (!produit?.image?.length) return;
-        updateMainImage((currentImageIndex + 1) % produit.image.length);
-      };
-    }
-
-    updateMainImage(0);
-  }
+  swiperInstance.slideTo(0);
 }
 
 // ---- initFullScreenModal ----
@@ -309,7 +249,10 @@ function initFullScreenModal() {
 function displayProductDetails() {
   if (!produit) return;
   const boutonAcheter = document.querySelector('.btn-ajout-panier');
-  if (boutonAcheter) boutonAcheter.dataset.id = produit._id || '';
+  if (boutonAcheter) {
+    boutonAcheter.dataset.id = produit._id || '';
+    boutonAcheter.dataset.stock = produit.stock || '';
+  }
 
   const boutonFavoris = document.querySelector('.btn-fav-article');
   if (boutonFavoris) boutonFavoris.dataset.id = produit._id || '';
@@ -356,18 +299,57 @@ function displayProductDetails() {
 // ---- stock selector ----
 function initStockSelector() {
   const select = document.getElementById('stock-produit');
-  if (!select) return;
+  const divImgWrapper = document.querySelector('.image-wrapper');
+  if (!select || !divImgWrapper) return;
+
   select.innerHTML = '';
-  const stock = Number(produit?.stock) || 1;
-  for (let i = 1; i <= Math.max(1, stock); i++) {
-    const opt = document.createElement('option');
-    opt.value = i;
-    opt.textContent = i;
-    select.appendChild(opt);
+
+  const stock = Number(produit?.stock) || 0;
+
+  // Chercher un élément de rupture existant
+  let textRupture = divImgWrapper.querySelector('.text-rupture');
+
+  if (stock <= 0) {
+    select.style.display = 'none';
+    if (!textRupture) {
+      textRupture = document.createElement('p');
+      textRupture.classList.add('text-rupture');
+      textRupture.textContent = 'Rupture de stock';
+      divImgWrapper.appendChild(textRupture);
+    }
+  } else {
+    select.style.display = 'inline';
+    // Supprimer l'éventuel texte de rupture
+    if (textRupture) {
+      textRupture.remove();
+    }
+    for (let i = 1; i <= stock; i++) {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.textContent = i;
+      select.appendChild(opt);
+    }
   }
 }
 
-// ---- avis ----
+// ---- gestion avis client ----
+const formAvis = document.getElementById('form-avis');
+const messageAvis = document.getElementById('avis-message');
+const listeAvisBloc = document.getElementById('liste-avis');
+
+// récupère la référence produit depuis window.produit ou depuis un attribut HTML
+// Utilitaire : récupère la référence produit au moment demandé
+function getProductRef() {
+  if (produit && produit.reference) return String(produit.reference);
+  if (produit && produit._id) return String(produit._id);
+  const el = document.querySelector('[data-product-ref]');
+  if (el) return el.getAttribute('data-product-ref');
+  if (window.produit && window.produit.reference)
+    return String(window.produit.reference);
+  if (window.produit && window.produit._id) return String(window.produit._id);
+  return null;
+}
+
 function renderAvis(list, targetEl) {
   if (!targetEl) return;
   targetEl.innerHTML = '';
@@ -378,52 +360,106 @@ function renderAvis(list, targetEl) {
   list.forEach((av) => {
     const div = document.createElement('div');
     div.classList.add('avis');
+
+    const h4 = document.createElement('h4');
+    const nomSpan = document.createElement('span');
+    nomSpan.textContent = av.nom || 'Anonyme';
+    h4.appendChild(nomSpan);
+
+    // note en étoiles (texte sécurisé)
+    const noteSpan = document.createElement('span');
+    noteSpan.classList.add('note');
     const note = Number(av.note) || 0;
-    div.innerHTML = `
-      <h4>${av.nom} <span class="note">${'★'.repeat(note)}${'☆'.repeat(
-      5 - note
-    )}</span></h4>
-      <p>${av.commentaire}</p>
-      <small>${new Date(av.date).toLocaleDateString()}</small>
-    `;
+    noteSpan.textContent = '★'.repeat(note) + '☆'.repeat(Math.max(0, 5 - note));
+    h4.appendChild(noteSpan);
+
+    const p = document.createElement('p');
+    p.textContent = av.commentaire || '';
+
+    const small = document.createElement('small');
+    const d = av.date ? new Date(av.date) : new Date();
+    small.textContent = d.toLocaleDateString();
+
+    div.appendChild(h4);
+    div.appendChild(p);
+    div.appendChild(small);
     targetEl.appendChild(div);
   });
 }
 
-function initReviewForm() {
-  const formAvis = document.getElementById('form-avis');
-  const messageAvis = document.getElementById('avis-message');
-  const listeAvisBloc = document.getElementById('liste-avis');
+async function fetchAndRenderReviews() {
+  try {
+    listeAvisBloc.textContent = 'Chargement…';
+    const ref = getProductRef();
+    if (!ref) {
+      listeAvisBloc.textContent = 'Référence produit introuvable.';
+      return;
+    }
 
+    const data = await avis(ref);
+
+    // Filtrer uniquement les avis validés
+    const avisValides = data.filter((a) => a.validated);
+
+    renderAvis(avisValides, listeAvisBloc);
+  } catch (err) {
+    console.error('Erreur fetchAndRenderReviews:', err);
+    listeAvisBloc.textContent = 'Impossible de charger les avis.';
+  }
+}
+
+function initReviewForm() {
   if (!formAvis) return;
 
-  const key = `avis_${produit?.reference || 'unknown'}`;
-  let avisList = JSON.parse(localStorage.getItem(key)) || [];
-  renderAvis(avisList, listeAvisBloc);
-
-  formAvis.removeEventListener('submit', handleReviewSubmit); // safe: no-op si pas attaché
-  formAvis.addEventListener('submit', handleReviewSubmit);
-
-  function handleReviewSubmit(e) {
+  formAvis.addEventListener('submit', async (e) => {
     e.preventDefault();
+
     const nom = document.getElementById('avis-nom').value.trim();
     const note = document.getElementById('avis-note').value;
     const com = document.getElementById('avis-commentaire').value.trim();
-    if (!nom || !note || !com) return;
-    const nouvel = {
-      nom,
-      note,
-      commentaire: com,
-      date: new Date().toISOString(),
-    };
-    avisList.unshift(nouvel);
-    localStorage.setItem(key, JSON.stringify(avisList));
-    renderAvis(avisList, listeAvisBloc);
-    formAvis.reset();
-    if (messageAvis) {
-      messageAvis.textContent = 'Merci pour votre avis !';
-      setTimeout(() => (messageAvis.textContent = ''), 3000);
+
+    if (!nom || note === '' || !com) {
+      showMessage('Merci de remplir tous les champs.', true);
+      return;
     }
+
+    // ✅ récupérer le token reCAPTCHA
+    const recaptchaResponse = grecaptcha.getResponse();
+    if (!recaptchaResponse) {
+      showMessage('Merci de valider le reCAPTCHA.', true);
+      return;
+    }
+
+    const ref = getProductRef();
+    const payload = {
+      productRef: String(ref),
+      nom,
+      note: Number(note),
+      commentaire: com,
+      recaptchaToken: recaptchaResponse, // 👈 ajouté
+    };
+
+    try {
+      await postAvis(payload);
+      await fetchAndRenderReviews();
+      formAvis.reset();
+      grecaptcha.reset(); // reset reCAPTCHA après envoi
+      showMessage('Merci pour votre avis ! Il sera publié après vérification.');
+    } catch (err) {
+      console.error('Erreur envoi avis:', err);
+      showMessage('Impossible d’envoyer l’avis. Réessayez plus tard.', true);
+    }
+  });
+}
+
+function showMessage(msg, isError = false) {
+  if (!messageAvis) return;
+  messageAvis.textContent = msg;
+  messageAvis.classList.toggle('error', !!isError);
+  if (!isError) {
+    setTimeout(() => {
+      messageAvis.textContent = '';
+    }, 3000);
   }
 }
 
@@ -478,15 +514,15 @@ function produitSupplementaireAutres() {
 
   const produitsSelectionnes = Object.values(produitsParCategorie)
     .map((arr) => arr[Math.floor(Math.random() * arr.length)])
-    .slice(0, 5);
+    .slice(0, 6);
 
   produitsSelectionnes.forEach((p) => {
     const c = document.createElement('div');
     c.classList.add('carte-produit-autres');
     c.innerHTML = `
-      <img src="${buildImageUrl(p.image?.[0] || '')}" alt="${p.categorie} - ${
-      p.nom
-    }">
+      <img src="${buildImageUrl(p.image?.[0] || '')}" alt=" Image ${
+      p.categorie
+    } - ${p.nom}">
       <h3>${p.nom}</h3>
       <p>${(p.prix || 0).toFixed(2)} €</p>
     `;
@@ -527,6 +563,7 @@ async function loadProduct(ref, addToHistory = true) {
     initReviewForm();
     produitSupplementaire();
     produitSupplementaireAutres();
+    fetchAndRenderReviews();
     // Favoris / panier
     initPageListeFavoris(allProducts);
     initPageListePanier(allProducts);
@@ -535,35 +572,35 @@ async function loadProduct(ref, addToHistory = true) {
     shareData.url = window.location.href;
   } catch (err) {
     console.error('Erreur loadProduct :', err);
-    document.querySelector('main').innerHTML =
-      '<p>Erreur lors du chargement du produit.</p>';
+    // 👉 rediriger vers la page 404
+    window.location.href = '/error.html';
   }
 }
 function updateMetas(prod) {
   if (!prod) return;
   try {
-    document.title = `${prod.categorie || ''} ${
+    const titre = `${prod.categorie || ''} ${
       prod.nom || ''
     } – Mignonneries de Nathalie`;
+    document.title = titre;
+
     const desc =
       prod.description ||
       (prod.descriptionComplete && prod.descriptionComplete.slice(0, 160)) ||
       '';
+
     const img = buildImageUrl(
       prod.imageCouverture || prod.image?.[0] || '/assets/images/preview.webp'
     );
 
     const setIf = (selector, attr, value) => {
       const el = document.querySelector(selector);
-      if (el) el.setAttribute(attr, value);
+      if (el && value) el.setAttribute(attr, value);
     };
 
+    // Meta tags classiques
     setIf('meta[name="description"]', 'content', desc);
-    setIf(
-      'meta[property="og:title"]',
-      'content',
-      `${prod.categorie || ''} ${prod.nom || ''} – Mignonneries de Nathalie`
-    );
+    setIf('meta[property="og:title"]', 'content', titre);
     setIf('meta[property="og:description"]', 'content', desc);
     setIf('meta[property="og:image"]', 'content', img);
     setIf(
@@ -571,20 +608,18 @@ function updateMetas(prod) {
       'content',
       prod.url || window.location.href
     );
-    setIf(
-      'meta[name="twitter:title"]',
-      'content',
-      `${prod.categorie || ''} ${prod.nom || ''} – Mignonneries de Nathalie`
-    );
+    setIf('meta[name="twitter:title"]', 'content', titre);
     setIf('meta[name="twitter:description"]', 'content', desc);
     setIf('meta[name="twitter:image"]', 'content', img);
-    setIf(
-      'link[rel="preload"]',
-      'href',
-      buildImageUrl(
-        prod.imageCouverture || prod.image?.[0] || '/assets/images/preview.webp'
-      )
-    );
+
+    // Preload image
+    if (img) {
+      const linkPreload = document.createElement('link');
+      linkPreload.setAttribute('rel', 'preload');
+      linkPreload.setAttribute('as', 'image');
+      linkPreload.setAttribute('href', img);
+      document.head.appendChild(linkPreload);
+    }
   } catch (e) {
     console.warn('updateMetas failed', e);
   }
@@ -645,6 +680,7 @@ async function init() {
     initPageListePanier(allProducts);
     mettreAJourBoutonsPanier();
     updateFavorisCount();
+    fetchAndRenderReviews();
   } catch (err) {
     console.error('Erreur init page produit :', err);
     document.querySelector('main').innerHTML =

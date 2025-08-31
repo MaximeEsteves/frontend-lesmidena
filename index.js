@@ -1,9 +1,11 @@
-// Fonction utilitaire fetchData
 import {
   getAllProducts,
   deleteProduct,
   createProduct,
   updateProduct,
+  avis,
+  deleteAvis,
+  validateAvis,
   API_BASE,
 } from './api/apiClient.js';
 import {
@@ -12,6 +14,7 @@ import {
   initPageListePanier,
   mettreAJourBoutonsPanier,
 } from './global/addFavorisPanier.js';
+import { initCustomSwiper } from '../global/initCustomSwiper.js';
 const baseURL = API_BASE + '/';
 async function init() {
   try {
@@ -52,11 +55,17 @@ function addAddProductButton() {
   const h2 = document.querySelector('.titre-projet');
   if (h2 && !h2.querySelector('.div-modification')) {
     const btnAdd = document.createElement('button');
+    const btnAvis = document.createElement('button');
+    btnAvis.classList.add('div-avis');
+    btnAvis.innerHTML =
+      '<i class="fa-solid fa-pen-to-square"></i><span>Voir les avis</span>';
+    btnAvis.addEventListener('click', () => verifAvis());
     btnAdd.classList.add('div-modification');
     btnAdd.innerHTML =
       '<i class="fa-solid fa-pen-to-square"></i><span>Ajouter un produit</span>';
     btnAdd.addEventListener('click', () => initProductModal('add'));
     h2.appendChild(btnAdd);
+    h2.appendChild(btnAvis);
   }
 }
 // on transmet isConnected à totalProduits !
@@ -169,9 +178,6 @@ function addAdminActions(figure, produit) {
   figure.append(btnSupprimer, btnModifier);
 }
 
-// Lancement de l'init au chargement du DOM
-document.addEventListener('DOMContentLoaded', init);
-
 // Fonction d'affichage des filtres (adaptée pour recevoir les données)
 function filtres(worksData) {
   // Si l'utilisateur est connecté, on ne montre pas les filtres
@@ -270,7 +276,7 @@ function projets(worksData) {
   // 1) Regrouper les produits valides par catégorie
   const produitsParCat = new Map();
   for (const produit of worksData) {
-    if (!produit._id || produit.stock <= 0) continue;
+    if (!produit._id) continue; // <- on garde uniquement les produits valides, même stock 0
     const cat = produit.categorie;
     if (!produitsParCat.has(cat)) {
       produitsParCat.set(cat, [produit]);
@@ -316,6 +322,13 @@ function projets(worksData) {
         }
       });
 
+      // Badge "Rupture de stock"
+      if (prod.stock <= 0) {
+        const badge = document.createElement('div');
+        badge.classList.add('badge-rupture');
+        badge.textContent = 'Rupture de stock';
+        divBg.appendChild(badge);
+      }
       divBg.appendChild(imgEl);
       slide.appendChild(divBg);
       swiperWrapper.appendChild(slide);
@@ -364,27 +377,21 @@ function projets(worksData) {
     portfolio.appendChild(figure);
 
     // --- Initialisation Swiper ---
-    const swiper = new Swiper(swiperContainer, {
-      loop: true,
-      navigation: {
-        nextEl: swiperContainer.querySelector('.swiper-button-next'),
-        prevEl: swiperContainer.querySelector('.swiper-button-prev'),
+    const swiper = initCustomSwiper(
+      swiperContainer,
+      {
+        navigation: {
+          nextEl: swiperContainer.querySelector('.swiper-button-next'),
+          prevEl: swiperContainer.querySelector('.swiper-button-prev'),
+        },
       },
-      grabCursor: true,
-      simulateTouch: true,
-      spaceBetween: 10,
-      on: {
-        slideChange: function () {
-          const activeIndex = this.realIndex; // index réel du produit
-          const prod = produits[activeIndex];
-          if (!prod) return;
-
-          // Mise à jour du prix, description
+      produits,
+      {
+        onSlideChange: (prod) => {
           prix.textContent = `${prod.prix}€`;
           description.textContent = prod.description;
-
-          // Mise à jour favoris
           btnFav.dataset.id = prod._id;
+          // update favoris
           const favoris = JSON.parse(localStorage.getItem('favoris')) || [];
           const isFav = favoris.some((f) => f._id === prod._id);
           if (isFav) {
@@ -395,8 +402,8 @@ function projets(worksData) {
             iconFav.classList.replace('fa-solid', 'fa-regular');
           }
         },
-      },
-    });
+      }
+    );
   }
 }
 
@@ -454,6 +461,62 @@ function validateForm(
       'background-color:gray;cursor:not-allowed;border:1px solid #3a5151;color:white;';
   }
 }
+let cropperInstance = null;
+let cropperCallback = null;
+
+function openCropper(file, callback) {
+  const modal = document.getElementById('cropper-modal');
+  const img = document.getElementById('cropper-image');
+  const applyBtn = document.getElementById('cropper-apply');
+  const cancelBtn = document.getElementById('cropper-cancel');
+
+  cropperCallback = callback;
+  const reader = new FileReader();
+  reader.onload = () => {
+    img.src = reader.result;
+    modal.style.display = 'flex';
+
+    // Forcer la taille du cropper à celle du conteneur
+    img.style.maxWidth = '100%';
+    img.style.maxHeight = '100%';
+
+    if (cropperInstance) cropperInstance.destroy();
+    cropperInstance = new Cropper(img, {
+      aspectRatio: NaN,
+      viewMode: 1,
+      autoCropArea: 0.5,
+      movable: true,
+      zoomable: false,
+      rotatable: true,
+      scalable: true,
+      background: true, // affiche la zone hors crop
+      highlight: true, // met en évidence la zone crop
+      cropBoxResizable: true,
+      cropBoxMovable: true,
+    });
+  };
+
+  reader.readAsDataURL(file);
+
+  applyBtn.onclick = () => {
+    if (!cropperInstance) return;
+    cropperInstance.getCroppedCanvas().toBlob((blob) => {
+      const croppedFile = new File([blob], file.name, { type: file.type });
+      cropperCallback(croppedFile);
+      modal.style.display = 'none';
+      cropperInstance.destroy();
+      cropperInstance = null;
+    }, file.type);
+  };
+
+  cancelBtn.onclick = () => {
+    modal.style.display = 'none';
+    if (cropperInstance) {
+      cropperInstance.destroy();
+      cropperInstance = null;
+    }
+  };
+}
 
 // Gestion preview couverture
 function handleCoverUpload(
@@ -466,7 +529,7 @@ function handleCoverUpload(
   couvertureInput.onchange = () => {
     coverErrorElem.textContent = '';
     const file = couvertureInput.files[0];
-    if (!file) return;
+    if (!file) return validateCb();
     if (file.size > 4 * 1024 * 1024) {
       coverErrorElem.textContent = 'Le fichier dépasse 4 Mo.';
       return validateCb();
@@ -478,51 +541,81 @@ function handleCoverUpload(
     }
     const reader = new FileReader();
     reader.onload = () => {
-      previewCover.src = reader.result;
-      previewCover.alt = file.name;
-      previewCover.style.display = 'block';
-      validateCb();
+      // Ouvre cropper pour couverture
+      openCropper(file, (croppedFile) => {
+        const croppedReader = new FileReader();
+        croppedReader.onload = () => {
+          previewCover.src = croppedReader.result;
+          previewCover.alt = croppedFile.name;
+          previewCover.style.display = 'block';
+
+          // Remplacer le fichier original
+        };
+        croppedReader.readAsDataURL(croppedFile);
+        couvertureInput.files = new DataTransfer().files; // créer un DataTransfer pour remplacer
+        const dt = new DataTransfer();
+        dt.items.add(croppedFile);
+        couvertureInput.files = dt.files;
+        validateCb();
+      });
     };
+
     reader.readAsDataURL(file);
   };
 }
 
 // Gestion preview images multiples
+let selectedMultiFiles = [];
+
 function handleMultiUpload(multiInput, gallery, multiErrorElem, validateCb) {
   multiInput.onchange = () => {
     multiErrorElem.textContent = '';
     const files = Array.from(multiInput.files);
-    files.forEach((file) => {
+
+    for (const file of files) {
       if (file.size > 4 * 1024 * 1024) {
         multiErrorElem.textContent = 'Chaque fichier doit être <4 Mo.';
-        return;
+        multiInput.value = '';
+        return validateCb();
       }
       const types = ['image/jpeg', 'image/png', 'image/webp'];
       if (!types.includes(file.type)) {
         multiErrorElem.textContent = 'Seuls JPG, WEBP et PNG sont autorisés.';
-        return;
+        multiInput.value = '';
+        return validateCb();
       }
-      const reader = new FileReader();
-      reader.onload = () => {
-        const figure = document.createElement('figure');
-        figure.classList.add('image-wrapper');
-        figure.innerHTML = `
-          <button type="button" class="icone-supprimer-modal">
-            <i class="fa-solid fa-trash-can"></i>
-          </button>
-          <img src="${reader.result}" alt="${file.name}" class="image-preview" />
-        `;
-        figure.querySelector('button').onclick = () => {
-          figure.remove();
+    }
+
+    // Pour chaque fichier, on ouvre le cropper puis on l'ajoute seulement à selectedMultiFiles après crop
+    files.forEach((file) => {
+      openCropper(file, (croppedFile) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const figure = document.createElement('figure');
+          figure.classList.add('image-wrapper');
+          figure.innerHTML = `
+            <button type="button" class="icone-supprimer-modal">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+            <img src="${reader.result}" alt="${croppedFile.name}" class="image-preview" />
+          `;
+          figure.querySelector('button').onclick = () => {
+            figure.remove();
+            selectedMultiFiles = selectedMultiFiles.filter(
+              (f) => f !== croppedFile
+            );
+            validateCb();
+          };
+          gallery.appendChild(figure);
+          // On ajoute le fichier cropper **UNE SEULE FOIS**
+          selectedMultiFiles.push(croppedFile);
           validateCb();
         };
-        gallery.appendChild(figure);
-        validateCb();
-      };
-      reader.readAsDataURL(file);
+        reader.readAsDataURL(croppedFile);
+      });
     });
-    // Reset input to allow same file re-upload
-    multiInput.value = '';
+
+    multiInput.value = ''; // reset pour permettre reupload
   };
 }
 
@@ -537,6 +630,8 @@ async function initProductModal(mode, produit = {}) {
   const previewCover = document.getElementById('preview-couverture');
   const gallery = document.getElementById('preview-multi-images');
   const hiddenDescInput = document.getElementById('input-descriptionComplete');
+  // 🟢 IMPORTANT : reset des fichiers sélectionnés pour éviter les doublons
+  selectedMultiFiles = [];
 
   // Setup initial button state
   btnSubmit.disabled = true;
@@ -607,12 +702,21 @@ async function initProductModal(mode, produit = {}) {
           <i class="fa-solid fa-trash-can"></i>
         </button>
         <img src="${baseURL + relPath}" alt="Image ${
-        idx + 1
+        produit.categorie +
+        ' ' +
+        produit.nom +
+        ' ' +
+        produit.reference +
+        ' ' +
+        (idx + 1)
       }" class="image-preview" />
       `;
       figure.querySelector('button').onclick = () => {
         imagesASupprimer.push(relPath);
         figure.remove();
+        selectedMultiFiles = selectedMultiFiles.filter(
+          (f) => f.name !== relPath && f.name !== relPath.split('/').pop()
+        );
         validateCbGlobal();
       };
       gallery.appendChild(figure);
@@ -648,16 +752,23 @@ async function initProductModal(mode, produit = {}) {
   // Affichage modal
   modal.style.display = 'flex';
   overlay.style.display = 'flex';
-
   // Soumission
   form.onsubmit = async (e) => {
     e.preventDefault();
     if (btnSubmit.disabled) return;
+
     const token = localStorage.getItem('token');
     if (!token) return alert('Vous devez être connecté.');
 
     hiddenDescInput.value = editorDescriptionComplete.root.innerHTML;
     const formData = new FormData(form);
+
+    // Ajouter les fichiers multiples stockés
+    for (const file of selectedMultiFiles) {
+      formData.append('image', file);
+    }
+
+    // Ajouter les images supprimées
     imagesASupprimer.forEach((path) =>
       formData.append('imagesASupprimer', path)
     );
@@ -666,8 +777,10 @@ async function initProductModal(mode, produit = {}) {
       mode === 'add'
         ? await createProduct(formData, token)
         : await updateProduct(produit._id, formData, token);
+
       overlay.style.display = 'none';
       modal.style.display = 'none';
+
       const data = await getAllProducts();
       totalProduits(data, !!token);
     } catch (err) {
@@ -682,6 +795,41 @@ function closeModal() {
   const modalContent = document.querySelector('.modal-content');
   modal.style.display = 'none';
   modalContent.style.display = 'none';
+
+  const modalavis = document.querySelector('.modal-content-avis');
+  const modalContentavis = document.querySelector('.modal-avis');
+  modalavis.style.display = 'none';
+  modalContentavis.style.display = 'none';
+
+  // Réinitialiser le formulaire
+  const form = document.querySelector('#product-form');
+  if (form) form.reset();
+
+  // Réinitialiser le bouton
+  const btnSubmit = form?.querySelector('button[type=submit]');
+  if (btnSubmit) {
+    btnSubmit.disabled = true;
+    btnSubmit.style.cssText =
+      'background-color:gray;cursor:not-allowed;border:1px solid #3a5151;color:white;';
+  }
+
+  // Réinitialiser les variables globales liées aux images
+  selectedMultiFiles = [];
+  validateCbGlobal = null;
+
+  // Réinitialiser le contenu des prévisualisations
+  const gallery = document.getElementById('preview-multi-images');
+  if (gallery) gallery.innerHTML = '';
+  const previewCover = document.getElementById('preview-couverture');
+  if (previewCover) {
+    previewCover.src = '';
+    previewCover.style.display = 'none';
+  }
+
+  // Réinitialiser l'éditeur Quill
+  if (window.editorDescriptionComplete) {
+    editorDescriptionComplete.setContents([]);
+  }
 }
 
 // /* fonction de suppression de la photo, reçoit la figure à supprimer */
@@ -717,7 +865,7 @@ document.body.addEventListener('click', function (e) {
   if (e.target.closest('.btn-close')) {
     closeModal();
   }
-  const modalContent = document.querySelector('.modal-content');
+  const modalContent = document.querySelector('.modal-content-avis');
   if (e.target === modalContent) {
     // au clic en dehors de la modale, ferme la modale
     closeModal();
@@ -726,3 +874,97 @@ document.body.addEventListener('click', function (e) {
     initProductModal('add');
   }
 });
+
+async function verifAvis() {
+  const divAvis = document.querySelector('.modal-content-avis');
+  const divAvisOverlay = document.querySelector('.modal-avis');
+  divAvis.style.display = 'flex';
+  divAvisOverlay.style.display = 'flex';
+
+  const container = document.getElementById('table-container');
+  container.innerHTML = '<p>Chargement des avis...</p>';
+
+  try {
+    const avisList = await avis();
+
+    if (!avisList || avisList.length === 0) {
+      container.innerHTML = '<p>Aucun avis trouvé.</p>';
+      return;
+    }
+
+    let html = `
+      <table class="avis-table">
+        <thead>
+          <tr>
+            <th>Produit</th>
+            <th>Nom</th>
+            <th>Note</th>
+            <th>Commentaire</th>
+            <th>Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    avisList.forEach((a) => {
+      const date = new Date(a.date).toLocaleDateString('fr-FR');
+      html += `
+<tr data-id="${a._id}">
+  <td>${a.productRef}</td>
+  <td>${a.nom}</td>
+  <td>${'⭐'.repeat(a.note)}</td>
+  <td>
+    <div class="comment-cell">${a.commentaire}</div>
+  </td>
+  <td>${date}</td>
+  <td>
+    ${
+      a.validated
+        ? ''
+        : `<button class="btn-validate" data-id="${a._id}">✔</button>`
+    }
+    <button class="btn-delete" data-id="${a._id}">🗑️</button>
+  </td>
+</tr>
+`;
+    });
+
+    html += '</tbody></table>';
+    container.innerHTML = html;
+
+    // Ajout des listeners sur les boutons "Supprimer"
+    document.querySelectorAll('.btn-delete').forEach((btn) => {
+      btn.addEventListener('click', async (e) => {
+        const id = e.target.getAttribute('data-id');
+        try {
+          await deleteAvis(id);
+          // Retire la ligne supprimée du tableau
+          document.querySelector(`tr[data-id="${id}"]`).remove();
+        } catch (err) {
+          alert('Erreur lors de la suppression de l’avis.');
+          console.error(err);
+        }
+      });
+    });
+    document.querySelectorAll('.btn-validate').forEach((btn) => {
+      btn.addEventListener('click', async (e) => {
+        const id = e.target.getAttribute('data-id');
+        try {
+          await validateAvis(id);
+          // Supprime le bouton valider pour refléter le changement
+          e.target.remove();
+        } catch (err) {
+          alert('Erreur lors de la validation de l’avis.');
+          console.error(err);
+        }
+      });
+    });
+  } catch (err) {
+    console.error(err);
+    container.innerHTML = '<p>Erreur lors du chargement des avis.</p>';
+  }
+}
+
+// Lancement de l'init au chargement du DOM
+document.addEventListener('DOMContentLoaded', init);

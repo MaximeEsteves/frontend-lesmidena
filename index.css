@@ -169,6 +169,22 @@
   cursor: pointer;
 }
 
+.badge-rupture {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(200, 0, 0, 0.85);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 6px;
+  z-index: 10;
+}
+.div-bg-card {
+  position: relative; /* nécessaire pour positionner le badge */
+}
+
 /* btn favoris*/
 .btn-fav-article {
   position: absolute;

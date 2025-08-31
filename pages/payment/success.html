@@ -58,6 +58,7 @@
       // Dès que la page se charge, on vide le panier localStorage
       window.addEventListener('DOMContentLoaded', () => {
         localStorage.removeItem('panier');
+        localStorage.removeItem('favoris');
       });
     </script>
   </head>
@@ -166,8 +167,8 @@
       <p>Votre paiement a été <strong>effectué avec succès</strong>.</p>
 
       <p>
-        Un email de confirmation a été envoyé à votre adresse. Vous recevrez
-        bientôt votre colis 💌.
+        Un email de confirmation a été envoyé à votre adresse. Vérifiez votre
+        boîte de spam. Vous recevrez bientôt votre colis 💌.
       </p>
 
       <a href="../../index.html" class="btn-retour">← Retour à l’accueil</a>

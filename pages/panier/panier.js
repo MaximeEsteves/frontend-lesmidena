@@ -1,5 +1,9 @@
 import { updateFavorisCount } from '../../global/addFavorisPanier.js';
-import { createStripeCheckoutSession, API_BASE } from '../../api/apiClient.js';
+import {
+  createStripeCheckoutSession,
+  API_BASE,
+  getAllProducts,
+} from '../../api/apiClient.js';
 const baseURL = API_BASE + '/';
 
 // Récupère le panier depuis localStorage
@@ -231,7 +235,8 @@ async function handleFormSubmit(e) {
     window.location.href = session.url;
   } catch (err) {
     console.error('Erreur de paiement :', err);
-    alert('Erreur lors du paiement. Veuillez réessayer.');
+    await verifierPanierAvecStock();
+
     const btnSubmit = document.getElementById('btn-submit-livraison');
     if (btnSubmit) {
       btnSubmit.disabled = false;
@@ -239,13 +244,74 @@ async function handleFormSubmit(e) {
     }
   }
 }
+async function verifierPanierAvecStock() {
+  let panier = JSON.parse(localStorage.getItem('panier')) || [];
+  const produitsSupprimes = [];
+
+  try {
+    const produits = await getAllProducts(); // récupère tous les produits depuis la base
+
+    // Vérifier chaque produit du panier
+    // Vérification chaque produit
+    panier = panier.filter((item) => {
+      const produit = produits.find((p) => p._id === item._id);
+      if (!produit || produit.stock <= 0) {
+        // Stocker nom et catégorie pour la modale
+        produitsSupprimes.push({
+          nom: item.nom,
+          categorie: produit ? produit.categorie : '',
+        });
+        return false; // retirer du panier
+      }
+      return true;
+    });
+
+    // Sauvegarder le panier filtré
+    localStorage.setItem('panier', JSON.stringify(panier));
+
+    // Rafraîchir l'affichage panier
+    renderPanier();
+
+    // Si des produits supprimés, afficher la modale
+    if (produitsSupprimes.length > 0) {
+      afficherModalProduitsSupprimes(produitsSupprimes);
+    }
+  } catch (err) {
+    console.error('Erreur lors de la synchro panier:', err);
+  }
+}
+
+function afficherModalProduitsSupprimes(produitsSupprimes) {
+  const modal = document.getElementById('error-modal');
+  const ul = document.getElementById('error-products');
+  const btn = document.getElementById('refresh-cart');
+
+  if (!modal || !ul || !btn) return; // sécurité
+
+  // Remplir la liste
+  ul.innerHTML = '';
+  produitsSupprimes.forEach((p) => {
+    const li = document.createElement('li');
+    li.textContent = `${p.categorie} ${p.nom} a été supprimé du panier (stock épuisé).`;
+    ul.appendChild(li);
+  });
+
+  // Afficher la modale
+  modal.style.display = 'flex';
+
+  // Bouton pour rafraîchir la page
+  btn.onclick = () => {
+    modal.style.display = 'none';
+    window.location.reload(); // recharge la page pour que tout soit à jour
+  };
+}
 
 function init() {
   renderPanier();
   updateFavorisCount();
-
   // Préparer autocomplétion si implémenté
   completeFormulaire();
+  verifierPanierAvecStock();
 
   const btnCheckout = document.getElementById('btn-checkout');
   const formLivraison = document.getElementById('form-livraison');

@@ -43,7 +43,7 @@
 			</div>
 <!-- NAVIGATION DESKTOP -->
       <nav class="desktop">
-      <a href="#btn-retour" id="logo-nav-header"><img src="../../assets/images/logo-nav.webp" alt="logo les mignonneries de nathalie"></a>
+      <a href="/" id="logo-nav-header"><img src="../../assets/images/logo-nav.webp" alt="logo les mignonneries de nathalie"></a>
       <ul class="btn-nav">
         <li><a href="../../index.html">Accueil</a></li>
         <li><a href="../../index.html#creation">Créations</a></li>
@@ -172,28 +172,38 @@
     <h3>Informations de livraison</h3>
     <div class="form-group">
       <label for="nom">Nom complet<span>*</span></label>
-      <input type="text" id="nom" name="nom" required>
+      <input type="text" id="nom" name="nom" required placeholder="Jean Dupont">
     </div>
     <div class="form-group">
       <label for="adresse">Adresse<span>*</span></label>
-      <input type="text" id="adresse" name="adresse" list="suggestions" required>
+      <input type="text" id="adresse" name="adresse" list="suggestions" required placeholder="123 Rue de Rubeus">
       <datalist id="suggestions"></datalist>
     </div>
     <div class="form-group">
       <label for="ville">Ville<span>*</span></label>
-      <input type="text" id="ville" name="ville" required>
+      <input type="text" id="ville" name="ville" required placeholder="Paris">
     </div>
     <div class="form-group">
       <label for="code-postal">Code postal<span>*</span></label>
-      <input type="text" id="code-postal" name="code-postal" required pattern="\d{4,6}">
+      <input type="text" id="code-postal" name="code-postal" required pattern="\d{4,6}" placeholder="12345">
     </div>
     <div class="form-group">
       <label for="email">E-mail<span>*</span></label>
-      <input type="email" id="email" name="email" required>
+      <input type="email" id="email" name="email" required placeholder="exemple@domaine.com">
     </div>
     <div class="form-group">
       <label for="telephone">Téléphone<span>*</span></label>
-      <input type="tel" id="telephone" name="telephone" required pattern="[\d\s+\-()]{6,}">
+      <input 
+  type="tel" 
+  id="telephone" 
+  name="telephone" 
+  pattern="\d{10}" 
+  minlength="10" 
+  maxlength="10" 
+  required 
+  placeholder="06XXXXXXXX"
+/>
+
     </div>
     <button id="btn-submit-livraison" type="submit">Valider et payer</button>
   </form>
@@ -287,5 +297,16 @@
         </ul>
       </div>
     </footer>
+<!-- Modal Erreur Panier -->
+<div id="error-modal" class="modal" style="display:none;">
+  <div class="modal-content">
+    <h2>Produits supprimés du panier</h2>
+    <ul id="error-products"></ul>
+    <button id="refresh-cart">Rafraîchir mon panier</button>
+  </div>
+</div>
+
+
+
   </body>
 </html>

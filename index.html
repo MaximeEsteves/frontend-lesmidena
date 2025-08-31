@@ -62,6 +62,14 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"
     />
+    <!-- CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css"
+    />
+
+    <!-- JS (UMD global) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
     <!-- Styles locaux -->
     <link rel="stylesheet" href="./index.css" />
@@ -93,7 +101,7 @@
       </div>
       <!-- NAVIGATION DESKTOP -->
       <nav class="desktop">
-        <a href="#btn-retour" id="logo-nav-header">
+        <a href="/" id="logo-nav-header">
           <img
             src="./assets/images/logo-nav.webp"
             alt="logo les mignonneries de nathalie"
@@ -526,18 +534,58 @@
           <div class="formulaire-modification-primaire">
             <!-- Les autres champs -->
             <label>Catégorie</label
-            ><input type="text" name="categorie" required /> <label>Nom</label
-            ><input type="text" name="nom" required />
+            ><input
+              type="text"
+              name="categorie"
+              required
+              placeholder="Bavoir bandana"
+            />
+            <label>Nom</label
+            ><input type="text" name="nom" required placeholder="Vert clair" />
             <label>Titre de description</label
-            ><input type="text" name="titreDescription" required />
+            ><input
+              type="text"
+              name="titreDescription"
+              required
+              placeholder="Bavoir bandana - L'accessoire indispensable pou..."
+            />
             <label>Description courte</label
-            ><input type="text" name="description" required />
+            ><input
+              type="text"
+              name="description"
+              required
+              placeholder="Ce bavoir bandana accompagne bébé du mat..."
+            />
             <label>reference</label
-            ><input type="text" name="reference" required /> <label>prix</label
-            ><input type="number" name="prix" step="0.01" required />
+            ><input
+              type="text"
+              name="reference"
+              required
+              placeholder="A27442"
+            />
+            <label>prix</label
+            ><input
+              type="number"
+              name="prix"
+              step="0.01"
+              required
+              placeholder="19.99"
+            />
             <label>materiaux</label
-            ><input type="text" name="materiaux" required /> <label>stock</label
-            ><input type="number" name="stock" min="0" required />
+            ><input
+              type="text"
+              name="materiaux"
+              required
+              placeholder="Coton bio"
+            />
+            <label>stock</label
+            ><input
+              type="number"
+              name="stock"
+              min="0"
+              required
+              placeholder="3"
+            />
             <button type="submit" id="btn-submit"></button>
           </div>
           <div class="formulaire-modification-secondaire">
@@ -587,6 +635,27 @@
             <div id="preview-multi-images" class="image-preview-gallery"></div>
           </div>
         </form>
+      </div>
+    </div>
+    <div class="modal-content-avis">
+      <div class="modal-avis">
+        <button class="btn-close">
+          <i class="fa-solid fa-xmark fa-2xl"></i>
+        </button>
+        <h1>Administration des avis</h1>
+        <h2>Liste des avis</h2>
+        <div id="table-container"></div>
+      </div>
+    </div>
+    <div id="cropper-modal">
+      <div class="cropper-modal-inner">
+        <div class="cropper-container-wrapper">
+          <img id="cropper-image" src="" alt="Edit image" />
+        </div>
+        <div class="cropper-buttons">
+          <button id="cropper-apply">Appliquer</button>
+          <button id="cropper-cancel">Annuler</button>
+        </div>
       </div>
     </div>
   </body>

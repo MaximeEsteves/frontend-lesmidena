@@ -1,5 +1,3 @@
-// /js/admin/login.js
-
 import { loginAdmin } from '../api/apiClient.js';
 
 /**
