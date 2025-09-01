@@ -103,7 +103,7 @@ function totalProduits(worksData, isConnected = false) {
   );
 
   worksData.forEach((produit) => {
-    if (!produit._id || produit.stock <= 0) return;
+    if (!produit._id) return;
 
     // Construction de la carte produit
     const figure = createProductFigure(produit, imgObserver);
