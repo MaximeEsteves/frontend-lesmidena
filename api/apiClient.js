@@ -31,6 +31,39 @@ export async function createStripeCheckoutSession(lignes, customer) {
   });
 }
 
+// === API spécifiques export de la gestion du site ===
+export async function exportOrders(
+  format,
+  periode,
+  mois = null,
+  annee = null,
+  token = null
+) {
+  const url = new URL(`${API_BASE}/api/order/export`);
+  url.searchParams.append('format', format);
+  url.searchParams.append('periode', periode);
+  if (mois !== null) url.searchParams.append('mois', mois);
+  if (annee !== null) url.searchParams.append('annee', annee);
+
+  const headers = {};
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+
+  const res = await fetch(url, { headers });
+
+  if (!res.ok)
+    throw new Error(`Erreur API export: ${res.status} ${res.statusText}`);
+
+  const blob = await res.blob();
+  return blob;
+}
+
+// === API spécifiques commande client ===
+export async function commandeClient() {
+  return apiRequest('/api/order');
+}
+export async function ajoutCommandeClient(formData, token) {
+  return apiRequest('/api/order', 'POST', formData, token);
+}
 // === API spécifiques avis client ===
 export async function avis(productRef) {
   const token = localStorage.getItem('token');

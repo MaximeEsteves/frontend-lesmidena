@@ -6,6 +6,9 @@ import {
   avis,
   deleteAvis,
   validateAvis,
+  commandeClient,
+  ajoutCommandeClient,
+  exportOrders,
   API_BASE,
 } from './api/apiClient.js';
 import {
@@ -34,10 +37,12 @@ async function init() {
   }
 }
 function enterEditModeUI() {
-  const userOpen = document.getElementById('user-open');
+  const userOpen = document.querySelectorAll('.user-open');
   if (userOpen) {
-    userOpen.textContent = 'log out';
-    userOpen.style.fontWeight = '700';
+    userOpen[0].textContent = 'log out';
+    userOpen[1].textContent = 'log out';
+    userOpen[0].style.fontWeight = '700';
+    userOpen[1].style.fontWeight = '700';
   }
   if (!document.querySelector('.mode-edition')) {
     const body = document.body;
@@ -56,16 +61,24 @@ function addAddProductButton() {
   if (h2 && !h2.querySelector('.div-modification')) {
     const btnAdd = document.createElement('button');
     const btnAvis = document.createElement('button');
+    const btnCommande = document.createElement('button');
     btnAvis.classList.add('div-avis');
     btnAvis.innerHTML =
       '<i class="fa-solid fa-pen-to-square"></i><span>Voir les avis</span>';
     btnAvis.addEventListener('click', () => verifAvis());
+    h2.appendChild(btnAvis);
+
     btnAdd.classList.add('div-modification');
     btnAdd.innerHTML =
       '<i class="fa-solid fa-pen-to-square"></i><span>Ajouter un produit</span>';
     btnAdd.addEventListener('click', () => initProductModal('add'));
     h2.appendChild(btnAdd);
-    h2.appendChild(btnAvis);
+
+    btnCommande.classList.add('div-commande');
+    btnCommande.innerHTML =
+      '<i class="fa-solid fa-pen-to-square"></i><span>Historique des ventes</span>';
+    btnCommande.addEventListener('click', () => gestionArticle());
+    h2.appendChild(btnCommande);
   }
 }
 // on transmet isConnected à totalProduits !
@@ -801,6 +814,11 @@ function closeModal() {
   modalavis.style.display = 'none';
   modalContentavis.style.display = 'none';
 
+  const modalCommande = document.querySelector('.modal-content-gestion');
+  const modalContentCommande = document.querySelector('.modal-gestion');
+  modalCommande.style.display = 'none';
+  modalContentCommande.style.display = 'none';
+
   // Réinitialiser le formulaire
   const form = document.querySelector('#product-form');
   if (form) form.reset();
@@ -851,15 +869,17 @@ async function deletePhoto(figure) {
 
 // eventListener "click"
 document.body.addEventListener('click', function (e) {
-  if (e.target.closest('#user-open')) {
+  if (e.target.closest('.user-open')) {
     if (window.localStorage.getItem('token')) {
-      const userOpen = document.querySelector('#user-open');
-      userOpen.innerHTML = 'login';
+      const userOpen = document.querySelectorAll('.user-open');
+      userOpen[0].innerHTML = 'login';
+      userOpen[1].innerHTML = 'login';
       window.localStorage.clear();
       window.location.href = 'index.html';
     } else {
-      const userOpen = document.querySelector('#user-open');
-      userOpen.classList.toggle('click');
+      const userOpen = document.querySelectorAll('.user-open');
+      userOpen[0].classList.toggle('click');
+      userOpen[1].classList.toggle('click');
     }
   }
   if (e.target.closest('.btn-close')) {
@@ -965,6 +985,604 @@ async function verifAvis() {
     container.innerHTML = '<p>Erreur lors du chargement des avis.</p>';
   }
 }
+
+// Modal de gestion //
+async function gestionArticle() {
+  const divAvis = document.querySelector('.modal-content-gestion');
+  const divAvisOverlay = document.querySelector('.modal-gestion');
+  const tableGestion = document.querySelector(
+    '.modal-gestion-filtres .gestion-table'
+  );
+
+  const selectAnnee = document.getElementById('select-gestion-annee');
+  const selectMois = document.getElementById('select-gestion-mois');
+
+  divAvis.style.display = 'flex';
+  divAvisOverlay.style.display = 'flex';
+
+  try {
+    const orders = await commandeClient();
+
+    // ==== Remplir sélecteur Année ====
+    const startYear = 2023;
+    const currentYear = new Date().getFullYear();
+
+    const annees = [];
+    for (let y = currentYear; y >= startYear; y--) {
+      annees.push(y);
+    }
+
+    selectAnnee.innerHTML = annees
+      .map((year) => `<option value="${year}">${year}</option>`)
+      .join('');
+
+    // ==== Remplir sélecteur Mois ====
+    const moisNoms = [
+      'Janvier',
+      'Février',
+      'Mars',
+      'Avril',
+      'Mai',
+      'Juin',
+      'Juillet',
+      'Août',
+      'Septembre',
+      'Octobre',
+      'Novembre',
+      'Décembre',
+    ];
+
+    selectMois.innerHTML = moisNoms
+      .map((mois, i) => `<option value="${i + 1}">${mois}</option>`)
+      .join('');
+
+    // ==== Afficher le détail commandes filtrées ====
+    function renderTable() {
+      const selectedYear = parseInt(selectAnnee.value, 10);
+      const selectedMonth = parseInt(selectMois.value, 10);
+
+      tableGestion.innerHTML = '';
+
+      orders.forEach((order) => {
+        const date = new Date(order.date);
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1;
+
+        if (year === selectedYear && month === selectedMonth) {
+          order.articles.forEach((a) => {
+            const revenu = a.quantite * a.prixUnitaire;
+            const html = `
+              <tr data-id="${order._id}">
+                <td>${date.toLocaleDateString('fr-FR')}</td>
+                <td>${a.categorie} ${a.nom}</td>
+                <td style="text-align:center;">${a.reference}</td>
+                <td style="text-align:center;">${a.quantite}</td>
+                <td style="text-align:center;">${revenu} €</td>
+                <td style="text-align:center;">${order.internet ? 'X' : ''}</td>
+                <td style="text-align:center;">${order.internet ? '' : 'X'}</td>
+              </tr>
+            `;
+            tableGestion.insertAdjacentHTML('beforeend', html);
+          });
+        }
+      });
+    }
+
+    // ==== Afficher le résumé mensuel ====
+    function renderResume() {
+      const selectedYear = parseInt(selectAnnee.value, 10);
+
+      // Initialisation des totaux
+      const resume = Array.from({ length: 12 }, () => ({
+        revenu: 0,
+        qte: 0,
+      }));
+
+      // Parcourir les commandes de l'année sélectionnée
+      orders.forEach((order) => {
+        const date = new Date(order.date);
+        const year = date.getFullYear();
+        const month = date.getMonth(); // 0-11
+
+        if (year === selectedYear) {
+          order.articles.forEach((a) => {
+            resume[month].revenu += a.quantite * a.prixUnitaire;
+            resume[month].qte += a.quantite;
+          });
+        }
+      });
+
+      // Mise à jour du tableau HTML
+      const moisClasses = [
+        'janvier',
+        'fevrier',
+        'mars',
+        'avril',
+        'mai',
+        'juin',
+        'juillet',
+        'aout',
+        'septembre',
+        'octobre',
+        'novembre',
+        'decembre',
+      ];
+
+      moisClasses.forEach((m, i) => {
+        document.querySelector(`.revenu-${m}`).textContent =
+          resume[i].revenu.toFixed(2) + ' €';
+        document.querySelector(`.qte-vente-${m}`).textContent = resume[i].qte;
+      });
+
+      // Met à jour l'entête avec l'année choisie
+      document.querySelector(
+        '.modal-gestion-charges-mensuel-table thead th:first-child'
+      ).textContent = selectedYear;
+    }
+
+    // ==== Événements ====
+    selectAnnee.addEventListener('change', () => {
+      renderTable();
+      renderResume();
+      renderTrimestre(orders, parseInt(selectAnnee.value, 10));
+      renderAnnuel(orders, parseInt(selectAnnee.value, 10));
+    });
+    selectMois.addEventListener('change', renderTable);
+
+    // ==== Affichage initial ====
+    renderTable();
+    renderResume();
+    renderTrimestre(orders, parseInt(selectAnnee.value, 10));
+    renderAnnuel(orders, parseInt(selectAnnee.value, 10));
+  } catch (err) {
+    console.error('Erreur lors du chargement des commandes:', err);
+  }
+}
+
+function renderTrimestre(orders, selectedYear) {
+  // Initialisation des trimestres
+  const trimestres = [0, 0, 0, 0]; // [Q1, Q2, Q3, Q4]
+
+  // Regrouper par trimestre
+  orders.forEach((order) => {
+    const date = new Date(order.date);
+    const year = date.getFullYear();
+
+    if (year === selectedYear) {
+      // Calcul du total de la commande
+      let totalCommande = 0;
+
+      order.articles.forEach((a) => {
+        totalCommande += a.quantite * a.prixUnitaire;
+      });
+
+      const month = date.getMonth(); // 0-11
+      const trimestreIndex = Math.floor(month / 3); // 0 à 3
+
+      if (order.internet) {
+        // Appliquer frais Mollie : 1.2% + 0.25€ fixe
+        const commission = totalCommande * 0.012 + 0.25;
+        trimestres[trimestreIndex] += totalCommande - commission;
+      } else {
+        trimestres[trimestreIndex] += totalCommande;
+      }
+    }
+  });
+
+  // URSSAF et progression
+  trimestres.forEach((revenu, i) => {
+    const urssaf = revenu * 0.128;
+    const revenuCell = document.querySelector(
+      `.revenu-trimestre-${['un', 'deux', 'trois', 'quatre'][i]}`
+    );
+    const urssafCell = document.querySelector(
+      `.ursaff-trimestre-${['un', 'deux', 'trois', 'quatre'][i]}`
+    );
+    const progressionCell = document.querySelector(
+      `.progression-trimestre-${['un', 'deux', 'trois', 'quatre'][i]}`
+    );
+
+    // Mise à jour du revenu et URSSAF
+    revenuCell.textContent = revenu.toFixed(2) + ' €';
+    urssafCell.textContent = urssaf.toFixed(2) + ' €';
+
+    // Progression (sauf pour le T1 qui n'a pas de référence précédente)
+    if (i === 0) {
+      progressionCell.textContent = '-';
+    } else {
+      const prev = trimestres[i - 1];
+      if (prev > 0) {
+        const progression = ((revenu - prev) / prev) * 100;
+        const signe = progression >= 0 ? '+' : '';
+        progressionCell.textContent = signe + progression.toFixed(1) + ' %';
+      } else {
+        progressionCell.textContent = '0 %';
+      }
+    }
+  });
+}
+
+function renderAnnuel(orders, selectedYear) {
+  let qteTotal = 0;
+  let revenuMagasin = 0;
+  let revenuInternetNet = 0;
+  let totalCommissionMollie = 0;
+  orders.forEach((order) => {
+    const date = new Date(order.date);
+    const year = date.getFullYear();
+
+    if (year === selectedYear) {
+      // Revenu total de la commande
+      let totalCommande = 0;
+
+      order.articles.forEach((a) => {
+        const revenu = a.quantite * a.prixUnitaire;
+        qteTotal += a.quantite;
+        totalCommande += revenu;
+      });
+
+      if (order.internet) {
+        // Commission Mollie : 1.2% + 0.25€ fixe
+        const commission = totalCommande * 0.012 + 0.25;
+        totalCommissionMollie += commission;
+
+        // Net après Mollie
+        revenuInternetNet += totalCommande - commission;
+      } else {
+        revenuMagasin += totalCommande;
+      }
+    }
+  });
+
+  // Revenu brut annuel
+  const revenuBrut = revenuMagasin + revenuInternetNet;
+
+  // URSSAF 12.8%
+  const ursaff = revenuBrut * 0.128;
+
+  // Revenu net annuel
+  const revenuNet = revenuBrut - ursaff;
+
+  // === Mise à jour des cellules HTML ===
+  document.querySelector('.qte-total-vente-annuel').textContent = qteTotal;
+
+  document.querySelectorAll('.revenu-total-magasin').textContent =
+    revenuMagasin.toFixed(2) + ' €';
+  document.querySelectorAll('.revenu-total-internet').textContent =
+    revenuInternetNet.toFixed(2) + ' €';
+  document.querySelector('.revenu-total-ursaff').textContent =
+    revenuBrut.toFixed(2) + ' €';
+  document.querySelector('.revenu-total-net').textContent =
+    revenuNet.toFixed(2) + ' €';
+}
+
+// === Sélecteurs DOM ===
+const modalAjout = document.querySelector('.modal-content-ajout-commande');
+const btnAjouter = document.querySelector('.modal-gestion-ajout-article');
+const btnCancel = document.getElementById('cancel-article');
+
+const selectCategorie = document.getElementById('select-categorie');
+const selectNom = document.getElementById('select-nom');
+const selectReference = document.getElementById('select-reference');
+const inputPrix = document.getElementById('article-prix');
+const inputDate = document.querySelectorAll('.article-date');
+const inputQuantite = document.getElementById('article-quantite');
+const btnAjouterArticle = document.getElementById('btn-ajouter-article');
+const submitCommande = document.getElementById('submit-commande');
+const listeArticles = document.getElementById('liste-articles-selectionnes');
+
+const manualFields = document.querySelector('.manual-article-fields');
+const btnAjouterManuel = document.getElementById('btn-ajouter-manuel');
+
+// === Variables globales ===
+let products = [];
+let commandeTemp = [];
+
+// === Fonctions ===
+
+// Charger les produits depuis l’API
+async function chargerProduits() {
+  products = await getAllProducts();
+  const categories = [...new Set(products.map((p) => p.categorie))];
+  selectCategorie.innerHTML =
+    `<option value="">--Choisir une catégorie--</option>` +
+    categories.map((c) => `<option value="${c}">${c}</option>`).join('');
+}
+
+// Ouvrir la modale
+async function ouvrirModal() {
+  modalAjout.style.display = 'flex';
+  try {
+    await chargerProduits();
+  } catch (err) {
+    console.error('Erreur lors du chargement du stock:', err);
+  }
+}
+
+// Fermer la modale
+function fermerModal() {
+  modalAjout.style.display = 'none';
+  commandeTemp = [];
+  listeArticles.innerHTML = '';
+}
+
+// Mettre à jour les noms en fonction de la catégorie
+function majNoms() {
+  const nomOptions = products
+    .filter((p) => p.categorie === selectCategorie.value)
+    .map((p) => p.nom);
+  const nomsUniques = [...new Set(nomOptions)];
+
+  selectNom.innerHTML =
+    `<option value="">--Choisir un nom--</option>` +
+    nomsUniques.map((n) => `<option value="${n}">${n}</option>`).join('');
+
+  selectNom.disabled = false;
+  selectReference.innerHTML = `<option value="">--Choisir une référence--</option>`;
+  selectReference.disabled = true;
+  inputPrix.value = '';
+  inputPrix.disabled = true;
+}
+
+// Mettre à jour les références en fonction du nom
+function majReferences() {
+  const refOptions = products.filter(
+    (p) => p.categorie === selectCategorie.value && p.nom === selectNom.value
+  );
+
+  selectReference.innerHTML =
+    `<option value="">--Choisir une référence--</option>` +
+    refOptions
+      .map(
+        (r) =>
+          `<option value="${r._id}" data-prix="${r.prixUnitaire}">${r.reference}</option>`
+      )
+      .join('');
+
+  selectReference.disabled = false;
+  inputPrix.value = '';
+  inputPrix.disabled = true;
+}
+
+// Mettre à jour le prix quand on choisit une référence
+function majPrix() {
+  const selected = selectReference.selectedOptions[0];
+  if (selected) {
+    inputPrix.value = selected.dataset.prix;
+    inputPrix.disabled = false;
+  }
+}
+
+// === Ajouter un article du stock avec vérif stock ===
+function ajouterArticleStock() {
+  const selected = selectReference.selectedOptions[0];
+  if (!selected) {
+    alert('Veuillez choisir une référence.');
+    return;
+  }
+
+  const produitId = selected.value;
+  const produit = products.find((p) => p._id === produitId);
+  const dateValue = inputDate[0].value; // premier champ date
+
+  const article = {
+    produitId,
+    date: dateValue ? new Date(dateValue).toISOString() : null, // ⚡ undefined => mongoose applique default
+    categorie: selectCategorie.value,
+    nom: selectNom.value,
+    reference: selected.textContent,
+    prixUnitaire: parseFloat(inputPrix.value),
+    quantite: parseInt(inputQuantite.value, 10),
+  };
+
+  // Validation des champs
+  if (
+    !article.categorie ||
+    !article.nom ||
+    !article.reference ||
+    !article.prixUnitaire ||
+    isNaN(article.quantite)
+  ) {
+    alert('Veuillez remplir tous les champs.');
+    return;
+  }
+
+  if (article.quantite <= 0) {
+    alert('La quantité doit être supérieure à 0.');
+    return;
+  }
+
+  // Vérifier le stock disponible
+  if (
+    produit &&
+    produit.stock !== undefined &&
+    article.quantite > produit.stock
+  ) {
+    alert(`Stock insuffisant ! Disponible : ${produit.stock}`);
+    return;
+  }
+
+  commandeTemp.push(article);
+
+  const li = document.createElement('li');
+  const affichageDate = article.date
+    ? new Date(article.date).toLocaleDateString()
+    : 'Non défini';
+  li.textContent = `${article.categorie} - ${article.nom} (${article.reference}) x${article.quantite} à ${article.prixUnitaire} € [${affichageDate}]`;
+  listeArticles.appendChild(li);
+
+  // Reset
+  selectNom.value = '';
+  selectReference.innerHTML = `<option value="">--Choisir une référence--</option>`;
+  inputPrix.value = '';
+  inputQuantite.value = '';
+}
+
+// === Ajouter un article manuel avec quantité >= 0 ===
+function ajouterArticleManuel() {
+  const categorie = document.getElementById('manual-categorie').value.trim();
+  const nom = document.getElementById('manual-nom').value.trim();
+  const reference = document.getElementById('manual-reference').value.trim();
+  const prixUnitaire = parseFloat(document.getElementById('manual-prix').value);
+  const quantite = parseInt(
+    document.getElementById('manual-quantite').value,
+    10
+  );
+
+  if (!categorie || !nom || !reference || !prixUnitaire || isNaN(quantite)) {
+    alert('Veuillez remplir tous les champs.');
+    return;
+  }
+
+  if (quantite < 0) {
+    alert('La quantité ne peut pas être négative.');
+    return;
+  }
+
+  const dateValue = inputDate[1].value; // deuxième champ date
+  const article = {
+    categorie,
+    nom,
+    reference,
+    prixUnitaire,
+    quantite,
+    date: dateValue ? new Date(dateValue).toISOString() : null, // ⚡ undefined => mongoose applique default
+  };
+  commandeTemp.push(article);
+
+  const li = document.createElement('li');
+  const affichageDate = article.date
+    ? new Date(article.date).toLocaleDateString()
+    : 'Non défini';
+  li.textContent = `${categorie} - ${nom} (${reference}) x${quantite} à ${prixUnitaire} € (manuel) [${affichageDate}]`;
+  listeArticles.appendChild(li);
+
+  // Reset
+  document.getElementById('manual-categorie').value = '';
+  document.getElementById('manual-nom').value = '';
+  document.getElementById('manual-reference').value = '';
+  document.getElementById('manual-prix').value = '';
+  document.getElementById('manual-quantite').value = '';
+
+  manualFields.style.display = 'none';
+}
+
+// Envoyer la commande
+async function envoyerCommande() {
+  if (commandeTemp.length === 0) {
+    alert('Aucun article à ajouter.');
+    return;
+  }
+
+  const token = localStorage.getItem('token');
+
+  try {
+    for (const article of commandeTemp) {
+      const formData = {
+        produitId: article.produitId || null,
+        date: article.date,
+        categorie: article.categorie,
+        nom: article.nom,
+        reference: article.reference,
+        quantite: article.quantite,
+        prixUnitaire: article.prixUnitaire,
+      };
+      await ajoutCommandeClient(formData, token);
+    }
+
+    alert('Commande(s) ajoutée(s) avec succès !');
+    fermerModal();
+    gestionArticle(); // refresh table principale
+  } catch (err) {
+    console.error(err);
+    alert('Erreur lors de l’ajout de la commande.');
+  }
+}
+
+// === Event Listeners ===
+btnAjouter.addEventListener('click', ouvrirModal);
+btnCancel.addEventListener('click', fermerModal);
+
+selectCategorie.addEventListener('change', majNoms);
+selectNom.addEventListener('change', majReferences);
+selectReference.addEventListener('change', majPrix);
+
+btnAjouterArticle.addEventListener('click', ajouterArticleStock);
+btnAjouterManuel.addEventListener('click', ajouterArticleManuel);
+
+submitCommande.addEventListener('click', envoyerCommande);
+
+const btnExport = document.querySelector('.modal-gestion-export');
+const modalExport = document.querySelector('.modal-content-export');
+const btnCancelExport = document.getElementById('cancel-export');
+const selectPeriode = document.getElementById('export-periode');
+const selectAnnee = document.getElementById('export-annee');
+
+// --- Remplissage dynamique du select des années ---
+(function remplirAnnees() {
+  const anneeCourante = new Date().getFullYear();
+  const anneeDebut = 2020; // change si nécessaire
+  for (let y = anneeCourante; y >= anneeDebut; y--) {
+    const opt = document.createElement('option');
+    opt.value = y;
+    opt.textContent = y;
+    selectAnnee.appendChild(opt);
+  }
+})();
+
+btnExport.addEventListener('click', () => {
+  modalExport.style.display = 'flex';
+});
+
+btnCancelExport.addEventListener('click', () => {
+  modalExport.style.display = 'none';
+});
+
+// === Export ===
+document.getElementById('submit-export').addEventListener('click', async () => {
+  const format = document.getElementById('export-format').value;
+  const periode = document.getElementById('export-periode').value;
+
+  let mois = null;
+  let annee = null;
+
+  if (periode === 'month') {
+    mois = document.getElementById('export-mois').value;
+    annee = document.getElementById('export-annee').value;
+  } else if (periode === 'year') {
+    annee = document.getElementById('export-annee').value;
+  }
+
+  const token = localStorage.getItem('token');
+
+  try {
+    const blob = await exportOrders(format, periode, mois, annee, token);
+
+    // Création du téléchargement
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = format === 'pdf' ? 'rapport.pdf' : 'rapport.xlsx';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+
+    modalExport.style.display = 'none';
+  } catch (err) {
+    console.error(err);
+    alert('Erreur lors de l’export.');
+  }
+});
+
+// --- Affichage dynamique des sélecteurs ---
+selectPeriode.addEventListener('change', function () {
+  const periode = this.value;
+  document.getElementById('export-year-select').style.display =
+    periode === 'year' || periode === 'month' ? 'block' : 'none';
+  document.getElementById('export-month-select').style.display =
+    periode === 'month' ? 'block' : 'none';
+});
 
 // Lancement de l'init au chargement du DOM
 document.addEventListener('DOMContentLoaded', init);

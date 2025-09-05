@@ -112,7 +112,7 @@
           <li><a href="#creation">Créations</a></li>
           <li><a href="./pages/blog/blog.html">Blog</a></li>
           <li><a href="#contact">Contact</a></li>
-          <li id="user-open"><a href="./global/login.html">Login</a></li>
+          <li class="user-open"><a href="./global/login.html">Login</a></li>
           <li>
             <a
               href="https://www.instagram.com/mignonneries.nathalie/"
@@ -224,7 +224,7 @@
             <li><a href="#btn-retour">Accueil</a></li>
             <li><a href="./pages/blog/blog.html">Blog</a></li>
             <li><a href="./pages/bio/bio.html">Contact</a></li>
-            <li><a href="./global/login.html">Login</a></li>
+            <li class="user-open"><a href="./global/login.html">Login</a></li>
           </ul>
           <p>© 2024 - 2025 Mignonneries-Nathalie</p>
         </div>
@@ -655,6 +655,333 @@
         <div class="cropper-buttons">
           <button id="cropper-apply">Appliquer</button>
           <button id="cropper-cancel">Annuler</button>
+        </div>
+      </div>
+    </div>
+    <div class="modal-content-gestion">
+      <div class="modal-gestion">
+        <button class="btn-close">
+          <i class="fa-solid fa-xmark fa-2xl"></i>
+        </button>
+        <button class="modal-gestion-ajout-article">Ajouter un article</button>
+        <div class="modal-gestion-periode">
+          <select name="gestion" id="select-gestion-annee"></select>
+          <select name="gestion" id="select-gestion-mois"></select>
+        </div>
+        <div class="modal-gestion-centrale">
+          <div class="modal-gestion-filtres">
+            <table class="modal-gestion-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Article</th>
+                  <th>Référence</th>
+                  <th>Quantités</th>
+                  <th>Revenu</th>
+                  <th>Internet</th>
+                  <th>Magasin</th>
+                </tr>
+              </thead>
+              <tbody class="gestion-table"></tbody>
+            </table>
+          </div>
+          <div class="modal-gestion-charges">
+            <div class="modal-gestion-charges-secondaire">
+              <p>Charges</p>
+              <ul>
+                <li>URSAFF <span>0.128</span></li>
+                <li>MOLLIE<span>0.012</span></li>
+              </ul>
+            </div>
+            <div class="modal-gestion-charges-mensuel">
+              <table class="modal-gestion-charges-mensuel-table">
+                <thead>
+                  <tr>
+                    <th>2025</th>
+                    <th>Total en €</th>
+                    <th>QTE vendu</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Janvier</td>
+                    <td class="revenu-janvier"></td>
+                    <td class="qte-vente-janvier"></td>
+                  </tr>
+                  <tr>
+                    <td>Février</td>
+                    <td class="revenu-fevrier"></td>
+                    <td class="qte-vente-fevrier"></td>
+                  </tr>
+                  <tr>
+                    <td>Mars</td>
+                    <td class="revenu-mars"></td>
+                    <td class="qte-vente-mars"></td>
+                  </tr>
+                  <tr>
+                    <td>Avril</td>
+                    <td class="revenu-avril"></td>
+                    <td class="qte-vente-avril"></td>
+                  </tr>
+                  <tr>
+                    <td>Mai</td>
+                    <td class="revenu-mai"></td>
+                    <td class="qte-vente-mai"></td>
+                  </tr>
+                  <tr>
+                    <td>Juin</td>
+                    <td class="revenu-juin"></td>
+                    <td class="qte-vente-juin"></td>
+                  </tr>
+                  <tr>
+                    <td>Juillet</td>
+                    <td class="revenu-juillet"></td>
+                    <td class="qte-vente-juillet"></td>
+                  </tr>
+                  <tr>
+                    <td>Aout</td>
+                    <td class="revenu-aout"></td>
+                    <td class="qte-vente-aout"></td>
+                  </tr>
+                  <tr>
+                    <td>Septembre</td>
+                    <td class="revenu-septembre"></td>
+                    <td class="qte-vente-septembre"></td>
+                  </tr>
+                  <tr>
+                    <td>Octobre</td>
+                    <td class="revenu-octobre"></td>
+                    <td class="qte-vente-octobre"></td>
+                  </tr>
+                  <tr>
+                    <td>Novembre</td>
+                    <td class="revenu-novembre"></td>
+                    <td class="qte-vente-novembre"></td>
+                  </tr>
+                  <tr>
+                    <td>Décembre</td>
+                    <td class="revenu-decembre"></td>
+                    <td class="qte-vente-decembre"></td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="modal-gestion-qte-total-ventes">
+                <table class="modal-gestion-charges-mensuel-table-trimestre">
+                  <thead>
+                    <tr>
+                      <th>Trimestre</th>
+                      <th>Total en €</th>
+                      <th>URSAFF</th>
+                      <th>Progression en %</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Trimestre 1</td>
+                      <td class="revenu-trimestre-un"></td>
+                      <td class="ursaff-trimestre-un"></td>
+                      <td class="progression-trimestre-un"></td>
+                    </tr>
+                  </tbody>
+                  <tbody>
+                    <tr>
+                      <td>Trimestre 2</td>
+                      <td class="revenu-trimestre-deux"></td>
+                      <td class="ursaff-trimestre-deux"></td>
+                      <td class="progression-trimestre-deux"></td>
+                    </tr>
+                  </tbody>
+                  <tbody>
+                    <tr>
+                      <td>Trimestre 3</td>
+                      <td class="revenu-trimestre-trois"></td>
+                      <td class="ursaff-trimestre-trois"></td>
+                      <td class="progression-trimestre-trois"></td>
+                    </tr>
+                  </tbody>
+                  <tbody>
+                    <tr>
+                      <td>Trimestre 4</td>
+                      <td class="revenu-trimestre-quatre"></td>
+                      <td class="ursaff-trimestre-quatre"></td>
+                      <td class="progression-trimestre-quatre"></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="modal-gestion-qte-total-ventes-annuel">
+                  <table class="modal-gestion-charges-mensuel-table-qte">
+                    <thead>
+                      <tr>
+                        <th>Qte total des ventes</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="qte-total-vente-annuel"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <table class="modal-gestion-charges-mensuel-table-qte">
+                    <thead>
+                      <th>Qte total des ventes</th>
+                      <th>En €</th>
+                      <tr>
+                        <th>Revenu magasin</th>
+                        <td class="revenu-total-magasin"></td>
+                      </tr>
+                      <tr></tr>
+                      <tr>
+                        <th>Revenu internet</th>
+                        <td class="revenu-total-internet"></td>
+                      </tr>
+                      <tr>
+                        <th>Revenu BRUT</th>
+                        <td class="revenu-total-ursaff"></td>
+                      </tr>
+                      <tr>
+                        <th>Revenu NET</th>
+                        <td class="revenu-total-net"></td>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="modal-gestion-export">Exporter le fichier</button>
+      </div>
+    </div>
+    <div class="modal-content-ajout-commande" style="display: none">
+      <div class="modal-ajout-commande">
+        <h3 style="text-align: center">Ajouter une commande magasin</h3>
+        <div class="modal-ajout-commande-enfant">
+          <div style="width: 50%">
+            <h4>En stock</h4>
+
+            <label>Date: <input type="date" class="article-date" /></label>
+
+            <label
+              >Catégorie:
+              <select id="select-categorie">
+                <option value="">--Choisir une catégorie--</option>
+              </select>
+            </label>
+
+            <label
+              >Nom:
+              <select id="select-nom" disabled>
+                <option value="">--Choisir un nom--</option>
+              </select>
+            </label>
+
+            <label
+              >Référence:
+              <select id="select-reference" disabled>
+                <option value="">--Choisir une référence--</option>
+              </select>
+            </label>
+
+            <label
+              >Prix unitaire:
+              <input type="number" id="article-prix" step="0.01" disabled />
+            </label>
+
+            <label
+              >Quantité:
+              <input type="number" id="article-quantite" min="0" />
+            </label>
+
+            <button id="btn-ajouter-article">Ajouter la commande</button>
+          </div>
+          <div style="width: 50%">
+            <h4>Hors stock</h4>
+            <label>Date: <input type="date" class="article-date" /></label>
+
+            <label
+              >Catégorie:
+              <input
+                type="text"
+                id="manual-categorie"
+                placeholder="Sac à tarte"
+            /></label>
+            <label
+              >Nom: <input type="text" id="manual-nom" placeholder="Vert"
+            /></label>
+            <label
+              >Référence:
+              <input type="text" id="manual-reference" placeholder="B25689"
+            /></label>
+            <label
+              >Prix unitaire:
+              <input
+                type="number"
+                id="manual-prix"
+                step="0.01"
+                placeholder="12.99"
+            /></label>
+            <label
+              >Quantité:
+              <input type="number" id="manual-quantite" placeholder="0" min="0"
+            /></label>
+            <button id="btn-ajouter-manuel">Ajouter la commande</button>
+          </div>
+        </div>
+        <div>
+          <h4>Commandes sélectionnés</h4>
+          <ul id="liste-articles-selectionnes"></ul>
+
+          <button id="submit-commande">Valider la commande</button>
+          <button id="cancel-article">Annuler</button>
+        </div>
+      </div>
+    </div>
+    <!-- Modale export -->
+    <div class="modal-content-export" style="display: none">
+      <div class="modal-export">
+        <h3>Exporter les données</h3>
+
+        <label>Format :</label>
+        <select id="export-format">
+          <option value="pdf">PDF</option>
+          <option value="excel">Excel</option>
+        </select>
+
+        <label>Période :</label>
+        <select id="export-periode">
+          <option value="all">Toute la base</option>
+          <option value="year">Une année précise</option>
+          <option value="month">Un mois précis</option>
+        </select>
+
+        <div id="export-year-select" style="display: none">
+          <label>Année :</label>
+          <select id="export-annee">
+            <!-- Généré dynamiquement avec JS (ex: 2020 → année courante) -->
+          </select>
+        </div>
+
+        <div id="export-month-select" style="display: none">
+          <label>Mois :</label>
+          <select id="export-mois">
+            <option value="0">Janvier</option>
+            <option value="1">Février</option>
+            <option value="2">Mars</option>
+            <option value="3">Avril</option>
+            <option value="4">Mai</option>
+            <option value="5">Juin</option>
+            <option value="6">Juillet</option>
+            <option value="7">Août</option>
+            <option value="8">Septembre</option>
+            <option value="9">Octobre</option>
+            <option value="10">Novembre</option>
+            <option value="11">Décembre</option>
+          </select>
+        </div>
+
+        <div class="export-buttons">
+          <button id="submit-export">Exporter</button>
+          <button id="cancel-export">Annuler</button>
         </div>
       </div>
     </div>

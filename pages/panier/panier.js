@@ -1,3 +1,4 @@
+//panier.js
 import { updateFavorisCount } from '../../global/addFavorisPanier.js';
 import {
   createStripeCheckoutSession,

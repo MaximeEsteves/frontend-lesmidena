@@ -1,4 +1,5 @@
 /* zone de modification */
+.div-commande,
 .div-avis,
 .div-modification {
   color: black;
@@ -12,6 +13,7 @@
   border: none;
   background-color: inherit;
 }
+.div-commande:hover,
 .div-avis:hover,
 .div-modification:hover {
   opacity: 0.5;
@@ -367,14 +369,320 @@
 }
 /* Hauteur des lignes */
 .avis-table tr {
-  height: 60px; /* ou la valeur que tu souhaites */
+  height: 60px;
 }
 
-/* Cellule commentaire avec scroll si trop longue */
 .comment-cell {
   max-height: 50px; /* hauteur max de la cellule */
   overflow-y: auto; /* scroll vertical si contenu trop long */
   white-space: normal; /* autorise le retour à la ligne */
   word-wrap: break-word; /* coupe les mots si nécessaire */
   padding: 4px 8px;
+}
+
+/* === modal gestion des revenus === */
+.modal-content-export,
+.modal-content-ajout-commande,
+.modal-content-gestion {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  overflow: auto;
+}
+.modal-export,
+.modal-ajout-commande {
+  background: #fff;
+  max-width: 90vw;
+  width: 1300px;
+  max-height: 85vh;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: hidden;
+  margin: 80px auto !important;
+  gap: 10px;
+  color: #3a5151;
+}
+.modal-ajout-commande button {
+  background-color: #3a5151;
+  border: 1px solid white;
+  border-radius: 8px;
+  color: white;
+  margin-top: 10px;
+}
+.modal-ajout-commande button:hover {
+  background-color: white;
+  border: 1px solid #3a5151;
+  color: #3a5151;
+  cursor: pointer;
+}
+.modal-ajout-commande label {
+  display: flex;
+  flex-direction: column;
+  font-family: Geist;
+  margin-top: 10px;
+}
+.modal-gestion {
+  background: #fff;
+  width: 90vw;
+  height: 90vh;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+.modal-gestion-periode {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 10px;
+  width: 20%;
+  margin: 0 auto;
+}
+.modal-gestion-periode select {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+  width: 40%;
+  margin: 0 auto;
+  border-radius: 8px;
+  padding: 3px 15px;
+}
+.modal-gestion-centrale {
+  display: flex;
+  justify-content: space-between;
+  gap: 50px;
+  height: 100%;
+}
+.modal-gestion-filtres {
+  width: 100%;
+  height: 85%;
+  overflow: auto;
+}
+.modal-gestion-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.modal-gestion-table th,
+.modal-gestion-table td {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  text-align: left;
+  white-space: nowrap;
+}
+.modal-gestion-table tr {
+  height: 50px;
+}
+.modal-gestion-ajout-article {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  border-radius: 8px;
+  background-color: white;
+}
+.modal-gestion-export {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 8px;
+  background-color: white;
+}
+.modal-gestion-charges {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.modal-gestion-charges-secondaire {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.modal-gestion-charges-secondaire ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid;
+  border-radius: 8px;
+}
+.modal-gestion-charges-secondaire li {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  padding: 5px 15px;
+}
+.modal-gestion-charges-mensuel {
+  display: flex;
+  justify-content: center;
+  align-items: start;
+  margin: auto;
+  width: 100%;
+  gap: 10px;
+}
+.modal-gestion-qte-total-ventes {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.modal-gestion-qte-total-ventes-annuel {
+  display: flex;
+  gap: 10px;
+}
+.modal-gestion-charges-mensuel-table-qte,
+.modal-gestion-charges-mensuel-table-trimestre {
+  width: 50%;
+  border-collapse: collapse;
+  height: 50%;
+}
+.modal-gestion-charges-mensuel-table {
+  width: 50%;
+  border-collapse: collapse;
+}
+.modal-gestion-charges-mensuel-table-qte th,
+.modal-gestion-charges-mensuel-table-qte td,
+.modal-gestion-charges-mensuel-table-trimestre th,
+.modal-gestion-charges-mensuel-table-trimestre td,
+.modal-gestion-charges-mensuel-table th,
+.modal-gestion-charges-mensuel-table td {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  text-align: left;
+  white-space: nowrap;
+}
+.modal-gestion-charges-mensuel-table tr {
+  height: 30px;
+}
+#liste-articles-selectionnes {
+  height: 60px;
+  overflow: auto;
+  border: 1px solid black;
+}
+.modal-ajout-commande h4 {
+  margin: 0;
+}
+.modal-ajout-commande-enfant {
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+  gap: 80px;
+}
+@media (max-width: 1498px) {
+  .modal-gestion-centrale {
+    flex-direction: column;
+  }
+  .modal-gestion-filtres {
+    height: 35%;
+    border: 1px solid black;
+  }
+  .modal-gestion-centrale {
+    height: 86%;
+    gap: 20px;
+  }
+  .modal-gestion-charges-secondaire {
+    position: absolute;
+    bottom: 20px;
+    right: 230px;
+  }
+}
+@media (max-width: 768px) {
+  .modal-gestion {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0px;
+  }
+  .modal-gestion-centrale {
+    gap: 0px;
+  }
+  .modal-gestion-charges-secondaire li {
+    gap: 0px;
+    padding: 0px 13px;
+  }
+  .modal-gestion-periode {
+    width: 35%;
+  }
+}
+@media (max-width: 690px) {
+  .modal-gestion-charges {
+    overflow-y: auto;
+  }
+  .modal-gestion-charges-mensuel {
+    flex-direction: column;
+  }
+  .modal-gestion-charges-mensuel-table {
+    width: 100%;
+    margin-top: 10px;
+  }
+  .modal-gestion-filtres {
+    height: 100%;
+  }
+  .modal-gestion-charges-mensuel-table-trimestre,
+  .modal-gestion-qte-total-ventes-annuel,
+  .modal-gestion-qte-total-ventes {
+    width: 100%;
+  }
+  .modal-gestion-charges-secondaire {
+    position: initial;
+  }
+}
+@media (max-width: 590px) {
+  .modal-ajout-commande h3 {
+    font-size: 24px;
+  }
+  .modal-ajout-commande h4 {
+    font-size: 18px;
+  }
+  .modal-ajout-commande-enfant {
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+    width: 100%;
+    margin: auto;
+    overflow: auto;
+    border: 1px solid black;
+  }
+  .modal-ajout-commande-enfant > div {
+    width: 90% !important;
+    margin: 0 auto;
+  }
+  .modal-ajout-commande {
+    background: #fff;
+    max-width: none;
+    max-height: none;
+    width: 100vw;
+    height: 100vh;
+    border-radius: 1px;
+    margin: 0px auto !important;
+    gap: 10px;
+    color: #3a5151;
+  }
+}
+@media (max-width: 375px) {
+  .modal-gestion-qte-total-ventes {
+    font-size: 11px;
+  }
+}
+@media (max-width: 320px) {
+  .modal-gestion-qte-total-ventes {
+    font-size: 8px;
+  }
 }
